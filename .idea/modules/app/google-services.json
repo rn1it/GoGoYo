@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "232832649240",
+    "firebase_url": "https://turing-opus-296809.firebaseio.com",
+    "project_id": "turing-opus-296809",
+    "storage_bucket": "turing-opus-296809.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:232832649240:android:9d68ecef53577b124a9b6d",
+        "android_client_info": {
+          "package_name": "com.rn1.gogoyo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "232832649240-6bpr4qjgnmoa553ngroa0t1nc0u3ir22.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rn1.gogoyo",
+            "certificate_hash": "78fd22f6c169f6ccc48aec9831c96c310eeeaeb1"
+          }
+        },
+        {
+          "client_id": "232832649240-uu99rcdeci2gscctd8pjtn0lj3i0kk15.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZLZJ60tH4gHgSIiIDPaUYHt1PhOpCBVg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "232832649240-uu99rcdeci2gscctd8pjtn0lj3i0kk15.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

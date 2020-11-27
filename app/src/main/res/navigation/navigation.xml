@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.rn1.gogoyo.Home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/makeFriendsFragment"
+        android:name="com.rn1.gogoyo.friend.MakeFriendsFragment"
+        android:label="fragment_make_friends"
+        tools:layout="@layout/fragment_make_friends" />
+    <fragment
+        android:id="@+id/myPetsFragment"
+        android:name="com.rn1.gogoyo.mypets.MyPetsFragment"
+        android:label="fragment_my_pets"
+        tools:layout="@layout/fragment_my_pets" />
+    <fragment
+        android:id="@+id/walkFragment"
+        android:name="com.rn1.gogoyo.walk.WalkFragment"
+        android:label="fragment_walk"
+        tools:layout="@layout/fragment_walk" />
+    <fragment
+        android:id="@+id/eventFragment"
+        android:name="com.rn1.gogoyo.event.EventFragment"
+        android:label="fragment_event"
+        tools:layout="@layout/fragment_event" />
+    
+    <action android:id="@+id/action_global_homeFragment" app:destination="@id/homeFragment" />
+    <action android:id="@+id/action_global_makeFriendsFragment" app:destination="@id/makeFriendsFragment" />
+    <action android:id="@+id/action_global_myPetsFragment" app:destination="@id/myPetsFragment" />
+    <action android:id="@+id/action_global_walkFragment" app:destination="@id/walkFragment" />
+    <action android:id="@+id/action_global_eventFragment" app:destination="@id/eventFragment" />
+</navigation>
