@@ -9,7 +9,8 @@
         android:id="@+id/nav_event"
         android:icon="@drawable/ic_baseline_call_received_24"
         android:title="Event" />
-    <item android:id="@+id/placeholder" />
+    <item android:id="@+id/placeholder"
+        android:title="" />
     <item
         android:id="@+id/nav_friend"
         android:icon="@drawable/ic_baseline_change_history_24"

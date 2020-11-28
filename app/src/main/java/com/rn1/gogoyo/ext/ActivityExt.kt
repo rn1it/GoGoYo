@@ -10,7 +10,7 @@ import com.rn1.gogoyo.factory.ViewModelFactory
  */
 
 fun Activity.getVmFactory(): ViewModelFactory{
-    val repository = (application as GogoyoApplication).repository
+    val repository = (applicationContext as GogoyoApplication).repository
     return ViewModelFactory(repository)
 }
 

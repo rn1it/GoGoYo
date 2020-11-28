@@ -1,4 +1,7 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="elevation_all">4dp</dimen>
+
+    <!-- map-->
+    <dimen name="radius_map_outline">60dp</dimen>
 </resources>

@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.rn1.gogoyo.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -85,7 +87,8 @@
                 app:fabSize="auto"
                 app:layout_anchor="@id/bottomAppBar"
                 app:maxImageSize="40dp"
-                android:elevation="@dimen/elevation_all"/>
+                android:elevation="@dimen/elevation_all"
+                android:onClick="@{() -> viewModel.onNavigateToWalk()}"/>
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
