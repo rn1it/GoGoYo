@@ -6,6 +6,6 @@ data class Users(
     val location: String? = null,
     val qrCode: String? = null,
     val currentLat: Double? = null,
-    val currentLon: Double,
+    val currentLon: Double? = null,
     val isWalking: Boolean = false
 )

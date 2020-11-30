@@ -15,6 +15,7 @@ class MyPetsPagerAdapter: ListAdapter<Pets, RecyclerView.ViewHolder>(PetsDiffCal
         fun bind(pets: Pets) {
             binding.pets = pets
             binding.myPetsIv.outlineProvider = MapOutlineProvider()
+            binding.executePendingBindings()
         }
         companion object{
             fun from(parent: ViewGroup): PetsViewHolder{

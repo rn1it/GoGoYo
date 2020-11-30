@@ -12,9 +12,9 @@
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/makeFriendsFragment"
-        android:name="com.rn1.gogoyo.friend.MakeFriendsFragment"
+        android:name="com.rn1.gogoyo.friend.cards.FriendCardsFragment"
         android:label="fragment_make_friends"
-        tools:layout="@layout/fragment_make_friends" />
+        tools:layout="@layout/fragment_friend_cards" />
     <fragment
         android:id="@+id/myPetsFragment"
         android:name="com.rn1.gogoyo.mypets.MyPetsFragment"
