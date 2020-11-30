@@ -14,6 +14,7 @@ class FriendCardsAdapter: ListAdapter<Users, RecyclerView.ViewHolder>(UserDiffCa
 
         fun bind(users: Users){
             binding.users = users
+            binding.executePendingBindings()
         }
 
         companion object {

@@ -5,8 +5,8 @@ import java.io.File
 data class Articles(
     val id: String,
     val title: String,
-    val authorId: String,
-    val createdTime: Long,
-    val images: List<File>,
-    val like: Int
+    val authorId: String? = null,
+    val createdTime: Long? = null,
+    val images: List<File>? = null,
+    val like: Int? = null
 )
