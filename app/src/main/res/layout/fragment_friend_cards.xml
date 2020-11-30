@@ -12,55 +12,17 @@
         android:layout_height="match_parent"
         tools:context=".friend.cards.FriendCardsFragment">
 
-        <Button
-            android:id="@+id/friendCardsBt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="好友卡"
-            app:layout_constraintEnd_toStartOf="@+id/friendListBt"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/friendListBt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="好友列表"
-            app:layout_constraintBottom_toBottomOf="@+id/friendCardsBt"
-            app:layout_constraintEnd_toStartOf="@+id/chatBt"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/friendCardsBt"
-            app:layout_constraintTop_toTopOf="@+id/friendCardsBt" />
-
-        <Button
-            android:id="@+id/chatBt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="聊天"
-            app:layout_constraintBottom_toBottomOf="@+id/friendCardsBt"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/friendListBt"
-            app:layout_constraintTop_toTopOf="@+id/friendCardsBt" />
-
-
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/friendCardsViewPager"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="4dp"
             android:orientation="horizontal"
             android:paddingStart="32dp"
             android:paddingEnd="32dp"
             app:layout_constraintBottom_toTopOf="@+id/textView2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/friendCardsBt" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textView2"

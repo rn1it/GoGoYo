@@ -31,6 +31,7 @@ class FriendCardsFragment : Fragment() {
         viewPager.clipToPadding = false
         viewPager.clipChildren = false
         viewPager.offscreenPageLimit = 3
+//        viewPager.isUserInputEnabled = false
 
         // not to show slide to end effect
         viewPager.getChildAt(0).overScrollMode = View.OVER_SCROLL_NEVER

@@ -30,10 +30,17 @@
         android:name="com.rn1.gogoyo.event.EventFragment"
         android:label="fragment_event"
         tools:layout="@layout/fragment_event" />
-    
+    <fragment
+        android:id="@+id/friendFragment"
+        android:name="com.rn1.gogoyo.friend.FriendFragment"
+        android:label="FriendFragment"
+        tools:layout="@layout/fragment_friend"/>
+
+
     <action android:id="@+id/action_global_homeFragment" app:destination="@id/homeFragment" />
     <action android:id="@+id/action_global_makeFriendsFragment" app:destination="@id/makeFriendsFragment" />
     <action android:id="@+id/action_global_myPetsFragment" app:destination="@id/myPetsFragment" />
     <action android:id="@+id/action_global_walkFragment" app:destination="@id/walkFragment" />
     <action android:id="@+id/action_global_eventFragment" app:destination="@id/eventFragment" />
+    <action android:id="@+id/action_global_friendFragment" app:destination="@id/friendFragment" />
 </navigation>
