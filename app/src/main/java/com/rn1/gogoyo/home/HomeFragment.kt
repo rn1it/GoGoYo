@@ -1,4 +1,4 @@
-package com.rn1.gogoyo.Home
+package com.rn1.gogoyo.home
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import com.rn1.gogoyo.R
 
 class HomeFragment : Fragment() {
+
+    
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

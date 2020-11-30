@@ -6,8 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
@@ -33,6 +35,30 @@ class MyPetsFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_pets, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
+
+
+        viewModel.onEdit.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                petInfoEditableChange(true)
+                viewModel.onDoneEdit()
+            }
+        })
+
+        viewModel.onSureEdit.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                petInfoEditableChange(false)
+                viewModel.onDoneSureEdit()
+            }
+        })
+
+        viewModel.onCancelEdit.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                petInfoEditableChange(false)
+                viewModel.onDoneCancelEdit()
+            }
+        })
+
 
         // mock data
         val pet1 = Pets("001", "ppp")
@@ -82,5 +108,33 @@ class MyPetsFragment : Fragment() {
         viewPager.setPageTransformer(transformer)
 
         return binding.root
+    }
+
+    private fun petInfoEditableChange(boolean: Boolean){
+        binding.breedTitleEt.apply {
+            isFocusable = boolean
+            isFocusableInTouchMode = boolean
+        }
+        binding.sexTitleEt.apply {
+            isFocusable = boolean
+            isFocusableInTouchMode = boolean
+        }
+        binding.birthTitleEt.apply {
+            isFocusable = boolean
+            isFocusableInTouchMode = boolean
+        }
+        binding.introductionTitleEt.apply {
+            isFocusable = boolean
+            isFocusableInTouchMode = boolean
+        }
+        if (boolean) {
+            binding.sureEditBt.visibility = View.VISIBLE
+            binding.cancelEditBt.visibility = View.VISIBLE
+            binding.editPetInfoBt.visibility = View.GONE
+        } else {
+            binding.sureEditBt.visibility = View.GONE
+            binding.cancelEditBt.visibility = View.GONE
+            binding.editPetInfoBt.visibility = View.VISIBLE
+        }
     }
 }

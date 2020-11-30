@@ -44,12 +44,12 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:clickable="true"
-                android:src="@drawable/add_pet"
+                android:src="@drawable/add_pet3"
                 app:backgroundTint="@color/white"
                 app:fabSize="mini"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:maxImageSize="40dp" />
+                app:maxImageSize="30dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
@@ -77,17 +77,47 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/imageView"
+                    android:id="@+id/editPetInfoBt"
+                    android:layout_width="59dp"
+                    android:layout_height="64dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:elevation="@dimen/elevation_all"
+                    android:onClick="@{()->viewModel.edit()}"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/edit_pet"
+                    app:backgroundTint="@color/design_default_color_secondary_variant"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:maxImageSize="50dp" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/sureEditBt"
+                    android:layout_width="59dp"
+                    android:layout_height="64dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:onClick="@{()->viewModel.onSureEdit()}"
+                    android:src="@drawable/check"
+                    android:visibility="gone"
+                    app:backgroundTint="@color/design_default_color_secondary_variant"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:maxImageSize="50dp" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/cancelEditBt"
                     android:layout_width="59dp"
                     android:layout_height="64dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:elevation="@dimen/elevation_all"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/edit_pet"
-                    app:backgroundTint="@color/white"
+                    android:onClick="@{()->viewModel.onCancelEdit()}"
+                    android:src="@drawable/cancel"
+                    android:visibility="gone"
+                    android:foregroundGravity="center"
+                    app:backgroundTint="#F44336"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/sureEditBt"
                     app:maxImageSize="50dp" />
 
                 <TextView
@@ -134,16 +164,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/birthTitleTv" />
 
-                <TextView
-                    android:id="@+id/photoTitleTv"
-                    style="@style/TextStyleTitle1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
-                    android:text="@string/text_photo"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/introductionTitleTv" />
+                <!--                <TextView-->
+                <!--                    android:id="@+id/photoTitleTv"-->
+                <!--                    style="@style/TextStyleTitle1"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_marginStart="16dp"-->
+                <!--                    android:layout_marginTop="24dp"-->
+                <!--                    android:text="@string/text_photo"-->
+                <!--                    app:layout_constraintStart_toStartOf="parent"-->
+                <!--                    app:layout_constraintTop_toBottomOf="@+id/introductionTitleTv" />-->
 
                 <TextView
                     android:id="@+id/voiceTitleTv"
@@ -152,9 +182,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="24dp"
+                    android:layout_marginBottom="32dp"
                     android:text="@string/text_voice"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/photoTitleTv" />
+                    app:layout_constraintTop_toBottomOf="@+id/introductionTitleEt" />
 
                 <TextView
                     android:id="@+id/videoTitleTv"
@@ -163,11 +195,97 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="24dp"
-                    android:layout_marginBottom="16dp"
                     android:text="@string/text_video"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/voiceTitleTv" />
+                    app:layout_constraintStart_toEndOf="@+id/button3"
+                    app:layout_constraintTop_toBottomOf="@+id/introductionTitleEt" />
+
+                <EditText
+                    android:id="@+id/breedTitleEt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="32dp"
+                    android:background="@android:color/transparent"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:inputType="textPersonName"
+                    android:text=""
+                    app:layout_constraintStart_toEndOf="@+id/breedTitleTv"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/sexTitleEt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:background="@android:color/transparent"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:inputType="textPersonName"
+                    android:text=""
+                    app:layout_constraintStart_toEndOf="@+id/sexTitleTv"
+                    app:layout_constraintTop_toBottomOf="@+id/breedTitleEt" />
+
+                <EditText
+                    android:id="@+id/birthTitleEt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:background="@android:color/transparent"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:inputType="textPersonName"
+                    android:text=""
+                    app:layout_constraintStart_toEndOf="@+id/birthTitleTv"
+                    app:layout_constraintTop_toBottomOf="@+id/sexTitleEt" />
+
+                <EditText
+                    android:id="@+id/introductionTitleEt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:background="@android:color/transparent"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:inputType="textPersonName"
+                    android:text=""
+                    app:layout_constraintStart_toEndOf="@+id/introductionTitleTv"
+                    app:layout_constraintTop_toBottomOf="@+id/birthTitleEt" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button3"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="#FFC107"
+                    android:elevation="10dp"
+                    android:gravity="center"
+                    android:text=""
+                    app:icon="@drawable/play_music"
+                    app:iconPadding="0dp"
+                    app:layout_constraintStart_toEndOf="@+id/voiceTitleTv"
+                    app:layout_constraintTop_toBottomOf="@+id/introductionTitleEt" />
+
+                <Button
+                    android:id="@+id/button4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="#FFC107"
+                    android:elevation="10dp"
+                    android:text="PLAY"
+                    app:icon="@drawable/play_video"
+                    app:layout_constraintStart_toEndOf="@+id/videoTitleTv"
+                    app:layout_constraintTop_toBottomOf="@+id/introductionTitleEt" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
