@@ -33,7 +33,9 @@ class HomeFragment : Fragment() {
         binding.viewModel = viewModel
 
         val recyclerView = binding.articleRv
-        val adapter = HomeAdapter()
+        val adapter = HomeAdapter(HomeAdapter.OnClickListener {
+            viewModel.navigateToContent(it)
+        })
 
 
         val a1 = Articles("001", "001001001001001001001001001001001001001", authorId = "hi0103")
@@ -58,6 +60,13 @@ class HomeFragment : Fragment() {
             it?.let {
                 findNavController().navigate(NavigationDirections.actionGlobalPostFragment())
                 viewModel.onDoneNavigate()
+            }
+        })
+
+        viewModel.navigateToContent.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                findNavController().navigate(NavigationDirections.actionGlobalArticleContentFragment(it))
+                viewModel.onDoneNavigateToContent()
             }
         })
 

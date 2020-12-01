@@ -1,21 +1,23 @@
 package com.rn1.gogoyo
 
+import android.nfc.Tag
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
-import com.google.android.material.bottomnavigation.BottomNavigationMenu
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.rn1.gogoyo.databinding.ActivityMainBinding
 import com.rn1.gogoyo.ext.getVmFactory
+import com.rn1.gogoyo.util.CurrentFragmentType
+import java.util.logging.Logger
+
+private const val TAG = "GoGoYo"
 
 class MainActivity : AppCompatActivity() {
 
@@ -59,11 +61,18 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.navigateToWalk.observe(this, Observer {
             it?.let {
-                if (it) {
-                    setUpWalkBottom()
-                }
+                setUpWalkBottom()
+                viewModel.onDoneNavigateToWalk()
             }
         })
+
+        // observe current fragment change, only for show info
+        viewModel.currentFragmentType.observe(this, Observer {
+            Log.d(TAG,"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+            Log.d(TAG,"[${viewModel.currentFragmentType.value}]")
+            Log.d(TAG,"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        })
+
 
 
         setUpBottomNav()
@@ -85,7 +94,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupNavController() {
         findNavController(R.id.myNavHostFragment).addOnDestinationChangedListener{ navController: NavController, navDestination: NavDestination, bundle: Bundle? ->
+            viewModel.currentFragmentType.value =  when (navController.currentDestination?.id) {
+                R.id.homeFragment -> CurrentFragmentType.HOME
+                R.id.articleContentFragment -> CurrentFragmentType.ARTICLE_CONTENT
+                R.id.postFragment -> CurrentFragmentType.POST_ARTICLE
+                R.id.walkFragment -> CurrentFragmentType.WALK
+                R.id.friendFragment -> CurrentFragmentType.FRIEND
+                R.id.friendCardsFragment -> CurrentFragmentType.FRIEND_CARD
+                R.id.friendListFragment -> CurrentFragmentType.FRIEND_LIST
+                R.id.friendChatFragment -> CurrentFragmentType.FRIEND_CHAT
+                R.id.myPetsFragment -> CurrentFragmentType.PROFILE_PET
 
+                else -> viewModel.currentFragmentType.value
+            }
         }
     }
 

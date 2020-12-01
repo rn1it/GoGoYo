@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rn1.gogoyo.databinding.ItemArticleBinding
 import com.rn1.gogoyo.model.Articles
 
-class HomeAdapter: ListAdapter<Articles, RecyclerView.ViewHolder>(ArticleDiffCallback) {
+class HomeAdapter(private val onClickListener: OnClickListener): ListAdapter<Articles, RecyclerView.ViewHolder>(ArticleDiffCallback) {
 
     class ArticleViewHolder(val binding: ItemArticleBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(articles: Articles){
@@ -30,7 +30,13 @@ class HomeAdapter: ListAdapter<Articles, RecyclerView.ViewHolder>(ArticleDiffCal
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val articleViewHolder = holder as ArticleViewHolder
         val article = getItem(position)
+
+        articleViewHolder.itemView.setOnClickListener {
+                onClickListener.onClick(article)
+        }
+
         articleViewHolder.bind(article)
+
     }
 
     companion object ArticleDiffCallback: DiffUtil.ItemCallback<Articles>(){
@@ -43,4 +49,9 @@ class HomeAdapter: ListAdapter<Articles, RecyclerView.ViewHolder>(ArticleDiffCal
         }
 
     }
+
+    class OnClickListener(val clickListener: (articles: Articles) -> Unit) {
+        fun onClick(articles: Articles) = clickListener(articles)
+    }
+
 }

@@ -11,10 +11,20 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
-        android:id="@+id/makeFriendsFragment"
+        android:id="@+id/friendCardsFragment"
         android:name="com.rn1.gogoyo.friend.cards.FriendCardsFragment"
-        android:label="fragment_make_friends"
+        android:label="fragment_friend_cards"
         tools:layout="@layout/fragment_friend_cards" />
+    <fragment
+        android:id="@+id/friendListFragment"
+        android:name="com.rn1.gogoyo.friend.list.FriendListFragment"
+        android:label="FriendListFragment"
+        tools:layout="@layout/fragment_friend_list"/>
+    <fragment
+        android:id="@+id/friendChatFragment"
+        android:name="com.rn1.gogoyo.friend.chat.FriendChatFragment"
+        android:label="FriendChatFragment"
+        tools:layout="@layout/fragment_friend_chat"/>
     <fragment
         android:id="@+id/myPetsFragment"
         android:name="com.rn1.gogoyo.mypets.MyPetsFragment"
@@ -40,12 +50,24 @@
         android:name="com.rn1.gogoyo.home.post.PostFragment"
         android:label="PostFragment"
         tools:layout="@layout/fragment_post"/>
+    <fragment
+        android:id="@+id/articleContentFragment"
+        android:name="com.rn1.gogoyo.home.content.ArticleContentFragment"
+        android:label="ArticleContentFragment"
+        tools:layout="@layout/fragment_article_content">
+        <argument
+            android:name="articleKey"
+            app:argType="com.rn1.gogoyo.model.Articles" />
+    </fragment>
 
     <action android:id="@+id/action_global_homeFragment" app:destination="@id/homeFragment" />
-    <action android:id="@+id/action_global_makeFriendsFragment" app:destination="@id/makeFriendsFragment" />
+    <action android:id="@+id/action_global_makeFriendsFragment" app:destination="@id/friendCardsFragment" />
     <action android:id="@+id/action_global_myPetsFragment" app:destination="@id/myPetsFragment" />
     <action android:id="@+id/action_global_walkFragment" app:destination="@id/walkFragment" />
     <action android:id="@+id/action_global_eventFragment" app:destination="@id/eventFragment" />
     <action android:id="@+id/action_global_friendFragment" app:destination="@id/friendFragment" />
     <action android:id="@+id/action_global_postFragment" app:destination="@id/postFragment" />
+    <action android:id="@+id/action_global_articleContentFragment" app:destination="@id/articleContentFragment" />
+    <action android:id="@+id/action_global_friendChatFragment" app:destination="@id/friendChatFragment" />
+    <action android:id="@+id/action_global_friendListFragment" app:destination="@id/friendListFragment" />
 </navigation>

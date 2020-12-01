@@ -7,6 +7,8 @@
         <variable
             name="viewModel"
             type="com.rn1.gogoyo.MainViewModel" />
+        <import type="com.rn1.gogoyo.util.CurrentFragmentType"/>
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -54,8 +56,7 @@
             android:id="@+id/coordinatorLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
-            tools:context=".MainActivity">
+            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.ARTICLE_CONTENT ? View.GONE : View.VISIBLE}">
 
             <com.google.android.material.bottomappbar.BottomAppBar
                 android:id="@+id/bottomAppBar"
@@ -99,6 +100,7 @@
             android:layout_height="56dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.ARTICLE_CONTENT ? View.GONE : View.VISIBLE}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
