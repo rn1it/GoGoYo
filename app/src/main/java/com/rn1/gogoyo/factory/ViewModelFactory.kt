@@ -3,6 +3,7 @@ package com.rn1.gogoyo.factory
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.rn1.gogoyo.MainViewModel
+import com.rn1.gogoyo.home.HomeViewModel
 import com.rn1.gogoyo.model.source.GogoyoRepository
 import com.rn1.gogoyo.mypets.MyPetsViewModel
 import com.rn1.gogoyo.walk.WalkViewModel
@@ -17,6 +18,9 @@ class ViewModelFactory constructor(
             when {
                 isAssignableFrom(MainViewModel::class.java) ->
                     MainViewModel(repository)
+
+                isAssignableFrom(HomeViewModel::class.java) ->
+                    HomeViewModel(repository)
 
                 isAssignableFrom(WalkViewModel::class.java) ->
                     WalkViewModel(repository)

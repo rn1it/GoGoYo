@@ -6,15 +6,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentHomeBinding
+import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.model.Articles
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
+    private val viewModel by viewModels<HomeViewModel> { getVmFactory() }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,6 +30,7 @@ class HomeFragment : Fragment() {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         binding.lifecycleOwner = this
+        binding.viewModel = viewModel
 
         val recyclerView = binding.articleRv
         val adapter = HomeAdapter()
@@ -46,6 +54,12 @@ class HomeFragment : Fragment() {
 
         adapter.submitList(list)
 
+        viewModel.navigateToPost.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                findNavController().navigate(NavigationDirections.actionGlobalPostFragment())
+                viewModel.onDoneNavigate()
+            }
+        })
 
 
         return binding.root

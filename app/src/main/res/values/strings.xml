@@ -19,4 +19,7 @@
     <string name="text_photo">照片</string>
     <string name="text_voice">聲音</string>
     <string name="text_video">影片</string>
+    <string name="text_title">標題</string>
+    <string name="text_content">內容</string>
+    <string name="text_post">發布</string>
 </resources>
