@@ -18,7 +18,7 @@
         <pl.droidsonroids.gif.GifImageView
             android:id="@+id/gifImageView2"
             android:layout_width="match_parent"
-            android:layout_height="1016dp"
+            android:layout_height="1048dp"
             android:src="@drawable/fly"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -65,6 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="64dp"
+            android:backgroundTint="#FFC107"
             android:text="開始散步"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

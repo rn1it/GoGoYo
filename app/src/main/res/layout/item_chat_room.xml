@@ -32,6 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
+            android:textColor="@color/black"
             android:text="@{chatRoom.user1Id}"
             app:layout_constraintStart_toEndOf="@+id/chatRoomFriendIv"
             app:layout_constraintTop_toTopOf="parent" />
@@ -42,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginBottom="8dp"
-            android:text="TextView"
+            android:text="@{chatRoom.lastMsg}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/chatRoomFriendIv" />
 
@@ -52,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginBottom="8dp"
-            android:text="TextView"
+            android:text="12月1日 01:36"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/chatRoomLastMsgTv" />
 

@@ -31,9 +31,9 @@ class FriendChatFragment : Fragment() {
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
 
-        val chat1 = Chatroom("001", "dog1", "dog2")
-        val chat2 = Chatroom("002", "dog2", "dog3")
-        val chat3 = Chatroom("003", "dog3", "dog4")
+        val chat1 = Chatroom("001", "dog1", "dog2", lastMsg = "回我訊息")
+        val chat2 = Chatroom("002", "dog2", "dog3", lastMsg = "你: 理我一下")
+        val chat3 = Chatroom("003", "dog3", "dog4", lastMsg = "你: 拜託")
 
         val list = mutableListOf<Chatroom>()
         list.add(chat1)

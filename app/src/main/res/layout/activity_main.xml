@@ -82,13 +82,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/app_name"
+                android:elevation="@dimen/elevation_all"
+                android:onClick="@{() -> viewModel.onNavigateToWalk()}"
                 android:src="@drawable/dog_walk_cool"
+                app:backgroundTint="#4CAF50"
                 app:fabCustomSize="70dp"
                 app:fabSize="auto"
                 app:layout_anchor="@id/bottomAppBar"
-                app:maxImageSize="40dp"
-                android:elevation="@dimen/elevation_all"
-                android:onClick="@{() -> viewModel.onNavigateToWalk()}"/>
+                app:maxImageSize="40dp" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

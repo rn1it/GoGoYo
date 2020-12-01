@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentFriendListBinding
+import com.rn1.gogoyo.model.Friends
 
 
 class FriendListFragment : Fragment() {
@@ -22,8 +23,23 @@ class FriendListFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_friend_list, container, false)
         binding.lifecycleOwner = this
 
+        val recyclerView = binding.friendListRv
+        val adapter = FriendListAdapter()
 
+        recyclerView.adapter = adapter
 
+        val f1 = Friends()
+        val list = mutableListOf<Friends>()
+
+        list.add(f1)
+        list.add(f1)
+        list.add(f1)
+        list.add(f1)
+        list.add(f1)
+        list.add(f1)
+        list.add(f1)
+
+        adapter.submitList(list)
 
         return binding.root
     }

@@ -88,7 +88,7 @@ class MyPetsFragment : Fragment() {
         // listen page change and change data for selected pet
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
             override fun onPageSelected(position: Int) {
-
+                binding.breedTitleEt.setText(list[position].name)
                 Log.d("onPageSelected", "this is : $position")
             }
         })
