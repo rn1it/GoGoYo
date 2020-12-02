@@ -1,20 +1,29 @@
-package com.rn1.gogoyo.home.post
+package com.rn1.gogoyo.walk
 
+import android.app.Activity
+import android.app.Application
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.databinding.ItemPetImageLayoutBinding
 import com.rn1.gogoyo.model.Pets
 
-class PostAdapter: ListAdapter<Pets, RecyclerView.ViewHolder>(PetsImageDiffCallback) {
+class WalkPetAdapter: ListAdapter<Pets, RecyclerView.ViewHolder>(PetsImageDiffCallback) {
 
     class PetImageViewHolder(val binding: ItemPetImageLayoutBinding): RecyclerView.ViewHolder(binding.root){
+
         fun bind(pets: Pets){
             binding.pets = pets
             binding.petsIv.outlineProvider = MapOutlineProvider()
+
+            val dp =  TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50F, GogoyoApplication.instance.resources.displayMetrics)
+            binding.petsIv.layoutParams.width = dp.toInt()
+            binding.petsIv.layoutParams.height = dp.toInt()
             binding.executePendingBindings()
         }
 
@@ -45,4 +54,5 @@ class PostAdapter: ListAdapter<Pets, RecyclerView.ViewHolder>(PetsImageDiffCallb
         }
 
     }
+
 }

@@ -1,7 +1,11 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <!--elevation-->
     <dimen name="elevation_all">4dp</dimen>
     <dimen name="elevation_more">10dp</dimen>
     <!-- map-->
     <dimen name="radius_map_outline">60dp</dimen>
+
+    <!-- recyclerview cell margin -->
+    <dimen name="cell_margin_8dp">8dp</dimen>
 </resources>

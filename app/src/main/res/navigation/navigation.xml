@@ -59,6 +59,10 @@
             android:name="articleKey"
             app:argType="com.rn1.gogoyo.model.Articles" />
     </fragment>
+    <fragment
+        android:id="@+id/walkStartFragment"
+        android:name="com.rn1.gogoyo.walk.start.WalkStartFragment"
+        android:label="WalkStartFragment" />
 
     <action android:id="@+id/action_global_homeFragment" app:destination="@id/homeFragment" />
     <action android:id="@+id/action_global_makeFriendsFragment" app:destination="@id/friendCardsFragment" />
@@ -70,4 +74,5 @@
     <action android:id="@+id/action_global_articleContentFragment" app:destination="@id/articleContentFragment" />
     <action android:id="@+id/action_global_friendChatFragment" app:destination="@id/friendChatFragment" />
     <action android:id="@+id/action_global_friendListFragment" app:destination="@id/friendListFragment" />
+    <action android:id="@+id/action_global_walkStartFragment" app:destination="@id/walkStartFragment"/>
 </navigation>

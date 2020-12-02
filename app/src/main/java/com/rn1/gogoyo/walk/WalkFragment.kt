@@ -10,14 +10,18 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentWalkBinding
 import com.rn1.gogoyo.ext.getVmFactory
+import com.rn1.gogoyo.model.Pets
 
 
 class WalkFragment : Fragment() {
@@ -65,6 +69,25 @@ class WalkFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_walk, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
+        viewModel.navigateToStartWalk.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                findNavController().navigate(NavigationDirections.actionGlobalWalkStartFragment())
+                viewModel.onDoneNavigateToStartWalk()
+            }
+        })
+
+
+        val pet1 = Pets("001","111")
+        val list = mutableListOf<Pets>()
+        list.add(pet1)
+
+
+        val recyclerView = binding.walkDogSelectRv
+        val adapter = WalkPetAdapter()
+
+        recyclerView.adapter = adapter
+        adapter.submitList(list)
 
         return binding.root
     }

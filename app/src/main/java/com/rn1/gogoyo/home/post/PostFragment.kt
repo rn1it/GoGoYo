@@ -23,7 +23,6 @@ class PostFragment : Fragment() {
         binding.lifecycleOwner = this
 
         val pet1 = Pets("001","111")
-
         val list = mutableListOf<Pets>()
         list.add(pet1)
         list.add(pet1)
@@ -31,7 +30,7 @@ class PostFragment : Fragment() {
         list.add(pet1)
 
         val recyclerView = binding.petsImageRv
-        val adapter = PostAdapter()
+        val adapter = PostPetAdapter()
 
         recyclerView.adapter = adapter
 
