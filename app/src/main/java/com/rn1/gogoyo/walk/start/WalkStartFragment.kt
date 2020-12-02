@@ -6,17 +6,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentWalkStartBinding
+import com.rn1.gogoyo.ext.getVmFactory
 
 class WalkStartFragment : Fragment() {
 
     private lateinit var binding: FragmentWalkStartBinding
+    private val viewModel by viewModels<WalkStartViewModel> { getVmFactory() }
 
     private val callback = OnMapReadyCallback { googleMap ->
 
@@ -31,10 +37,15 @@ class WalkStartFragment : Fragment() {
     ): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_walk_start, container, false)
+        binding.viewModel = viewModel
 
 
-
-
+        viewModel.navigateToEndWalk.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                findNavController().navigate(NavigationDirections.actionGlobalWalkEndFragment())
+                viewModel.onDoneNavigateToEndWalk()
+            }
+        })
 
 
         // Inflate the layout for this fragment

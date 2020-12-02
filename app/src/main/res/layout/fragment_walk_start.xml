@@ -4,7 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.rn1.gogoyo.walk.start.WalkStartViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -132,6 +134,7 @@
                 android:layout_marginBottom="4dp"
                 android:backgroundTint="#FFC107"
                 android:text="結束散步"
+                android:onClick="@{() -> viewModel.onNavigateToEndWalk()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
