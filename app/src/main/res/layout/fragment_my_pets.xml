@@ -14,6 +14,29 @@
         android:layout_height="match_parent"
         tools:context=".mypets.MyPetsFragment">
 
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/profileTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tabSelectedTextColor="@color/black_3f3a3a"
+            app:tabTextColor="@color/black_3f3a3a"
+            app:tabIndicatorColor="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            android:elevation="@dimen/elevation_all">
+
+            <com.google.android.material.tabs.TabItem
+                android:icon="@drawable/dog_profile"
+                android:layout_height="match_parent"
+                android:layout_width="100dp" />
+
+            <com.google.android.material.tabs.TabItem
+                android:icon="@drawable/profile"
+                android:layout_height="match_parent"
+                android:layout_width="100dp" />
+        </com.google.android.material.tabs.TabLayout>
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout3"
@@ -22,7 +45,7 @@
             android:background="#FBE7AA"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/profileTabLayout">
 
 
             <androidx.viewpager2.widget.ViewPager2

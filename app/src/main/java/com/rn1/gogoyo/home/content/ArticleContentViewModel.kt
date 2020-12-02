@@ -1,5 +1,6 @@
 package com.rn1.gogoyo.home.content
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
@@ -17,4 +18,13 @@ class ArticleContentViewModel(
     val article : LiveData<Articles>
     get() = _article
 
+    private val _leaveArticle = MediatorLiveData<Boolean>()
+
+    val leaveArticle : LiveData<Boolean>
+        get() = _leaveArticle
+
+    fun onLeaveArticle() {
+        Log.d("aaaa","aaaa")
+        _leaveArticle.value = true
+    }
 }

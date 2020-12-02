@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentArticleContentBinding
 import com.rn1.gogoyo.ext.getVmFactory
@@ -25,7 +27,16 @@ class ArticleContentFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+        val viewPager = binding.articleImageViewPager
+        val adapter = ArticleContentAdapter()
+        viewPager.adapter = adapter
 
+
+        viewModel.leaveArticle.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                if (it) findNavController().popBackStack()
+            }
+        })
 
 
 

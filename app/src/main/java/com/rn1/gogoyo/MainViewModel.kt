@@ -1,5 +1,6 @@
 package com.rn1.gogoyo
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,12 +9,17 @@ import com.rn1.gogoyo.util.CurrentFragmentType
 
 class MainViewModel(private val repository: GogoyoRepository): ViewModel() {
 
+    val currentFragmentType =  MutableLiveData<CurrentFragmentType>()
+
     private val _navigateToWalk = MutableLiveData<Boolean>()
 
     val navigateToWalk: LiveData<Boolean>
         get() = _navigateToWalk
 
-    val currentFragmentType =  MutableLiveData<CurrentFragmentType>()
+    private val _popBack = MutableLiveData<Boolean>()
+
+    val popBack: LiveData<Boolean>
+        get() = _popBack
 
     fun onNavigateToWalk(){
         _navigateToWalk.value = true
@@ -22,4 +28,9 @@ class MainViewModel(private val repository: GogoyoRepository): ViewModel() {
     fun onDoneNavigateToWalk(){
         _navigateToWalk.value = null
     }
+
+    fun back(){
+        _popBack.value = true
+    }
+
 }

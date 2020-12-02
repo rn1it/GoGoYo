@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.rn1.gogoyo.databinding.ActivityMainBinding
@@ -24,7 +25,6 @@ class MainActivity : AppCompatActivity() {
     private val db = FirebaseFirestore.getInstance()
     private lateinit var binding: ActivityMainBinding
     private val viewModel by viewModels<MainViewModel> { getVmFactory() }
-
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         val navController =  findNavController(R.id.myNavHostFragment)
@@ -59,13 +59,6 @@ class MainActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        viewModel.navigateToWalk.observe(this, Observer {
-            it?.let {
-                setUpWalkBottom()
-                viewModel.onDoneNavigateToWalk()
-            }
-        })
-
         // observe current fragment change, only for show info
         viewModel.currentFragmentType.observe(this, Observer {
             Log.d(TAG,"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
@@ -73,7 +66,18 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG,"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         })
 
+        viewModel.navigateToWalk.observe(this, Observer {
+            it?.let {
+                setUpWalkBottom()
+                viewModel.onDoneNavigateToWalk()
+            }
+        })
 
+        viewModel.popBack.observe(this, Observer {
+            it?.let {
+                findNavController(R.id.myNavHostFragment).popBackStack()
+            }
+        })
 
         setUpBottomNav()
         setupNavController()
@@ -109,5 +113,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
 
 }
