@@ -3,6 +3,8 @@ package com.rn1.gogoyo.factory
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.rn1.gogoyo.MainViewModel
+import com.rn1.gogoyo.friend.chat.FriendChatViewModel
+import com.rn1.gogoyo.friend.chat.chatRoom.ChatRoomViewModel
 import com.rn1.gogoyo.home.HomeViewModel
 import com.rn1.gogoyo.model.source.GogoyoRepository
 import com.rn1.gogoyo.mypets.MyPetsViewModel
@@ -43,6 +45,12 @@ class ViewModelFactory constructor(
 
                 isAssignableFrom(ProfileUserViewModel::class.java) ->
                     ProfileUserViewModel(repository)
+
+                isAssignableFrom(ChatRoomViewModel::class.java) ->
+                    ChatRoomViewModel(repository)
+
+                isAssignableFrom(FriendChatViewModel::class.java) ->
+                    FriendChatViewModel(repository)
 
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

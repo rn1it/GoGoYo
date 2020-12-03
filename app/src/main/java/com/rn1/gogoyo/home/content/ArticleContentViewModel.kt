@@ -24,7 +24,6 @@ class ArticleContentViewModel(
         get() = _leaveArticle
 
     fun onLeaveArticle() {
-        Log.d("aaaa","aaaa")
         _leaveArticle.value = true
     }
 }

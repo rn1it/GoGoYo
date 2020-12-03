@@ -6,16 +6,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentFriendChatBinding
+import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.model.Chatroom
 
 
 class FriendChatFragment : Fragment() {
 
     private lateinit var binding: FragmentFriendChatBinding
+    private val viewModel by viewModels<FriendChatViewModel> { getVmFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,7 +32,9 @@ class FriendChatFragment : Fragment() {
         binding.lifecycleOwner = this
 
         val recyclerView = binding.chatListRv
-        val adapter = FriendChatAdapter()
+        val adapter = FriendChatAdapter(FriendChatAdapter.OnClickListener{
+            viewModel.navigateToChatRoom()
+        })
 
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
@@ -42,6 +50,14 @@ class FriendChatFragment : Fragment() {
 
         adapter.submitList(list)
 
+
+
+        viewModel.navigateToChatRoom.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                findNavController().navigate(NavigationDirections.actionGlobalChatRoomFragment())
+                viewModel.onDoneNavigateToChatRoom()
+            }
+        })
 
         return binding.root
     }

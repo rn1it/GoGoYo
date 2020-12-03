@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.nav_event -> {
-                navController.navigate(NavigationDirections.actionGlobalEventFragment())
+                navController.navigate(NavigationDirections.actionGlobalChatRoomFragment())
                 return@OnNavigationItemSelectedListener true
             }
             R.id.nav_friend -> {

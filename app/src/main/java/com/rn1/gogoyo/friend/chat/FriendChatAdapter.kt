@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rn1.gogoyo.databinding.ItemChatRoomBinding
 import com.rn1.gogoyo.model.Chatroom
 
-class FriendChatAdapter: ListAdapter<Chatroom, RecyclerView.ViewHolder>(ChatRoomDiffCallback) {
+class FriendChatAdapter(private val onClickListener: OnClickListener): ListAdapter<Chatroom, RecyclerView.ViewHolder>(ChatRoomDiffCallback) {
 
     class ChatRoomViewHolder(val binding: ItemChatRoomBinding): RecyclerView.ViewHolder(binding.root){
 
@@ -32,6 +32,10 @@ class FriendChatAdapter: ListAdapter<Chatroom, RecyclerView.ViewHolder>(ChatRoom
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val chatRoomViewHolder = holder as ChatRoomViewHolder
         val chatRoom = getItem(position)
+        chatRoomViewHolder.itemView.setOnClickListener {
+            onClickListener.onClick()
+        }
+
         chatRoomViewHolder.bind(chatRoom)
     }
 
@@ -46,5 +50,8 @@ class FriendChatAdapter: ListAdapter<Chatroom, RecyclerView.ViewHolder>(ChatRoom
 
     }
 
+    class OnClickListener(val clickListener: () -> Unit) {
+        fun onClick() = clickListener()
+    }
 
 }
