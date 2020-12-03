@@ -1,26 +1,26 @@
-package com.rn1.gogoyo.mypets
+package com.rn1.gogoyo.mypets.pet
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.rn1.gogoyo.model.source.GogoyoRepository
 
-class MyPetsViewModel(val repository: GogoyoRepository): ViewModel() {
+class ProfilePetViewModel(val repository: GogoyoRepository): ViewModel() {
 
     private val _onEdit = MutableLiveData<Boolean>()
 
     val onEdit: LiveData<Boolean>
-        get() = _onEdit
+    get() = _onEdit
 
     private val _onSureEdit = MutableLiveData<Boolean>()
 
     val onSureEdit: LiveData<Boolean>
-        get() = _onSureEdit
+    get() = _onSureEdit
 
     private val _onCancelEdit = MutableLiveData<Boolean>()
 
     val onCancelEdit: LiveData<Boolean>
-        get() = _onCancelEdit
+    get() = _onCancelEdit
 
 
     fun edit(){

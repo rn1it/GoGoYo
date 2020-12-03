@@ -20,7 +20,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/friendViewPager"
             android:layout_width="match_parent"

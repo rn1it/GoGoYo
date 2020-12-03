@@ -1,11 +1,12 @@
-package com.rn1.gogoyo.mypets
+package com.rn1.gogoyo.mypets.user
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.rn1.gogoyo.model.Articles
 import com.rn1.gogoyo.model.source.GogoyoRepository
 
-class MyPetsViewModel(val repository: GogoyoRepository): ViewModel() {
+class ProfileUserViewModel(val repository: GogoyoRepository): ViewModel() {
 
     private val _onEdit = MutableLiveData<Boolean>()
 
@@ -22,6 +23,10 @@ class MyPetsViewModel(val repository: GogoyoRepository): ViewModel() {
     val onCancelEdit: LiveData<Boolean>
         get() = _onCancelEdit
 
+    private val _navigateToContent = MutableLiveData<Articles>()
+
+    val navigateToContent: LiveData<Articles>
+        get() = _navigateToContent
 
     fun edit(){
         _onEdit.value = true
@@ -47,4 +52,11 @@ class MyPetsViewModel(val repository: GogoyoRepository): ViewModel() {
         _onCancelEdit.value = null
     }
 
+    fun navigateToContent(articles: Articles){
+        _navigateToContent.value = articles
+    }
+
+    fun onDoneNavigateToContent(){
+        _navigateToContent.value = null
+    }
 }

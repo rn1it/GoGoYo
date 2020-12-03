@@ -1,4 +1,4 @@
-package com.rn1.gogoyo.mypets
+package com.rn1.gogoyo.mypets.pet
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -18,16 +18,20 @@ class MyPetsPagerAdapter: ListAdapter<Pets, RecyclerView.ViewHolder>(PetsDiffCal
             binding.executePendingBindings()
         }
         companion object{
-            fun from(parent: ViewGroup): PetsViewHolder{
+            fun from(parent: ViewGroup): PetsViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = ListPagerItemPetBinding.inflate(layoutInflater, parent, false)
-                return PetsViewHolder(binding)
+                return PetsViewHolder(
+                    binding
+                )
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return PetsViewHolder.from(parent)
+        return PetsViewHolder.from(
+            parent
+        )
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

@@ -14,62 +14,76 @@
         android:layout_height="match_parent"
         tools:context=".walk.WalkFragment">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/walkTabLayout"
+        <!--        <com.google.android.material.tabs.TabLayout-->
+        <!--            android:id="@+id/walkTabLayout"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:tabSelectedTextColor="@color/black_3f3a3a"-->
+        <!--            app:tabTextColor="@color/black_3f3a3a"-->
+        <!--            app:tabIndicatorColor="@color/white"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            android:elevation="@dimen/elevation_all">-->
+
+
+        <!--            <com.google.android.material.tabs.TabItem-->
+
+        <!--                android:text="散步紀錄"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                android:layout_width="100dp" />-->
+
+        <!--            <com.google.android.material.tabs.TabItem-->
+
+        <!--                android:text="數據統計"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                android:layout_width="100dp" />-->
+
+
+        <!--        </com.google.android.material.tabs.TabLayout>-->
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/btConst"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:elevation="@dimen/elevation_more"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:tabSelectedTextColor="@color/black_3f3a3a"
-            app:tabTextColor="@color/black_3f3a3a"
-            app:tabIndicatorColor="@color/white"
-            app:layout_constraintTop_toTopOf="parent"
-            android:elevation="@dimen/elevation_all">
+            app:layout_constraintTop_toTopOf="parent">
 
-
-            <com.google.android.material.tabs.TabItem
-
+            <Button
+                android:id="@+id/button6"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                android:elevation="@dimen/elevation_all"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:textColor="@color/black_3f3a3a"
                 android:text="散步紀錄"
-                android:layout_height="match_parent"
-                android:layout_width="100dp" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/button7"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.tabs.TabItem
-
+            <Button
+                android:id="@+id/button7"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                android:elevation="@dimen/elevation_all"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:textColor="@color/black_3f3a3a"
                 android:text="數據統計"
-                android:layout_height="match_parent"
-                android:layout_width="100dp" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/button6"
+                app:layout_constraintTop_toTopOf="@+id/button6" />
 
 
-        </com.google.android.material.tabs.TabLayout>
-
-
-
-
-
-<!--        <Button-->
-<!--            android:id="@+id/button6"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="8dp"-->
-<!--            android:background="null"-->
-<!--            android:backgroundTint="@android:color/transparent"-->
-<!--            android:elevation="@dimen/elevation_all"-->
-<!--            android:text="散步紀錄"-->
-<!--            app:layout_constraintEnd_toStartOf="@+id/button7"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--        <Button-->
-<!--            android:id="@+id/button7"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:background="null"-->
-<!--            android:backgroundTint="@android:color/transparent"-->
-<!--            android:elevation="@dimen/elevation_all"-->
-<!--            android:text="數據統計"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toEndOf="@+id/button6"-->
-<!--            app:layout_constraintTop_toTopOf="@+id/button6" />-->
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -83,7 +97,7 @@
             android:outlineProvider="@{viewModel.outlineProvider}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/walkTabLayout">
+            app:layout_constraintTop_toBottomOf="@id/btConst">
 
             <fragment
                 android:id="@+id/map"
@@ -100,17 +114,17 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-<!--        <Button-->
-<!--            android:id="@+id/button"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginBottom="64dp"-->
-<!--            android:backgroundTint="#FFC107"-->
-<!--            android:onClick="@{() -> viewModel.onNavigateToStartWalk()}"-->
-<!--            android:text="開始散步"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent" />-->
+        <!--        <Button-->
+        <!--            android:id="@+id/button"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginBottom="64dp"-->
+        <!--            android:backgroundTint="#FFC107"-->
+        <!--            android:onClick="@{() -> viewModel.onNavigateToStartWalk()}"-->
+        <!--            android:text="開始散步"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent" />-->
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
@@ -150,7 +164,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="24dp"
-                    android:backgroundTint="#4CAF50"
+                    android:backgroundTint="#FF9800"
                     android:minWidth="0dp"
                     android:onClick="@{() -> viewModel.onNavigateToStartWalk()}"
                     android:text="Go!"

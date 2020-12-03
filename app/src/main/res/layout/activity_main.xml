@@ -19,9 +19,9 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:background="@color/white"
-            android:elevation="@dimen/elevation_all"
             android:layout_height="60dp"
+            android:background="#FFC107"
+            android:elevation="@dimen/elevation_all"
             android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.ARTICLE_CONTENT ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,12 +33,12 @@
                 android:layout_height="30dp"
                 android:layout_gravity="start"
                 android:letterSpacing="0.15"
+                android:onClick="@{() -> viewModel.back()}"
                 android:src="@drawable/arrow_back"
                 android:text="@string/app_name"
                 android:textColor="@color/black_3f3a3a"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:onClick="@{() -> viewModel.back()}"
                 android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE  ? View.VISIBLE : View.GONE}"
                 tools:layout_editor_absoluteX="16dp"
                 tools:layout_editor_absoluteY="18dp" />
@@ -47,27 +47,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:textStyle="bold"
-                android:textSize="20sp"
+                android:letterSpacing="0.15"
                 android:paddingStart="10dp"
                 android:text="建立動態"
+                android:fontFamily="@font/jf_openhuninn"
                 android:textColor="@color/black_3f3a3a"
-                android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.VISIBLE : View.GONE}"
-                android:letterSpacing="0.15"/>
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.VISIBLE : View.GONE}" />
 
             <TextView
                 android:id="@+id/toolbarTitleTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.currentFragmentType.value}"
                 android:layout_gravity="center"
-                android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.GONE : View.VISIBLE}"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:textColor="@color/black_3f3a3a"
+                android:fontFamily="@font/jf_openhuninn"
                 android:letterSpacing="0.15"
-                tools:text="GoGoYo"
-                />
+                android:text="@{viewModel.currentFragmentType.value}"
+                android:textColor="@color/black_3f3a3a"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.GONE : View.VISIBLE}"
+                tools:text="GoGoYo" />
 
             <Button
                 android:id="@+id/button5"
@@ -76,9 +77,9 @@
                 android:layout_gravity="end"
                 android:layout_marginEnd="8dp"
                 android:backgroundTint="#ffffff"
-                android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.VISIBLE : View.GONE}"
                 android:elevation="@dimen/elevation_more"
-                android:text="@string/text_post" />
+                android:text="@string/text_post"
+                android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.VISIBLE : View.GONE}" />
 
 
         </androidx.appcompat.widget.Toolbar>
@@ -133,7 +134,7 @@
                 android:elevation="@dimen/elevation_all"
                 android:onClick="@{() -> viewModel.onNavigateToWalk()}"
                 android:src="@drawable/dog_walk_cool"
-                app:backgroundTint="#4CAF50"
+                app:backgroundTint="#FFC107"
                 app:fabCustomSize="70dp"
                 app:fabSize="auto"
                 app:layout_anchor="@id/bottomAppBar"

@@ -1,0 +1,59 @@
+package com.rn1.gogoyo.mypets.user
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.rn1.gogoyo.databinding.ItemArticleBinding
+import com.rn1.gogoyo.databinding.ItemImageBinding
+import com.rn1.gogoyo.home.HomeViewModel
+import com.rn1.gogoyo.model.Articles
+
+class UserArticleAdapter(private val onClickListener: OnClickListener): ListAdapter<Articles, RecyclerView.ViewHolder>(ArticleDiffCallback) {
+
+    class ArticleViewHolder(val binding: ItemImageBinding): RecyclerView.ViewHolder(binding.root){
+        fun bind(articles: Articles){
+            binding.article = articles
+            binding.executePendingBindings()
+        }
+
+        companion object{
+            fun from(parent: ViewGroup): ArticleViewHolder{
+                return ArticleViewHolder(ItemImageBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            }
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return ArticleViewHolder.from(parent)
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val articleViewHolder = holder as ArticleViewHolder
+        val article = getItem(position)
+
+        articleViewHolder.itemView.setOnClickListener {
+                onClickListener.onClick(article)
+        }
+
+        articleViewHolder.bind(article)
+
+    }
+
+    companion object ArticleDiffCallback: DiffUtil.ItemCallback<Articles>(){
+        override fun areItemsTheSame(oldItem: Articles, newItem: Articles): Boolean {
+            return oldItem === newItem
+        }
+
+        override fun areContentsTheSame(oldItem: Articles, newItem: Articles): Boolean {
+            return oldItem == newItem
+        }
+
+    }
+
+    class OnClickListener(val clickListener: (articles: Articles) -> Unit) {
+        fun onClick(articles: Articles) = clickListener(articles)
+    }
+
+}
