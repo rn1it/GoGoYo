@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import com.google.android.material.tabs.TabLayoutMediator
 import com.rn1.gogoyo.R
@@ -12,6 +13,7 @@ import com.rn1.gogoyo.databinding.FragmentFriendBinding
 import com.rn1.gogoyo.friend.cards.FriendCardsFragment
 import com.rn1.gogoyo.friend.chat.FriendChatFragment
 import com.rn1.gogoyo.friend.list.FriendListFragment
+import com.rn1.gogoyo.model.Articles
 
 class FriendFragment : Fragment() {
 
@@ -46,8 +48,7 @@ class FriendFragment : Fragment() {
             viewPager.currentItem = tab.position
         }.attach()
 
-
-
         return binding.root
     }
+
 }

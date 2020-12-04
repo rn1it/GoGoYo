@@ -12,18 +12,21 @@
         android:layout_height="match_parent"
         tools:context=".friend.list.FriendListFragment">
 
-
-        <TextView
-            android:id="@+id/friendListSearchBar"
+        <SearchView
+            android:id="@+id/friendListSearchView"
             android:layout_width="0dp"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:text="this is search bar"
+            android:layout_marginBottom="8dp"
+            android:background="@color/white"
+            android:elevation="@dimen/elevation_more"
+            app:layout_constraintBottom_toTopOf="@+id/friendListRv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:queryHint="Search" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/friendListRv"
@@ -33,7 +36,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/friendListSearchBar" />
+            app:layout_constraintTop_toBottomOf="@+id/friendListSearchView" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
