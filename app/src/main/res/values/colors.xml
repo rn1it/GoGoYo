@@ -6,4 +6,5 @@
     <color name="white">#ffffff</color>
     <color name="black_3f3a3a">#3f3a3a</color>
     <color name="black">#000000</color>
+    <color name="app_main_color">#FFC107</color>
 </resources>

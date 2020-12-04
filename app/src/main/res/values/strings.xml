@@ -22,4 +22,7 @@
     <string name="text_title">標題</string>
     <string name="text_content">內容</string>
     <string name="text_post">發佈</string>
+    <string name="stop_count">暫停散步</string>
+    <string name="countinue_count">繼續散步</string>
+    <string name="time_format">00:00:00</string>
 </resources>
