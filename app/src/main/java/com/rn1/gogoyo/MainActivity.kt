@@ -1,6 +1,6 @@
 package com.rn1.gogoyo
 
-import android.nfc.Tag
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
@@ -10,16 +10,15 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.rn1.gogoyo.databinding.ActivityMainBinding
 import com.rn1.gogoyo.ext.getVmFactory
+import com.rn1.gogoyo.model.Users
 import com.rn1.gogoyo.util.CurrentFragmentType
-import java.util.logging.Logger
+
 
 private const val TAG = "GoGoYo"
-
 class MainActivity : AppCompatActivity() {
 
     private val db = FirebaseFirestore.getInstance()
@@ -53,6 +52,32 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val user = Users("","")
+        val users = db.collection("users")
+        val document = users.document()
+        user.id = document.id
+
+
+
+        //Login Check
+        if (!UserManager.isLoggedIn) {
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
+        else {
+            Log.d(TAG, "jlkjlkjlkjlk ${UserManager.userUID}")
+
+            document
+                .set(user)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d(TAG, "asasasas ${user}")
+                    } else {
+
+                    }
+                }
+
+        }
 
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -113,6 +138,5 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 
 }
