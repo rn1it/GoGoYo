@@ -1,5 +1,9 @@
 package com.rn1.gogoyo.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class Users(
     val id: String,
     val name: String,
@@ -8,4 +12,4 @@ data class Users(
     val currentLat: Double? = null,
     val currentLon: Double? = null,
     val isWalking: Boolean = false
-)
+): Parcelable

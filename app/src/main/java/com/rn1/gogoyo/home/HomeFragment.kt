@@ -18,7 +18,7 @@ import com.rn1.gogoyo.databinding.FragmentHomeBinding
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.model.Articles
 
-class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
+class HomeFragment : Fragment(){
 
     private lateinit var binding: FragmentHomeBinding
     private val viewModel by viewModels<HomeViewModel> { getVmFactory() }
@@ -41,10 +41,10 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
         })
 
 
-        val a1 = Articles("001", "001001001001001001001001001001001001001", authorId = "hi0103")
-        val a2 = Articles("002", "002", authorId = "hi0103")
-        val a3 = Articles("0031", "0031", authorId = "hi0103")
-        val a4 = Articles("0041", "004100410041004100410041004100410041004100410041004100410041", authorId = "hi0103")
+        val a1 = Articles("001", "001001001001001001001001001001001001001")
+        val a2 = Articles("002", "002")
+        val a3 = Articles("0031", "0031")
+        val a4 = Articles("0041", "004100410041004100410041004100410041004100410041004100410041")
 
         val list = mutableListOf<Articles>()
         list.add(a1)
@@ -73,15 +73,34 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
             }
         })
 
+        binding.searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?) = false
+
+            override fun onQueryTextChange(query: String): Boolean {
+                adapter.submitList(filter(list, query))
+                return true
+            }
+        })
 
         return binding.root
     }
 
-    override fun onQueryTextSubmit(query: String?): Boolean {
-        TODO("Not yet implemented")
+    // return query list
+    fun filter(list: List<Articles>, query: String): List<Articles> {
+
+        val lowerCaseQueryString = query.toLowerCase()
+        val filteredList = mutableListOf<Articles>()
+
+        for (article in list) {
+            val author = article.id.toLowerCase()
+            val content = article.content ?: "" .toLowerCase()
+
+            if (author.contains(lowerCaseQueryString) || content.contains(lowerCaseQueryString)) {
+                filteredList.add(article)
+            }
+        }
+
+        return filteredList
     }
 
-    override fun onQueryTextChange(query: String?): Boolean {
-        TODO("Not yet implemented")
-    }
 }

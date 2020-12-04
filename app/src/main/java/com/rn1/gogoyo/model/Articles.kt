@@ -9,7 +9,7 @@ data class Articles(
     val id: String,
     val title: String,
     val content: String? = null,
-    val authorId: String? = null,
+    val author: Users? = null,
     val createdTime: Long? = null,
     val images: List<File>? = null,
     val like: Int? = null
