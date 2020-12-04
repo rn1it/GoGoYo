@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -16,6 +17,8 @@ import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentFriendChatBinding
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.model.Chatroom
+import com.rn1.gogoyo.model.Friends
+import java.util.*
 
 
 class FriendChatFragment : Fragment() {
@@ -59,6 +62,32 @@ class FriendChatFragment : Fragment() {
             }
         })
 
+        binding.friendChatListSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?) = false
+
+            override fun onQueryTextChange(query: String): Boolean {
+                adapter.submitList(filter(list, query))
+                return true
+            }
+        })
+
         return binding.root
+    }
+
+    // return query list
+    fun filter(list: List<Chatroom>, query: String): List<Chatroom> {
+
+        val lowerCaseQueryString = query.toLowerCase(Locale.ROOT)
+        val filteredList = mutableListOf<Chatroom>()
+
+        for (chatRoom in list) {
+            val name = chatRoom.user1Id.toLowerCase(Locale.ROOT)
+            val lastMsg = chatRoom.lastMsg ?: "".toLowerCase(Locale.ROOT)
+            if (name.contains(lowerCaseQueryString)) {
+                filteredList.add(chatRoom)
+            }
+        }
+
+        return filteredList
     }
 }
