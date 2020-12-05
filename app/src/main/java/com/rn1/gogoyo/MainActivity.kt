@@ -14,7 +14,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.rn1.gogoyo.databinding.ActivityMainBinding
 import com.rn1.gogoyo.ext.getVmFactory
-import com.rn1.gogoyo.model.Users
 import com.rn1.gogoyo.util.CurrentFragmentType
 
 
@@ -53,30 +52,34 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val user = Users("","")
-        val users = db.collection("users")
-        val document = users.document()
-        user.id = document.id
-
-
+//        val user = Users(UserManager.userUID!!,"")
+//        val users = db.collection("users")
+//        val document = users.document()
+//        user.id = document.id
 
         //Login Check
         if (!UserManager.isLoggedIn) {
             startActivity(Intent(this, LoginActivity::class.java))
         }
         else {
-            Log.d(TAG, "jlkjlkjlkjlk ${UserManager.userUID}")
+//            Log.d(TAG, "jlkjlkjlkjlk ${UserManager.userUID}")
 
-            document
-                .set(user)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Log.d(TAG, "asasasas ${user}")
-                    } else {
+            viewModel.loginAndSetUser(UserManager.userUID!!, UserManager.userName ?: "No Name")
 
-                    }
-                }
+//            users.document(UserManager.userUID!!).set(user).addOnSuccessListener {
+////                it.update("id", user.id)
+//            }
 
+
+//            users.document(UserManager.userUID!!).get().addOnCompleteListener {
+//                if (it.isSuccessful){
+//                    val u = it.result.toObject(Users::class.java)
+//
+//                    Log.d("xxxxx","xxx success, UserManager.userUID!! = ${UserManager.userUID!!},u = $u, ${u == null}")
+//                } else {
+//                    Log.d("xxxxx","xxx fail")
+//                }
+//            }
         }
 
 

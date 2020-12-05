@@ -184,7 +184,7 @@ class WalkStartFragment : Fragment() {
 
                                     moveCamera(
                                         CameraUpdateFactory.newLatLngZoom(
-                                            LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude), 10f))
+                                            LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude), 30f))
                                 }
 
                                 Log.d("aaa", "1 st lat = $lat, lon = $lon")
