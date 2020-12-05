@@ -9,14 +9,14 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.ViewPager2
+import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
-import com.rn1.gogoyo.databinding.FragmentMyPetsBinding
 import com.rn1.gogoyo.databinding.FragmentProfilePetBinding
 import com.rn1.gogoyo.ext.getVmFactory
-import com.rn1.gogoyo.model.Pets
-import com.rn1.gogoyo.mypets.MyPetsViewModel
+import com.rn1.gogoyo.util.Logger
 import kotlin.math.abs
 
 class ProfilePetFragment : Fragment() {
@@ -27,13 +27,36 @@ class ProfilePetFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile_pet, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+        val viewPager = binding.myPetsViewPager
 
+        val adapter = MyPetsPagerAdapter()
+        viewPager.adapter = adapter
+
+        viewModel.petList.observe(viewLifecycleOwner, Observer {
+            it?.let {
+
+                adapter.submitList(it)
+                // listen page change and change data for selected pet
+                viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                    override fun onPageSelected(position: Int) {
+                        viewModel.pet.value = it[position]
+                    }
+                })
+            }
+        })
+
+        viewModel.navigateToNewPet.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                if (it) findNavController().navigate(NavigationDirections.actionGlobalNewPetFragment())
+                viewModel.onDoneNavigateToNewPet()
+            }
+        })
 
         viewModel.onEdit.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -56,55 +79,27 @@ class ProfilePetFragment : Fragment() {
             }
         })
 
+        setUpViewPager(viewPager)
 
-        // mock data
-        val pet1 = Pets("001", "ppp")
-        val pet2 = Pets("002", "qqq")
-        val pet3 = Pets("003", "aaa")
-        val pet4 = Pets("004", "vvv")
-        val pet5 = Pets("005", "fff")
+        return binding.root
+    }
 
-        val list = mutableListOf<Pets>()
-        list.add(pet1)
-        list.add(pet2)
-        list.add(pet3)
-        list.add(pet4)
-        list.add(pet5)
-
-        val viewPager = binding.myPetsViewPager
-
-
+    private fun setUpViewPager(viewPager: ViewPager2){
         viewPager.clipToPadding = false
         viewPager.clipChildren = false
         viewPager.offscreenPageLimit = 3
-
         // not to show slide to end effect
         viewPager.getChildAt(0).overScrollMode = View.OVER_SCROLL_NEVER
 
-
-        // listen page change and change data for selected pet
-        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                binding.breedTitleEt.setText(list[position].name)
-                Log.d("onPageSelected", "this is : $position")
-            }
-        })
-
-        val adapter = MyPetsPagerAdapter()
-        adapter.submitList(list)
-
-        viewPager.adapter = adapter
-
         val transformer = CompositePageTransformer()
-//        transformer.addTransformer(MarginPageTransformer(8))
+        //transformer.addTransformer(MarginPageTransformer(8))
         transformer.addTransformer(ViewPager2.PageTransformer { page, position ->
             val v = 1 - abs(position)
             page.scaleY = 0.6f + v * 0.4f
+            page.scaleX = 0.6f + v * 0.4f
         })
 
         viewPager.setPageTransformer(transformer)
-
-        return binding.root
     }
 
     private fun petInfoEditableChange(boolean: Boolean) {

@@ -3,10 +3,16 @@ package com.rn1.gogoyo.mypets.user
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.rn1.gogoyo.UserManager
 import com.rn1.gogoyo.model.Articles
 import com.rn1.gogoyo.model.source.GogoyoRepository
 
 class ProfileUserViewModel(val repository: GogoyoRepository): ViewModel() {
+
+    val name = MutableLiveData<String>().apply {
+        value = UserManager.userName
+    }
+
 
     private val _onEdit = MutableLiveData<Boolean>()
 

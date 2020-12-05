@@ -1,4 +1,4 @@
-package com.rn1.gogoyo.mypets.pet
+package com.rn1.gogoyo.mypets.newpets
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,34 +15,33 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class ProfilePetViewModel(val repository: GogoyoRepository): ViewModel() {
+class NewPetViewModel(val repository: GogoyoRepository): ViewModel() {
 
-    private val _petList = MutableLiveData<List<Pets>>()
+    val name = MutableLiveData<String>()
 
-    val petList: LiveData<List<Pets>>
-        get() = _petList
+    val introduction = MutableLiveData<String>()
 
-    val pet = MutableLiveData<Pets>()
+    val selectedSexRadio = MutableLiveData<Int>()
 
-    private val _onEdit = MutableLiveData<Boolean>()
+    private val petSex: String
+        get() = when (selectedSexRadio.value) {
+            R.id.radioBoy -> "男生"
+            R.id.radioGirl -> "女生"
+            else -> ""
+        }
 
-    val onEdit: LiveData<Boolean>
-        get() = _onEdit
+    // Handle the error for adding new pet
+    private val _invalidInfo = MutableLiveData<Int>()
 
-    private val _onSureEdit = MutableLiveData<Boolean>()
+    val invalidInfo: LiveData<Int>
+        get() = _invalidInfo
 
-    val onSureEdit: LiveData<Boolean>
-        get() = _onSureEdit
+    val canAddPet = MutableLiveData<Boolean>()
 
-    private val _onCancelEdit = MutableLiveData<Boolean>()
+    private val _navigateToPets = MutableLiveData<Boolean>()
 
-    val onCancelEdit: LiveData<Boolean>
-        get() = _onCancelEdit
-
-    private val _navigateToNewPet = MutableLiveData<Boolean>()
-
-    val navigateToNewPet: LiveData<Boolean>
-        get() = _navigateToNewPet
+    val navigateToPets: LiveData<Boolean>
+        get() = _navigateToPets
 
 
     // status: The internal MutableLiveData that stores the status of the most recent request
@@ -63,79 +62,64 @@ class ProfilePetViewModel(val repository: GogoyoRepository): ViewModel() {
     // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    init {
-        getMyPets()
-
-    }
-
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
     }
 
-    fun getMyPets(){
+    fun checkPetInfo(){
+        canAddPet.value = !name.value.isNullOrEmpty()
+                && !introduction.value.isNullOrBlank()
+                && petSex.isNotEmpty()
+        when {
+            name.value.isNullOrEmpty() -> _invalidInfo.value = INVALID_FORMAT_NAME_EMPTY
+            petSex.isEmpty() -> _invalidInfo.value = INVALID_FORMAT_SEX_EMPTY
+            introduction.value.isNullOrBlank() -> _invalidInfo.value = INVALID_FORMAT_INTRODUCTION_EMPTY
+        }
+    }
+
+    fun addNewPet(){
+        val pet = Pets()
+        pet.name = name.value!!
+        pet.introduction = introduction.value
+        pet.sex = petSex
 
         coroutineScope.launch {
             _status.value = LoadStatus.LOADING
 
-            val result = repository.getAllPetsByUserId(UserManager.userUID!!)
-
-            _petList.value = when (result) {
+            when(val result = repository.newPets(pet, UserManager.userUID!!)) {
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadStatus.DONE
-                    result.data
+                    _navigateToPets.value = true
                 }
                 is Result.Fail -> {
                     _error.value = result.error
                     _status.value = LoadStatus.ERROR
-                    null
                 }
                 is Result.Error -> {
                     _error.value = result.exception.toString()
                     _status.value = LoadStatus.ERROR
-                    null
                 }
                 else -> {
                     _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
                     _status.value = LoadStatus.ERROR
-                    null
                 }
             }
-
         }
     }
 
-    fun onNavigateToNewPet(){
-        _navigateToNewPet.value = true
+
+
+    fun onDoneNavigateToPet(){
+        _navigateToPets.value = null
     }
 
-    fun onDoneNavigateToNewPet(){
-        _navigateToNewPet.value = null
-    }
+    companion object {
 
-    fun edit(){
-        _onEdit.value = true
-    }
-
-    fun onDoneEdit(){
-        _onEdit.value = null
-    }
-
-    fun onSureEdit(){
-        _onSureEdit.value = true
-    }
-
-    fun onDoneSureEdit(){
-        _onSureEdit.value = null
-    }
-
-    fun onCancelEdit(){
-        _onCancelEdit.value = true
-    }
-
-    fun onDoneCancelEdit(){
-        _onCancelEdit.value = null
+        const val INVALID_FORMAT_NAME_EMPTY = 0x11
+        const val INVALID_FORMAT_INTRODUCTION_EMPTY = 0x12
+        const val INVALID_FORMAT_SEX_EMPTY          = 0x13
     }
 
 }

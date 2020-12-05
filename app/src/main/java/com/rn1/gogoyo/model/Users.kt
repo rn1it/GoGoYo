@@ -7,10 +7,11 @@ import kotlinx.android.parcel.Parcelize
 data class Users(
     var id: String = "",
     val name: String = "",
-    val petList: List<Pets>? = null,
+    val petList: List<String>? = null,
     val location: String? = null,
     val qrCode: String? = null,
     val currentLat: Double? = null,
     val currentLon: Double? = null,
-    val isWalking: Boolean = false
+    @field:JvmField // use this annotation if your Boolean field is prefixed with 'is'
+    var isWalking: Boolean = false
 ): Parcelable

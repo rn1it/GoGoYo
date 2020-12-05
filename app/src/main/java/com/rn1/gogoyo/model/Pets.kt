@@ -6,17 +6,17 @@ import java.io.File
 
 @Parcelize
 data class Pets(
-    val id: String,
-    val name: String,
+    var id: String = "",
+    var name: String = "",
     // 品種
-    val breed : String? = null,
-    val sex: String? = null,
-    val birth: String? = null,
-    val interest: String? = null,
-    val introduction: String? = null,
-    val age: Int? = null,
-    val weight: Float? = null,
-    val video: File? = null,
-    val images: List<File>? = null,
-    val voice: File? = null
+    var breed : String? = null,
+    var sex: String? = null,
+    var birth: String? = null,
+    var interest: String? = null,
+    var introduction: String? = null,
+    var age: Int? = null,
+    var weight: Float? = null,
+    var video: File? = null,
+    var images: List<File>? = null,
+    var voice: File? = null
 ): Parcelable

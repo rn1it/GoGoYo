@@ -64,7 +64,9 @@ class MainActivity : AppCompatActivity() {
         else {
 //            Log.d(TAG, "jlkjlkjlkjlk ${UserManager.userUID}")
 
-            viewModel.loginAndSetUser(UserManager.userUID!!, UserManager.userName ?: "No Name")
+            val userName = UserManager.userName  ?:  "No Name"
+
+            viewModel.loginAndSetUser(UserManager.userUID!!, userName)
 
 //            users.document(UserManager.userUID!!).set(user).addOnSuccessListener {
 ////                it.update("id", user.id)

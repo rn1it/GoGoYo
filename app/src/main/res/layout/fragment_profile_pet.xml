@@ -43,6 +43,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:clickable="true"
+                android:onClick="@{() -> viewModel.onNavigateToNewPet()}"
                 android:src="@drawable/add_pet3"
                 app:backgroundTint="@color/white"
                 app:fabSize="mini"
@@ -148,7 +149,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="24dp"
-                    android:text="@string/text_birth"
+                    android:text="@string/age"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/sexTitleTv" />
 
@@ -209,7 +210,7 @@
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     android:inputType="textPersonName"
-                    android:text=""
+                    android:text="@{viewModel.pet.breed}"
                     app:layout_constraintStart_toEndOf="@+id/breedTitleTv"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -224,7 +225,7 @@
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     android:inputType="textPersonName"
-                    android:text=""
+                    android:text="@{viewModel.pet.sex}"
                     app:layout_constraintStart_toEndOf="@+id/sexTitleTv"
                     app:layout_constraintTop_toBottomOf="@+id/breedTitleEt" />
 
@@ -239,7 +240,7 @@
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     android:inputType="textPersonName"
-                    android:text=""
+                    android:text="@{String.valueOf(viewModel.pet.age)}"
                     app:layout_constraintStart_toEndOf="@+id/birthTitleTv"
                     app:layout_constraintTop_toBottomOf="@+id/sexTitleEt" />
 
@@ -254,7 +255,7 @@
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     android:inputType="textPersonName"
-                    android:text=""
+                    android:text="@{viewModel.pet.introduction}"
                     app:layout_constraintStart_toEndOf="@+id/introductionTitleTv"
                     app:layout_constraintTop_toBottomOf="@+id/birthTitleEt" />
 
