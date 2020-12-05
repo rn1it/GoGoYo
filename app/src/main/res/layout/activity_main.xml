@@ -113,7 +113,7 @@
                 android:layout_gravity="bottom"
                 app:contentInsetStart="0dp"
                 app:contentInsetStartWithNavigation="0dp"
-                app:fabCradleMargin="10dp"
+                app:fabCradleMargin="7dp"
                 app:fabCradleRoundedCornerRadius="10dp"
                 app:fabCradleVerticalOffset="5dp">
 
@@ -131,10 +131,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/app_name"
-                android:elevation="@dimen/elevation_all"
                 android:onClick="@{() -> viewModel.onNavigateToWalk()}"
                 android:src="@drawable/dog_walk_cool"
-                app:backgroundTint="#FFC107"
+                app:tint="#00205b"
+                app:backgroundTint="#ffffff"
                 app:fabCustomSize="70dp"
                 app:fabSize="auto"
                 app:layout_anchor="@id/bottomAppBar"
