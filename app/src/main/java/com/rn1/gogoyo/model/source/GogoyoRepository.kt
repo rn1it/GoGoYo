@@ -13,4 +13,6 @@ interface GogoyoRepository {
     suspend fun getAllPetsByUserId(userId: String): Result<List<Pets>>
 
     suspend fun postArticle(article: Articles): Result<Boolean>
+
+    suspend fun getAllArticle(): Result<List<Articles>>
 }

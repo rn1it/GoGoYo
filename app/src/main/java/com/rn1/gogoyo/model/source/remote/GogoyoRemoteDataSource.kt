@@ -2,6 +2,7 @@ package com.rn1.gogoyo.model.source.remote
 
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
@@ -11,10 +12,13 @@ import com.rn1.gogoyo.model.Result
 import com.rn1.gogoyo.model.Users
 import com.rn1.gogoyo.model.source.GogoyoDataSource
 import com.rn1.gogoyo.util.Logger
+import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 object GogoyoRemoteDataSource: GogoyoDataSource{
+
+    private const val KEY_CREATED_TIME = "createdTime"
 
     private val db = FirebaseFirestore.getInstance()
     private val usersRef =  db.collection("users")
@@ -140,6 +144,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
 
         val document = articleRef.document()
         article.id = document.id
+        article.createdTime = Calendar.getInstance().timeInMillis
 
         document.set(article).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -153,6 +158,30 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
                     continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
                 }
             }
+    }
+
+    override suspend fun getAllArticle(): Result<List<Articles>> = suspendCoroutine{ continuation ->
+
+        articleRef.orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING).get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val list = mutableListOf<Articles>()
+
+                    for (document in task.result!!) {
+                        Logger.d(document.id + " => " + document.data)
+
+                        val article = document.toObject(Articles::class.java)
+                        list.add(article)
+                    }
+                    continuation.resume(Result.Success(list))
+                } else {
+                    task.exception?.let {e ->
+                        Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                        continuation.resume(Result.Error(e))
+                    }
+                    continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+                }
+            }
+
     }
 
 }

@@ -23,4 +23,8 @@ class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
         TODO("Not yet implemented")
     }
 
+    override suspend fun getAllArticle(): Result<List<Articles>> {
+        TODO("Not yet implemented")
+    }
+
 }

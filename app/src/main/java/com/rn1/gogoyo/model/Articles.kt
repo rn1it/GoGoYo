@@ -10,7 +10,8 @@ data class Articles(
     var title: String = "",
     var content: String? = null,
     var authorId: String? = null,
-    val createdTime: Long? = null,
+    var createdTime: Long = -1,
     val images: List<File>? = null,
-    val like: Int? = null
+    val like: Int = 0,
+    val responseList: List<ArticleMessages> = mutableListOf()
 ): Parcelable

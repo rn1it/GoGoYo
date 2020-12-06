@@ -18,6 +18,7 @@ import com.rn1.gogoyo.databinding.FragmentHomeBinding
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.home.post.PostViewModel
 import com.rn1.gogoyo.model.Articles
+import java.util.*
 
 
 class HomeFragment : Fragment(){
@@ -34,28 +35,37 @@ class HomeFragment : Fragment(){
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+        var articleList: List<Articles>? = null
+
         val recyclerView = binding.articleRv
         val adapter = HomeAdapter(HomeAdapter.OnClickListener {
             viewModel.navigateToContent(it)
         })
 
-        val a1 = Articles("001", "001001001001001001001001001001001001001")
-        val a2 = Articles("002", "002")
-        val a3 = Articles("0031", "0031")
-        val a4 = Articles("0041", "004100410041004100410041004100410041004100410041004100410041")
-
-        val list = mutableListOf<Articles>()
-        list.add(a1)
-        list.add(a2)
-        list.add(a3)
-        list.add(a4)
+//        val a1 = Articles("001", "001001001001001001001001001001001001001")
+//        val a2 = Articles("002", "002")
+//        val a3 = Articles("0031", "0031")
+//        val a4 = Articles("0041", "004100410041004100410041004100410041004100410041004100410041")
+//
+//        val list = mutableListOf<Articles>()
+//        list.add(a1)
+//        list.add(a2)
+//        list.add(a3)
+//        list.add(a4)
 
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
 
 
-        adapter.submitList(list)
+//        adapter.submitList(list)
+
+        viewModel.articleList.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                adapter.submitList(it)
+                articleList = it
+            }
+        })
 
         viewModel.navigateToPost.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -75,7 +85,7 @@ class HomeFragment : Fragment(){
             override fun onQueryTextSubmit(query: String?) = false
 
             override fun onQueryTextChange(query: String): Boolean {
-                adapter.submitList(filter(list, query))
+                adapter.submitList(articleList?.let { filter(it, query) })
                 return true
             }
         })
@@ -86,12 +96,12 @@ class HomeFragment : Fragment(){
     // return query list
     fun filter(list: List<Articles>, query: String): List<Articles> {
 
-        val lowerCaseQueryString = query.toLowerCase()
+        val lowerCaseQueryString = query.toLowerCase(Locale.ROOT)
         val filteredList = mutableListOf<Articles>()
 
         for (article in list) {
-            val author = article.id.toLowerCase()
-            val content = article.content ?: "" .toLowerCase()
+            val author = article.id.toLowerCase(Locale.ROOT)
+            val content = article.content ?: "" .toLowerCase(Locale.ROOT)
 
             if (author.contains(lowerCaseQueryString) || content.contains(lowerCaseQueryString)) {
                 filteredList.add(article)

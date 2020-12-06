@@ -26,4 +26,8 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.postArticle(article)
     }
 
+    override suspend fun getAllArticle(): Result<List<Articles>> {
+        return remoteDataSource.getAllArticle()
+    }
+
 }
