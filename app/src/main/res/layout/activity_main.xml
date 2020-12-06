@@ -7,6 +7,9 @@
         <variable
             name="viewModel"
             type="com.rn1.gogoyo.MainViewModel" />
+<!--        <variable-->
+<!--            name="postViewModel"-->
+<!--            type="com.rn1.gogoyo.home.post.PostViewModel" />-->
         <import type="com.rn1.gogoyo.util.CurrentFragmentType"/>
         <import type="android.view.View"/>
     </data>

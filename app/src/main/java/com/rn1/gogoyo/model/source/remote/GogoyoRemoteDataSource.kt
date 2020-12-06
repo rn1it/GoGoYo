@@ -1,11 +1,11 @@
 package com.rn1.gogoyo.model.source.remote
 
-import android.util.Log
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
+import com.rn1.gogoyo.model.Articles
 import com.rn1.gogoyo.model.Pets
 import com.rn1.gogoyo.model.Result
 import com.rn1.gogoyo.model.Users
@@ -19,7 +19,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
     private val db = FirebaseFirestore.getInstance()
     private val usersRef =  db.collection("users")
     private val petsRef =  db.collection("pets")
-
+    private val articleRef = db.collection("articles")
 
 
     override suspend fun login(id: String, name: String): Result<Boolean> = suspendCoroutine { continuation ->
@@ -134,6 +134,25 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
                 }
             }
 
+    }
+
+    override suspend fun postArticle(article: Articles): Result<Boolean> = suspendCoroutine{ continuation ->
+
+        val document = articleRef.document()
+        article.id = document.id
+
+        document.set(article).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Logger.w("post success: article = $article")
+                    continuation.resume(Result.Success(true))
+                } else {
+                    task.exception?.let {e ->
+                        Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                        continuation.resume(Result.Error(e))
+                    }
+                    continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+                }
+            }
     }
 
 }

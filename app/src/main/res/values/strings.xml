@@ -3,7 +3,7 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_main">MainActivity</string>
 
-    <string name="something_wrong">Something went wrong!</string>
+    <string name="something_wrong">Something went Wrong!</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="text_breed">品種</string>

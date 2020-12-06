@@ -26,6 +26,10 @@ class MainViewModel(private val repository: GogoyoRepository): ViewModel() {
     val popBack: LiveData<Boolean>
         get() = _popBack
 
+    private val _toPostArticle = MutableLiveData<Boolean>()
+
+    val toPostArticle: LiveData<Boolean>
+        get() = _toPostArticle
 
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadStatus>()
@@ -74,6 +78,14 @@ class MainViewModel(private val repository: GogoyoRepository): ViewModel() {
             }
         }
     }
+
+//    fun toPostArticle(){
+//        _toPostArticle.value = true
+//    }
+//
+//    fun toPostArticleDone(){
+//        _toPostArticle.value = null
+//    }
 
 
     fun onNavigateToWalk(){

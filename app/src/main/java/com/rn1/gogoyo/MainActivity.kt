@@ -6,7 +6,9 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
@@ -14,6 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.rn1.gogoyo.databinding.ActivityMainBinding
 import com.rn1.gogoyo.ext.getVmFactory
+import com.rn1.gogoyo.home.post.PostViewModel
 import com.rn1.gogoyo.util.CurrentFragmentType
 
 
@@ -88,6 +91,18 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
+        //TODO
+//        val postViewModel = ViewModelProvider(this).get(PostViewModel::class.java)
+//        viewModel.toPostArticle.observe(this, Observer {
+//            it?.let {
+//                if (it) {
+//                    postViewModel.checkArticleContent()
+//                    viewModel.toPostArticleDone()
+//                }
+//            }
+//        })
+
 
         // observe current fragment change, only for show info
         viewModel.currentFragmentType.observe(this, Observer {

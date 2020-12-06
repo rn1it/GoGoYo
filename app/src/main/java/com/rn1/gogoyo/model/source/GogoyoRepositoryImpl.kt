@@ -1,5 +1,6 @@
 package com.rn1.gogoyo.model.source
 
+import com.rn1.gogoyo.model.Articles
 import com.rn1.gogoyo.model.Pets
 import com.rn1.gogoyo.model.Result
 
@@ -19,6 +20,10 @@ class GogoyoRepositoryImpl(
 
     override suspend fun getAllPetsByUserId(userId: String): Result<List<Pets>> {
         return remoteDataSource.getAllPetsByUserId(userId)
+    }
+
+    override suspend fun postArticle(article: Articles): Result<Boolean> {
+        return remoteDataSource.postArticle(article)
     }
 
 }

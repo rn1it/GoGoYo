@@ -6,6 +6,7 @@ import com.rn1.gogoyo.MainViewModel
 import com.rn1.gogoyo.friend.chat.FriendChatViewModel
 import com.rn1.gogoyo.friend.chat.chatRoom.ChatRoomViewModel
 import com.rn1.gogoyo.home.HomeViewModel
+import com.rn1.gogoyo.home.post.PostViewModel
 import com.rn1.gogoyo.model.source.GogoyoRepository
 import com.rn1.gogoyo.mypets.MyPetsViewModel
 import com.rn1.gogoyo.mypets.newpets.NewPetViewModel
@@ -28,6 +29,9 @@ class ViewModelFactory constructor(
 
                 isAssignableFrom(HomeViewModel::class.java) ->
                     HomeViewModel(repository)
+
+                isAssignableFrom(PostViewModel::class.java) ->
+                    PostViewModel(repository)
 
                 isAssignableFrom(WalkViewModel::class.java) ->
                     WalkViewModel(repository)

@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.rn1.gogoyo.home.post.PostViewModel" />
     </data>
 
 
@@ -91,6 +93,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@={viewModel.title}"
                     android:clickable="false" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -111,6 +114,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@={viewModel.content}"
                     android:clickable="false" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -152,6 +156,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
+            <Button
+                android:id="@+id/button8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:onClick="@{() -> viewModel.checkArticleContent()}"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

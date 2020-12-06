@@ -16,6 +16,7 @@ import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentHomeBinding
 import com.rn1.gogoyo.ext.getVmFactory
+import com.rn1.gogoyo.home.post.PostViewModel
 import com.rn1.gogoyo.model.Articles
 
 

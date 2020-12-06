@@ -6,10 +6,10 @@ import java.io.File
 
 @Parcelize
 data class Articles(
-    val id: String,
-    val title: String,
-    val content: String? = null,
-    val author: Users? = null,
+    var id: String = "",
+    var title: String = "",
+    var content: String? = null,
+    var authorId: String? = null,
     val createdTime: Long? = null,
     val images: List<File>? = null,
     val like: Int? = null
