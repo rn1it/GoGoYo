@@ -6,10 +6,7 @@ import com.google.firebase.firestore.Query
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
-import com.rn1.gogoyo.model.Articles
-import com.rn1.gogoyo.model.Pets
-import com.rn1.gogoyo.model.Result
-import com.rn1.gogoyo.model.Users
+import com.rn1.gogoyo.model.*
 import com.rn1.gogoyo.model.source.GogoyoDataSource
 import com.rn1.gogoyo.util.Logger
 import java.util.*
@@ -181,6 +178,40 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
                     continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
                 }
             }
+
+    }
+
+    override suspend fun responseArticle(articleId: String, response: ArticleResponse): Result<List<ArticleResponse>> = suspendCoroutine{ continuation ->
+
+        response.createdTime = Calendar.getInstance().timeInMillis
+
+        articleRef.document(articleId).update("responseList", FieldValue.arrayUnion(response)).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+
+                articleRef.document(articleId).get().addOnCompleteListener { task1 ->
+                    if (task1.isSuccessful) {
+                        val list = task1.result.toObject(Articles::class.java)!!.responseList
+                        Logger.w("response list = $list")
+                        continuation.resume(Result.Success(list))
+                    } else {
+                        task1.exception?.let {e ->
+                            Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                            continuation.resume(Result.Error(e))
+                        }
+                        continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+                    }
+                }
+
+            } else {
+                task.exception?.let {e ->
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                    continuation.resume(Result.Error(e))
+                }
+                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+        }
+
+
 
     }
 

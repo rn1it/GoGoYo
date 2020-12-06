@@ -15,9 +15,10 @@
         tools:context=".home.content.ArticleContentFragment">
 
         <ScrollView
-            android:id="@+id/scrollView2"
+            android:id="@+id/articleSv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:background="#EFEFEF"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -38,103 +39,143 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/articleContentUserIv"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/articleImageViewPager" />
-
-                <TextView
-                    android:id="@+id/postUserNameTv"
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/articleContentConst"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="test"
-                    app:layout_constraintBottom_toTopOf="@+id/textView8"
-                    app:layout_constraintStart_toEndOf="@+id/articleContentUserIv"
-                    app:layout_constraintTop_toTopOf="@+id/articleContentUserIv" />
-
-                <ImageView
-                    android:id="@+id/imageView11"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:src="@drawable/favorite"
-                    app:layout_constraintBottom_toBottomOf="@+id/articleContentLikeTv"
-                    app:layout_constraintEnd_toStartOf="@+id/articleContentLikeTv"
-                    app:layout_constraintTop_toTopOf="@+id/articleContentLikeTv"
-                    app:layout_constraintVertical_bias="0.6" />
-
-                <TextView
-                    android:id="@+id/textView8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:text="2020/12/1"
-                    app:layout_constraintBottom_toBottomOf="@+id/articleContentUserIv"
-                    app:layout_constraintStart_toEndOf="@+id/articleContentUserIv"
-                    app:layout_constraintTop_toBottomOf="@+id/postUserNameTv" />
-
-                <TextView
-                    android:id="@+id/articleContentLikeTv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="24dp"
-                    android:text="@{String.valueOf(viewModel.article.like)}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/articleImageViewPager" />
-
-                <TextView
-                    android:id="@+id/articleContentTitleTv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="16dp"
-                    android:text="@{viewModel.article.title}"
+                    android:background="#ffffff"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/articleContentUserIv" />
+                    app:layout_constraintTop_toBottomOf="@+id/articleImageViewPager">
 
-                <TextView
-                    android:id="@+id/articleContentContentTitleTv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:text="@{viewModel.article.content}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/articleContentTitleTv" />
+                    <ImageView
+                        android:id="@+id/articleContentUserIv"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="24dp"
+                        android:src="@drawable/profile"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/textView14"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:text="留言："
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/articleContentContentTitleTv" />
+                    <TextView
+                        android:id="@+id/postUserNameTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="User"
+                        app:layout_constraintBottom_toTopOf="@+id/textView8"
+                        app:layout_constraintStart_toEndOf="@+id/articleContentUserIv"
+                        app:layout_constraintTop_toTopOf="@+id/articleContentUserIv" />
+
+                    <ImageView
+                        android:id="@+id/imageView11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="8dp"
+                        android:src="@drawable/favorite"
+                        app:layout_constraintEnd_toStartOf="@+id/articleContentLikeTv"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textView8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:text="2020/12/1"
+                        app:layout_constraintBottom_toBottomOf="@+id/articleContentUserIv"
+                        app:layout_constraintStart_toEndOf="@+id/articleContentUserIv"
+                        app:layout_constraintTop_toBottomOf="@+id/postUserNameTv" />
+
+                    <TextView
+                        android:id="@+id/articleContentLikeTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:text="@{String.valueOf(viewModel.article.like)}"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView11"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/imageView11" />
+
+                    <TextView
+                        android:id="@+id/articleContentTitleTv"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="@{viewModel.article.title}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/articleContentUserIv" />
+
+                    <TextView
+                        android:id="@+id/articleContentContentTitleTv"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:text="@{viewModel.article.content}"
+                        app:layout_constraintBottom_toTopOf="@+id/textView14"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/articleContentTitleTv" />
+
+                    <TextView
+                        android:id="@+id/textView14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:text="-和"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@color/black_3f3a3a"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintBottom_toBottomOf="@+id/textView14"
+                        app:layout_constraintStart_toEndOf="@+id/textView14"
+                        app:layout_constraintTop_toTopOf="@+id/textView14" />
+
+                    <TextView
+                        android:id="@+id/textView27"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="在一起"
+                        app:layout_constraintBottom_toBottomOf="@+id/recyclerView"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/recyclerView"
+                        app:layout_constraintTop_toTopOf="@+id/recyclerView" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/articleRespRv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:background="#EFEFEF"
+                    android:paddingStart="8dp"
+                    android:paddingTop="16dp"
+                    android:paddingEnd="16dp"
+                    android:clipToPadding="false"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView14" />
+                    app:layout_constraintTop_toBottomOf="@+id/articleContentConst" />
 
 
                 <ImageButton
@@ -167,8 +208,10 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="8dp"
                 android:ems="10"
-                android:hint="我想說..."
+                android:hint="新增留言..."
+
                 android:inputType="textPersonName"
+                android:text="@={viewModel.response}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/sendResponseBt"
                 app:layout_constraintStart_toStartOf="parent"
@@ -180,7 +223,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:backgroundTint="#FFC107"
+                android:clickable='@{viewModel.response.trim() == "" ? false : true}'
                 android:text="送出"
+                android:onClick="@{() -> viewModel.response()}"
                 app:layout_constraintBottom_toBottomOf="@+id/editTextTextPersonName"
                 app:layout_constraintEnd_toEndOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,9 +4,9 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class ArticleMessages(
+data class ArticleResponse(
     var id: String = "",
     var userId: String =  "",
     var content: String = "",
-    val createdTime: Long = -1,
+    var createdTime: Long = -1,
 ): Parcelable
