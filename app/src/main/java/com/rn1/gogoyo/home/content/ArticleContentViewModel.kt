@@ -1,17 +1,22 @@
 package com.rn1.gogoyo.home.content
 
+import android.graphics.Rect
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.RecyclerView
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
 import com.rn1.gogoyo.model.ArticleResponse
 import com.rn1.gogoyo.model.Articles
+import com.rn1.gogoyo.model.Pets
 import com.rn1.gogoyo.model.Result
 import com.rn1.gogoyo.model.source.GogoyoRepository
 import com.rn1.gogoyo.util.LoadStatus
+import com.rn1.gogoyo.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -27,6 +32,11 @@ class ArticleContentViewModel(
 
     val article : LiveData<Articles>
         get() = _article
+
+    private val _petList = MutableLiveData<List<Pets>>()
+
+    val petList: LiveData<List<Pets>>
+        get() = _petList
 
     val response = MutableLiveData<String>()
 
@@ -61,11 +71,42 @@ class ArticleContentViewModel(
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
+        getPets()
     }
 
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
+    }
+
+    private fun getPets(){
+
+        coroutineScope.launch {
+
+            _petList.value = when (val result = repository.getPetsByIdList(arguments.petIdList)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    result.data
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+            }
+        }
+
     }
 
     fun response(){
@@ -96,6 +137,23 @@ class ArticleContentViewModel(
                 }
             }
 
+        }
+    }
+
+    val decoration = object : RecyclerView.ItemDecoration(){
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+        ) {
+            super.getItemOffsets(outRect, view, parent, state)
+
+            // add margin for recyclerView cell
+            if (parent.getChildLayoutPosition(view) == 0) {
+                outRect.left = 0
+            } else {
+            }
         }
     }
 

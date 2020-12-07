@@ -6,11 +6,19 @@
         <variable
             name="pets"
             type="com.rn1.gogoyo.model.Pets" />
+        <variable
+            name="viewHolder"
+            type="com.rn1.gogoyo.home.post.PostPetAdapter.PetImageViewHolder" />
+        <variable
+            name="viewModel"
+            type="com.rn1.gogoyo.home.post.PostViewModel" />
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> viewModel.selectPet(pets.id, viewHolder.adapterPosition)}">
 
 
         <ImageView
@@ -18,6 +26,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="#2196F3"
+            android:visibility="@{viewHolder.isSelected() ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

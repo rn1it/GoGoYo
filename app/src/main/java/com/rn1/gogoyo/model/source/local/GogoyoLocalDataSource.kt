@@ -20,6 +20,10 @@ class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
         TODO("Not yet implemented")
     }
 
+    override suspend fun getPetsByIdList(idList: List<String>): Result<List<Pets>> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun postArticle(article: Articles): Result<Boolean> {
         TODO("Not yet implemented")
     }

@@ -134,7 +134,34 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
                     continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
                 }
             }
+    }
 
+    override suspend fun getPetsByIdList(idList: List<String>): Result<List<Pets>> = suspendCoroutine{ continuation ->
+
+        val list = mutableListOf<Pets>()
+        var count = 0
+
+        for (id in idList) {
+            petsRef.document(id).get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    list.add(task.result.toObject(Pets::class.java)!!)
+                    Logger.w("add pet to list: pet id = $id")
+
+                    count += 1
+                    if (count == idList.size) {
+                        Logger.w("add pet complete: idListSize = ${idList.size}, add = ${list.size}")
+                        continuation.resume(Result.Success(list))
+                    }
+
+                } else {
+                    task.exception?.let {e ->
+                        Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                        continuation.resume(Result.Error(e))
+                    }
+                    continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+                }
+            }
+        }
     }
 
     override suspend fun postArticle(article: Articles): Result<Boolean> = suspendCoroutine{ continuation ->
@@ -231,9 +258,9 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
                 continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
             }
         }
-
-
-
     }
+
+
+
 
 }

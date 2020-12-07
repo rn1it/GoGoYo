@@ -14,6 +14,7 @@ import com.rn1.gogoyo.model.Pets
 import com.rn1.gogoyo.model.Result
 import com.rn1.gogoyo.model.source.GogoyoRepository
 import com.rn1.gogoyo.util.LoadStatus
+import com.rn1.gogoyo.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -23,16 +24,23 @@ class PostViewModel(private val repository: GogoyoRepository): ViewModel() {
 
     val post = MutableLiveData<Boolean>()
 
+
+    /**
+     *  do select pet logic
+     */
+    val selectedPetPositionList = MutableLiveData<MutableList<Int>>()
+    val selectedPetIdList = MutableLiveData<MutableList<String>>()
+
+
+
+
     private val _navigateToHome = MutableLiveData<Boolean>()
 
     val navigateToHome: LiveData<Boolean>
         get() = _navigateToHome
 
     val title = MutableLiveData<String>()
-
     val content = MutableLiveData<String>()
-
-    val selectedPetList = MutableLiveData<List<String>>()
 
     // Handle the error for post article
     private val _invalidInfo = MutableLiveData<Int>()
@@ -70,6 +78,8 @@ class PostViewModel(private val repository: GogoyoRepository): ViewModel() {
 
     init {
         getUserPets()
+        selectedPetPositionList.value = mutableListOf()
+        selectedPetIdList.value = mutableListOf()
     }
 
     override fun onCleared() {
@@ -77,9 +87,30 @@ class PostViewModel(private val repository: GogoyoRepository): ViewModel() {
         viewModelJob.cancel()
     }
 
-    fun selectPet(pet: Pets){
-        selectedPetList.value
+    fun selectPet(id: String, position: Int) {
+        Logger.w("id=$id, position=$position")
+
+        val positionList = selectedPetPositionList.value
+        val idList = selectedPetIdList.value
+
+        Logger.w("positionList=$positionList, idList=$idList")
+
+            if (positionList!!.contains(position)) {
+                positionList.remove(position)
+            } else {
+                positionList.add(position)
+            }
+            selectedPetPositionList.value = positionList
+
+            if (idList!!.contains(id)) {
+                idList.remove(id)
+            } else {
+                idList.add(id)
+            }
+            selectedPetIdList.value = idList
+
     }
+
 
     private fun getUserPets(){
 
@@ -132,6 +163,7 @@ class PostViewModel(private val repository: GogoyoRepository): ViewModel() {
             article.title = title.value!!
             article.content = content.value
             article.authorId = UserManager.userUID
+            article.petIdList = selectedPetIdList.value!!
 
             when(val result = repository.postArticle(article)) {
                 is Result.Success -> {

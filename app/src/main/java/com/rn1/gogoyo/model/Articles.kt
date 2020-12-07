@@ -15,5 +15,6 @@ data class Articles(
     var createdTime: Long = -1,
     val images: List<File>? = null,
     val like: Int = 0,
-    val responseList: List<ArticleResponse> = mutableListOf()
+    val responseList: List<ArticleResponse> = mutableListOf(),
+    var petIdList: List<String> = mutableListOf()
 ): Parcelable

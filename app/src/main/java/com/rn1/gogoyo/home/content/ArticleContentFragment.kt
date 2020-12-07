@@ -44,6 +44,13 @@ class ArticleContentFragment : Fragment() {
         val adapter = ArticleContentAdapter()
         viewPager.adapter = adapter
 
+
+        val petRecyclerView = binding.articleContentPetRv
+        val petAdapter = ArticleContentPetImageAdapter(viewModel)
+        petRecyclerView.adapter = petAdapter
+
+
+
         val articleResponseRv = binding.articleRespRv
         val responseAdapter = ArticleResponseAdapter()
         articleResponseRv.adapter = responseAdapter
@@ -65,6 +72,12 @@ class ArticleContentFragment : Fragment() {
                 responseAdapter.submitList(it)
                 //TODO 發文到最底
 //                binding.articleSv.post(Runnable { binding.articleSv.fullScroll(ScrollView.FOCUS_DOWN) })
+            }
+        })
+
+        viewModel.petList.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                petAdapter.submitList(it)
             }
         })
 

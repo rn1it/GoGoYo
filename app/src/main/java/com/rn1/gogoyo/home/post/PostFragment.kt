@@ -36,7 +36,7 @@ class PostFragment : Fragment() {
         binding.viewModel = viewModel
 
         val recyclerView = binding.petsImageRv
-        val adapter = PostPetAdapter()
+        val adapter = PostPetAdapter(viewModel)
 
         recyclerView.adapter = adapter
 
