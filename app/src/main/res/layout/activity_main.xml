@@ -7,9 +7,6 @@
         <variable
             name="viewModel"
             type="com.rn1.gogoyo.MainViewModel" />
-<!--        <variable-->
-<!--            name="postViewModel"-->
-<!--            type="com.rn1.gogoyo.home.post.PostViewModel" />-->
         <import type="com.rn1.gogoyo.util.CurrentFragmentType"/>
         <import type="android.view.View"/>
     </data>
@@ -82,6 +79,7 @@
                 android:backgroundTint="#ffffff"
                 android:elevation="@dimen/elevation_more"
                 android:text="@string/text_post"
+                android:onClick="@{() -> viewModel.postArticle() }"
                 android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.VISIBLE : View.GONE}" />
 
 

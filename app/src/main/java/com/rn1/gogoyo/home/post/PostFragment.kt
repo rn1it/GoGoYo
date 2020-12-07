@@ -9,7 +9,9 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.rn1.gogoyo.MainViewModel
 import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentPostBinding
@@ -27,6 +29,8 @@ class PostFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_post, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
@@ -35,6 +39,24 @@ class PostFragment : Fragment() {
         val adapter = PostPetAdapter()
 
         recyclerView.adapter = adapter
+
+
+        // observer main view model post button
+        mainViewModel.toPostArticle.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                if (it) {
+                    viewModel.checkArticleContent()
+                    mainViewModel.postArticleDone()
+                }
+            }
+        })
+
+        viewModel.post.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                viewModel.checkArticleContent()
+                mainViewModel.postArticleDone()
+            }
+        })
 
         viewModel.userPetList.observe(viewLifecycleOwner, Observer {
             it?.let {

@@ -163,13 +163,34 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
                 if (task.isSuccessful) {
                     val list = mutableListOf<Articles>()
 
+                    var count = 0
                     for (document in task.result!!) {
                         Logger.d(document.id + " => " + document.data)
 
                         val article = document.toObject(Articles::class.java)
-                        list.add(article)
+
+                        usersRef.document(article.authorId!!).get().addOnCompleteListener { task1 ->
+                            if (task1.isSuccessful) {
+                                val user = task1.result.toObject(Users::class.java)!!
+                                article.userName = user.name
+
+                                list.add(article)
+                                count += 1
+
+                                if (count == task.result!!.size()){
+                                    continuation.resume(Result.Success(list))
+                                }
+                            } else {
+                                task1.exception?.let {e ->
+                                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                                    continuation.resume(Result.Error(e))
+                                }
+                                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+                            }
+
+                        }
                     }
-                    continuation.resume(Result.Success(list))
+
                 } else {
                     task.exception?.let {e ->
                         Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")

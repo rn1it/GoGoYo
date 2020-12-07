@@ -10,6 +10,8 @@ data class Articles(
     var title: String = "",
     var content: String? = null,
     var authorId: String? = null,
+    var userName: String? = null,
+    var userImg: String? = null,
     var createdTime: Long = -1,
     val images: List<File>? = null,
     val like: Int = 0,

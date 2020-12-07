@@ -14,6 +14,9 @@ class PostPetAdapter: ListAdapter<Pets, RecyclerView.ViewHolder>(PetsImageDiffCa
     class PetImageViewHolder(val binding: ItemPetImageLayoutBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(pets: Pets){
             binding.pets = pets
+            binding.petImageOuterSel.outlineProvider = MapOutlineProvider()
+            binding.petImageOuter.outlineProvider = MapOutlineProvider()
+            binding.petImageBorder.outlineProvider = MapOutlineProvider()
             binding.petsIv.outlineProvider = MapOutlineProvider()
             binding.executePendingBindings()
         }

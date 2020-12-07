@@ -19,11 +19,14 @@ class WalkPetAdapter: ListAdapter<Pets, RecyclerView.ViewHolder>(PetsImageDiffCa
 
         fun bind(pets: Pets){
             binding.pets = pets
+            binding.petImageOuterSel.outlineProvider = MapOutlineProvider()
+            binding.petImageOuter.outlineProvider = MapOutlineProvider()
+            binding.petImageBorder.outlineProvider = MapOutlineProvider()
             binding.petsIv.outlineProvider = MapOutlineProvider()
 
-            val dp =  TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50F, GogoyoApplication.instance.resources.displayMetrics)
-            binding.petsIv.layoutParams.width = dp.toInt()
-            binding.petsIv.layoutParams.height = dp.toInt()
+//            val dp =  TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50F, GogoyoApplication.instance.resources.displayMetrics)
+//            binding.petsIv.layoutParams.width = dp.toInt()
+//            binding.petsIv.layoutParams.height = dp.toInt()
             binding.executePendingBindings()
         }
 

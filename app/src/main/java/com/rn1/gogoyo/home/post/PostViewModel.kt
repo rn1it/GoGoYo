@@ -1,8 +1,11 @@
 package com.rn1.gogoyo.home.post
 
+import android.graphics.Rect
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.RecyclerView
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
@@ -17,6 +20,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class PostViewModel(private val repository: GogoyoRepository): ViewModel() {
+
+    val post = MutableLiveData<Boolean>()
 
     private val _navigateToHome = MutableLiveData<Boolean>()
 
@@ -150,7 +155,23 @@ class PostViewModel(private val repository: GogoyoRepository): ViewModel() {
         }
     }
 
+    val decoration = object : RecyclerView.ItemDecoration(){
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+        ) {
+            super.getItemOffsets(outRect, view, parent, state)
 
+            // add margin for recyclerView cell
+            if (parent.getChildLayoutPosition(view) == 0) {
+                outRect.left = 0
+            } else {
+                outRect.left = GogoyoApplication.instance.resources.getDimensionPixelSize(R.dimen.cell_margin_8dp)
+            }
+        }
+    }
 
     companion object {
 

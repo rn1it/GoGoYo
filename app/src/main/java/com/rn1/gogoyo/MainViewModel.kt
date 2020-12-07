@@ -79,13 +79,13 @@ class MainViewModel(private val repository: GogoyoRepository): ViewModel() {
         }
     }
 
-//    fun toPostArticle(){
-//        _toPostArticle.value = true
-//    }
-//
-//    fun toPostArticleDone(){
-//        _toPostArticle.value = null
-//    }
+    fun postArticle(){
+        _toPostArticle.value = true
+    }
+
+    fun postArticleDone(){
+        _toPostArticle.value = null
+    }
 
 
     fun onNavigateToWalk(){
