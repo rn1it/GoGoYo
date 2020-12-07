@@ -6,24 +6,19 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.firestore.FirebaseFirestore
 import com.rn1.gogoyo.databinding.ActivityMainBinding
 import com.rn1.gogoyo.ext.getVmFactory
-import com.rn1.gogoyo.home.post.PostViewModel
 import com.rn1.gogoyo.util.CurrentFragmentType
 
 
-private const val TAG = "GoGoYo"
+
 class MainActivity : AppCompatActivity() {
 
-    private val db = FirebaseFirestore.getInstance()
     private lateinit var binding: ActivityMainBinding
     private val viewModel by viewModels<MainViewModel> { getVmFactory() }
 
@@ -55,54 +50,19 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        val user = Users(UserManager.userUID!!,"")
-//        val users = db.collection("users")
-//        val document = users.document()
-//        user.id = document.id
-
         //Login Check
         if (!UserManager.isLoggedIn) {
             startActivity(Intent(this, LoginActivity::class.java))
         }
         else {
-//            Log.d(TAG, "jlkjlkjlkjlk ${UserManager.userUID}")
 
             val userName = UserManager.userName  ?:  "No Name"
-
             viewModel.loginAndSetUser(UserManager.userUID!!, userName)
-
-//            users.document(UserManager.userUID!!).set(user).addOnSuccessListener {
-////                it.update("id", user.id)
-//            }
-
-
-//            users.document(UserManager.userUID!!).get().addOnCompleteListener {
-//                if (it.isSuccessful){
-//                    val u = it.result.toObject(Users::class.java)
-//
-//                    Log.d("xxxxx","xxx success, UserManager.userUID!! = ${UserManager.userUID!!},u = $u, ${u == null}")
-//                } else {
-//                    Log.d("xxxxx","xxx fail")
-//                }
-//            }
         }
-
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-
-        //TODO
-//        val postViewModel = ViewModelProvider(this).get(PostViewModel::class.java)
-//        viewModel.toPostArticle.observe(this, Observer {
-//            it?.let {
-//                if (it) {
-//                    postViewModel.checkArticleContent()
-//                    viewModel.toPostArticleDone()
-//                }
-//            }
-//        })
-
 
         // observe current fragment change, only for show info
         viewModel.currentFragmentType.observe(this, Observer {
@@ -159,4 +119,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    companion object {
+        private const val TAG = "GoGoYo"
+    }
 }

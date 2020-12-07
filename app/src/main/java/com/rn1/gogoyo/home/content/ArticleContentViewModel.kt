@@ -151,8 +151,9 @@ class ArticleContentViewModel(
 
             // add margin for recyclerView cell
             if (parent.getChildLayoutPosition(view) == 0) {
-                outRect.left = 0
+                outRect.top = 0
             } else {
+                outRect.top = GogoyoApplication.instance.resources.getDimensionPixelSize(R.dimen.cell_margin_4dp)
             }
         }
     }

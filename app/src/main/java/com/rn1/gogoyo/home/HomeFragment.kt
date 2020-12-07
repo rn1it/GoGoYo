@@ -16,7 +16,6 @@ import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentHomeBinding
 import com.rn1.gogoyo.ext.getVmFactory
-import com.rn1.gogoyo.home.post.PostViewModel
 import com.rn1.gogoyo.model.Articles
 import java.util.*
 
@@ -42,23 +41,8 @@ class HomeFragment : Fragment(){
             viewModel.navigateToContent(it)
         })
 
-//        val a1 = Articles("001", "001001001001001001001001001001001001001")
-//        val a2 = Articles("002", "002")
-//        val a3 = Articles("0031", "0031")
-//        val a4 = Articles("0041", "004100410041004100410041004100410041004100410041004100410041")
-//
-//        val list = mutableListOf<Articles>()
-//        list.add(a1)
-//        list.add(a2)
-//        list.add(a3)
-//        list.add(a4)
-
-
         recyclerView.adapter = adapter
         recyclerView.layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
-
-
-//        adapter.submitList(list)
 
         viewModel.articleList.observe(viewLifecycleOwner, Observer {
             it?.let {
