@@ -58,26 +58,33 @@ class ProfilePetFragment : Fragment() {
             }
         })
 
-        viewModel.onEdit.observe(viewLifecycleOwner, Observer {
+        viewModel.editPet.observe(viewLifecycleOwner, Observer {
             it?.let {
-                petInfoEditableChange(true)
-                viewModel.onDoneEdit()
+                findNavController().navigate(NavigationDirections.actionGlobalEditPetFragment(it))
+                viewModel.toEditPetDone()
             }
         })
 
-        viewModel.onSureEdit.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                petInfoEditableChange(false)
-                viewModel.onDoneSureEdit()
-            }
-        })
-
-        viewModel.onCancelEdit.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                petInfoEditableChange(false)
-                viewModel.onDoneCancelEdit()
-            }
-        })
+//        viewModel.onEdit.observe(viewLifecycleOwner, Observer {
+//            it?.let {
+//                petInfoEditableChange(true)
+//                viewModel.onDoneEdit()
+//            }
+//        })
+//
+//        viewModel.onSureEdit.observe(viewLifecycleOwner, Observer {
+//            it?.let {
+//                petInfoEditableChange(false)
+//                viewModel.onDoneSureEdit()
+//            }
+//        })
+//
+//        viewModel.onCancelEdit.observe(viewLifecycleOwner, Observer {
+//            it?.let {
+//                petInfoEditableChange(false)
+//                viewModel.onDoneCancelEdit()
+//            }
+//        })
 
         setUpViewPager(viewPager)
 
@@ -102,31 +109,31 @@ class ProfilePetFragment : Fragment() {
         viewPager.setPageTransformer(transformer)
     }
 
-    private fun petInfoEditableChange(boolean: Boolean) {
-        binding.breedTitleEt.apply {
-            isFocusable = boolean
-            isFocusableInTouchMode = boolean
-        }
-        binding.sexTitleEt.apply {
-            isFocusable = boolean
-            isFocusableInTouchMode = boolean
-        }
-        binding.birthTitleEt.apply {
-            isFocusable = boolean
-            isFocusableInTouchMode = boolean
-        }
-        binding.introductionTitleEt.apply {
-            isFocusable = boolean
-            isFocusableInTouchMode = boolean
-        }
-        if (boolean) {
-            binding.sureEditBt.visibility = View.VISIBLE
-            binding.cancelEditBt.visibility = View.VISIBLE
-            binding.editPetInfoBt.visibility = View.GONE
-        } else {
-            binding.sureEditBt.visibility = View.GONE
-            binding.cancelEditBt.visibility = View.GONE
-            binding.editPetInfoBt.visibility = View.VISIBLE
-        }
-    }
+//    private fun petInfoEditableChange(boolean: Boolean) {
+//        binding.breedTitleEt.apply {
+//            isFocusable = boolean
+//            isFocusableInTouchMode = boolean
+//        }
+//        binding.sexTitleEt.apply {
+//            isFocusable = boolean
+//            isFocusableInTouchMode = boolean
+//        }
+//        binding.birthTitleEt.apply {
+//            isFocusable = boolean
+//            isFocusableInTouchMode = boolean
+//        }
+//        binding.introductionTitleEt.apply {
+//            isFocusable = boolean
+//            isFocusableInTouchMode = boolean
+//        }
+//        if (boolean) {
+//            binding.sureEditBt.visibility = View.VISIBLE
+//            binding.cancelEditBt.visibility = View.VISIBLE
+//            binding.editPetInfoBt.visibility = View.GONE
+//        } else {
+//            binding.sureEditBt.visibility = View.GONE
+//            binding.cancelEditBt.visibility = View.GONE
+//            binding.editPetInfoBt.visibility = View.VISIBLE
+//        }
+//    }
 }

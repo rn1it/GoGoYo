@@ -14,6 +14,10 @@ interface GogoyoDataSource {
 
     suspend fun getAllPetsByUserId(userId: String): Result<List<Pets>>
 
+    suspend fun getPetsById(id: String): Result<Pets>
+
+    suspend fun editPets(pet: Pets): Result<Boolean>
+
     suspend fun getPetsByIdList(idList: List<String>): Result<List<Pets>>
 
     suspend fun postArticle(article: Articles): Result<Boolean>

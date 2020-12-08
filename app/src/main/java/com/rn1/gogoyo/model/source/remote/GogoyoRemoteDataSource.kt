@@ -137,6 +137,38 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
             }
     }
 
+    override suspend fun getPetsById(id: String): Result<Pets> = suspendCoroutine{ continuation ->
+
+        petsRef.document(id).get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val pet = task.result.toObject(Pets::class.java)!!
+                continuation.resume(Result.Success(pet))
+            } else {
+                task.exception?.let {e ->
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                    continuation.resume(Result.Error(e))
+                }
+                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+        }
+    }
+
+    override suspend fun editPets(pet: Pets): Result<Boolean> = suspendCoroutine{ continuation ->
+
+        petsRef.document(pet.id).set(pet).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Logger.i("edit pet: $pet")
+                continuation.resume(Result.Success(true))
+            } else {
+                task.exception?.let {e ->
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                    continuation.resume(Result.Error(e))
+                }
+                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+        }
+    }
+
     override suspend fun getPetsByIdList(idList: List<String>): Result<List<Pets>> = suspendCoroutine{ continuation ->
 
         val list = mutableListOf<Pets>()

@@ -82,7 +82,17 @@
         android:id="@+id/newPetFragment"
         android:name="com.rn1.gogoyo.mypets.newpets.NewPetFragment"
         android:label="NewPetFragment"
-        tools:layout="@layout/fragment_new_pet"/>
+        tools:layout="@layout/fragment_new_pet">
+    </fragment>
+    <fragment
+        android:id="@+id/editPetFragment"
+        android:name="com.rn1.gogoyo.mypets.edit.EditPetFragment"
+        android:label="EditPetFragment"
+        tools:layout="@layout/fragment_edit_pet">
+        <argument
+            android:name="petIdKey"
+            app:argType="string" />
+    </fragment>
 
     <action android:id="@+id/action_global_homeFragment" app:destination="@id/homeFragment" />
     <action android:id="@+id/action_global_makeFriendsFragment" app:destination="@id/friendCardsFragment" />
@@ -101,5 +111,6 @@
     <action android:id="@+id/action_global_walkEndFragment" app:destination="@id/walkEndFragment" />
     <action android:id="@+id/action_global_chatRoomFragment" app:destination="@id/chatRoomFragment" />
     <action android:id="@+id/action_global_newPetFragment" app:destination="@id/newPetFragment"/>
+    <action android:id="@+id/action_global_editPetFragment" app:destination="@id/editPetFragment" />
 
 </navigation>

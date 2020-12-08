@@ -12,7 +12,11 @@ interface GogoyoRepository {
 
     suspend fun newPets(pet: Pets, userId: String): Result<Boolean>
 
+    suspend fun editPets(pet: Pets): Result<Boolean>
+
     suspend fun getAllPetsByUserId(userId: String): Result<List<Pets>>
+
+    suspend fun getPetsById(id: String): Result<Pets>
 
     suspend fun getPetsByIdList(idList: List<String>): Result<List<Pets>>
 

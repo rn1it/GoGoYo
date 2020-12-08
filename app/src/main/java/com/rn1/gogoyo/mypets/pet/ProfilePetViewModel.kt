@@ -44,6 +44,11 @@ class ProfilePetViewModel(val repository: GogoyoRepository): ViewModel() {
     val navigateToNewPet: LiveData<Boolean>
         get() = _navigateToNewPet
 
+    private val _editPet = MutableLiveData<String>()
+
+    val editPet: LiveData<String>
+        get() = _editPet
+
 
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadStatus>()
@@ -114,28 +119,35 @@ class ProfilePetViewModel(val repository: GogoyoRepository): ViewModel() {
         _navigateToNewPet.value = null
     }
 
-    fun edit(){
-        _onEdit.value = true
+    fun editPet(){
+        _editPet.value = pet.value!!.id
     }
 
-    fun onDoneEdit(){
-        _onEdit.value = null
+    fun toEditPetDone(){
+        _editPet.value = null
     }
+//    fun edit(){
+//        _onEdit.value = true
+//    }
+//
+//    fun onDoneEdit(){
+//        _onEdit.value = null
+//    }
 
-    fun onSureEdit(){
-        _onSureEdit.value = true
-    }
+//    fun onSureEdit(){
+//        _onSureEdit.value = true
+//    }
+//
+//    fun onDoneSureEdit(){
+//        _onSureEdit.value = null
+//    }
 
-    fun onDoneSureEdit(){
-        _onSureEdit.value = null
-    }
-
-    fun onCancelEdit(){
-        _onCancelEdit.value = true
-    }
-
-    fun onDoneCancelEdit(){
-        _onCancelEdit.value = null
-    }
+//    fun onCancelEdit(){
+//        _onCancelEdit.value = true
+//    }
+//
+//    fun onDoneCancelEdit(){
+//        _onCancelEdit.value = null
+//    }
 
 }
