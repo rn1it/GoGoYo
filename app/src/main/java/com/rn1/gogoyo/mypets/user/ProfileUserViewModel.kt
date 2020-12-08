@@ -72,7 +72,7 @@ class ProfileUserViewModel(val repository: GogoyoRepository): ViewModel() {
 
     init {
         getUserArticle()
-//        getUserFavArticle()
+        getUserFavArticle()
     }
 
     override fun onCleared() {
@@ -116,7 +116,7 @@ class ProfileUserViewModel(val repository: GogoyoRepository): ViewModel() {
 
         coroutineScope.launch {
 
-            _userArticles.value =
+            _userFavArticles.value =
                 when (val result = repository.getFavoriteArticlesById(UserManager.userUID!!)) {
                     is Result.Success -> {
                         _error.value = null

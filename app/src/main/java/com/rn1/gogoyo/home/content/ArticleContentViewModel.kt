@@ -39,16 +39,16 @@ class ArticleContentViewModel(
         it.isNotEmpty()
     }
 
-    var liveArticleResponse = MutableLiveData<List<ArticleResponse>>()
+    var liveArticle = MutableLiveData<Articles>()
+
+    private val _isCollected = MutableLiveData<Boolean>()
+
+    val isCollected: LiveData<Boolean>
+        get() = _isCollected
+
 
     val response = MutableLiveData<String>()
 
-    private val _responseList = MutableLiveData<List<ArticleResponse>>().apply {
-        value = arguments.responseList
-    }
-
-    val responseList : LiveData<List<ArticleResponse>>
-        get() = _responseList
 
     private val _leaveArticle = MediatorLiveData<Boolean>()
 
@@ -75,7 +75,7 @@ class ArticleContentViewModel(
 
     init {
         getPets()
-        getLiveArticleResponse()
+        getLiveArticle()
     }
 
     override fun onCleared() {
@@ -113,9 +113,8 @@ class ArticleContentViewModel(
 
     }
 
-    private fun getLiveArticleResponse() {
-        liveArticleResponse = repository.getRealTimeResponse(arguments.id)
-        Logger.d("liveArticleResponse = $liveArticleResponse")
+    private fun getLiveArticle() {
+        liveArticle = repository.getRealTimeArticle(arguments.id)
     }
 
     fun response(){
@@ -123,23 +122,19 @@ class ArticleContentViewModel(
             val articleResponse = ArticleResponse()
             articleResponse.userId = UserManager.userUID!!
             articleResponse.content = response.value!!
-//            _responseList.value =
                 when (val result = repository.responseArticle(arguments.id, articleResponse)) {
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadStatus.DONE
-//                    result.data
                     Logger.d("response article success")
                 }
                 is Result.Fail -> {
                     _error.value = result.error
                     _status.value = LoadStatus.ERROR
-//                    null
                 }
                 is Result.Error -> {
                     _error.value = result.exception.toString()
                     _status.value = LoadStatus.ERROR
-//                    null
                 }
                 else -> {
                     _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
@@ -169,8 +164,35 @@ class ArticleContentViewModel(
         }
     }
 
-    fun favArticle(){
 
+    fun collectArticle(){
+        coroutineScope.launch {
+
+            _isCollected.value = when (val result = repository.collectArticle(arguments.id, UserManager.userUID!!)) {
+
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    result.data
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+
+            }
+        }
     }
 
     fun onLeaveArticle() {

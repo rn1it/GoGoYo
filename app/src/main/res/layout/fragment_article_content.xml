@@ -70,13 +70,16 @@
                         app:layout_constraintStart_toEndOf="@+id/articleContentUserIv"
                         app:layout_constraintTop_toTopOf="@+id/articleContentUserIv" />
 
-                    <ImageView
+                    <ImageButton
                         android:id="@+id/imageView11"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="8dp"
+                        android:backgroundTint="@android:color/transparent"
+                        android:onClick="@{() -> viewModel.collectArticle()}"
                         android:src="@drawable/favorite"
+                        app:changeCollectButtonStatus="@{viewModel.isCollected}"
                         app:layout_constraintEnd_toStartOf="@+id/articleContentLikeTv"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -97,7 +100,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
-                        android:text="@{String.valueOf(viewModel.article.like)}"
+                        android:text="@{String.valueOf(viewModel.liveArticle.favoriteUserIdList.size())}"
                         tools:text="10"
                         app:layout_constraintBottom_toBottomOf="@+id/imageView11"
                         app:layout_constraintEnd_toEndOf="parent"

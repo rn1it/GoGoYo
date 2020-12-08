@@ -45,6 +45,14 @@ class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
         TODO("Not yet implemented")
     }
 
+    override fun getRealTimeArticle(articleId: String): MutableLiveData<Articles> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun collectArticle(articleId: String, userId: String): Result<Boolean> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun responseArticle(articleId: String, response: ArticleResponse): Result<List<ArticleResponse>> {
         TODO("Not yet implemented")
     }
