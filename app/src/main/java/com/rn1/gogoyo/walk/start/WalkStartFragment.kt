@@ -26,13 +26,14 @@ import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentWalkStartBinding
 import com.rn1.gogoyo.ext.getVmFactory
+import com.rn1.gogoyo.util.Logger
 
 private const val PERMISSION_ID = 1
 
 class WalkStartFragment : Fragment() {
 
     private lateinit var binding: FragmentWalkStartBinding
-    private val viewModel by viewModels<WalkStartViewModel> { getVmFactory() }
+    private val viewModel by viewModels<WalkStartViewModel> { getVmFactory(WalkStartFragmentArgs.fromBundle(requireArguments()).petIdListKey.asList()) }
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var locationPermission = false
@@ -80,6 +81,12 @@ class WalkStartFragment : Fragment() {
             it?.let {
                 getDeviceLocation()
                 viewModel.onDoneAddPoint()
+            }
+        })
+
+        viewModel.petIdList.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                Logger.d("it = $it")
             }
         })
 

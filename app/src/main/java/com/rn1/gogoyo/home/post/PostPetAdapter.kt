@@ -20,16 +20,11 @@ class PostPetAdapter(val viewModel: PostViewModel) : ListAdapter<Pets, RecyclerV
         val isSelected: LiveData<Boolean> = Transformations.map(viewModel.selectedPetPositionList) {
             it.contains(adapterPosition)
         }
-
-
-
         fun bind(pets: Pets){
             binding.pets = pets
-
             binding.lifecycleOwner = this
             binding.viewHolder = this
             binding.viewModel = viewModel
-
             binding.petImageOuterSel.outlineProvider = MapOutlineProvider()
             binding.petImageOuter.outlineProvider = MapOutlineProvider()
             binding.petImageBorder.outlineProvider = MapOutlineProvider()

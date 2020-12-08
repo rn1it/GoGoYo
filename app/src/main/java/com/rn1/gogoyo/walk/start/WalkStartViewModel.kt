@@ -13,7 +13,16 @@ import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.concurrent.schedule
 
-class WalkStartViewModel(val repository: GogoyoRepository): ViewModel() {
+class WalkStartViewModel(
+    val repository: GogoyoRepository,
+    private val arguments: List<String>): ViewModel() {
+
+    private val _petIdList = MutableLiveData<List<String>>().apply {
+        value = arguments
+    }
+
+    val petIdList: LiveData<List<String>>
+        get() = _petIdList
 
     private val _navigateToEndWalk = MutableLiveData<Boolean>()
 

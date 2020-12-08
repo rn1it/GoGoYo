@@ -36,9 +36,6 @@ class ViewModelFactory constructor(
                 isAssignableFrom(WalkViewModel::class.java) ->
                     WalkViewModel(repository)
 
-                isAssignableFrom(WalkStartViewModel::class.java) ->
-                    WalkStartViewModel(repository)
-
                 isAssignableFrom(WalkEndViewModel::class.java) ->
                     WalkEndViewModel(repository)
 
