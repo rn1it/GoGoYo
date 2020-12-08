@@ -31,9 +31,6 @@ class ProfileUserFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-//        val fragmentList = mutableListOf<Fragment>()
-//        fragmentList.add(ProfilePetFragment())
-//        fragmentList.add(ProfileUserFragment())
 
         val tabLayout = binding.profileArticleTabLayout
 
@@ -44,21 +41,21 @@ class ProfileUserFragment : Fragment() {
         viewPager.isUserInputEnabled = false
         viewPager.adapter = pagerAdapter
 
-        val article = Articles("1","1")
-        val list1 = mutableListOf<Articles>()
-        val list2 = mutableListOf<Articles>()
-        list1.add(article)
-        list1.add(article)
-        list1.add(article)
-        list2.add(article)
-        list2.add(article)
-        list2.add(article)
-        list2.add(article)
-        val list3 = mutableListOf<List<Articles>>()
-        list3.add(list1)
-        list3.add(list2)
+//        val article = Articles("1","1")
+//        val list1 = mutableListOf<Articles>()
+//        val list2 = mutableListOf<Articles>()
+//        list1.add(article)
+//        list1.add(article)
+//        list1.add(article)
+//        list2.add(article)
+//        list2.add(article)
+//        list2.add(article)
+//        list2.add(article)
 
-        pagerAdapter.submitList(list3)
+        // Default no value for viewPager list
+        val viewPagerList = mutableListOf<List<Articles>>()
+        viewPagerList.add(0, mutableListOf() )
+        viewPagerList.add(1, mutableListOf() )
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
@@ -67,6 +64,13 @@ class ProfileUserFragment : Fragment() {
             }
             viewPager.currentItem = tab.position
         }.attach()
+
+        viewModel.userArticles.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                viewPagerList[0] = it
+                pagerAdapter.submitList(viewPagerList)
+            }
+        })
 
         viewModel.navigateToContent.observe(viewLifecycleOwner, Observer {
             it?.let {

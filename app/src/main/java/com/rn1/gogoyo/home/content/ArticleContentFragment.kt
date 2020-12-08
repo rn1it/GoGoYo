@@ -67,7 +67,7 @@ class ArticleContentFragment : Fragment() {
             }
         })
 
-        viewModel.responseList.observe(viewLifecycleOwner, Observer {
+        viewModel.liveArticleResponse.observe(viewLifecycleOwner, Observer {
             it?.let {
                 responseAdapter.submitList(it)
                 //TODO 發文到最底

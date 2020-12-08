@@ -1,5 +1,6 @@
 package com.rn1.gogoyo.model.source.remote
 
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -227,6 +228,118 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
                 }
             }
 
+    }
+
+    override suspend fun getArticlesById(id: String): Result<List<Articles>> = suspendCoroutine{ continuation ->
+
+        articleRef.orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING).whereEqualTo("authorId", id).get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val list = mutableListOf<Articles>()
+
+                var count = 0
+                for (document in task.result!!) {
+                    Logger.d(document.id + " => " + document.data)
+
+                    val article = document.toObject(Articles::class.java)
+
+                    usersRef.document(article.authorId!!).get().addOnCompleteListener { task1 ->
+                        if (task1.isSuccessful) {
+                            val user = task1.result.toObject(Users::class.java)!!
+                            article.userName = user.name
+
+                            list.add(article)
+                            count += 1
+
+                            if (count == task.result!!.size()){
+                                continuation.resume(Result.Success(list))
+                            }
+                        } else {
+                            task1.exception?.let {e ->
+                                Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                                continuation.resume(Result.Error(e))
+                            }
+                            continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+                        }
+
+                    }
+                }
+
+            } else {
+                task.exception?.let {e ->
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                    continuation.resume(Result.Error(e))
+                }
+                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+        }
+
+    }
+
+    override suspend fun getFavoriteArticlesById(id: String): Result<List<Articles>> = suspendCoroutine{ continuation ->
+
+        articleRef.orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING).whereArrayContains("favoriteUserIdList", id).get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val list = mutableListOf<Articles>()
+
+                var count = 0
+                for (document in task.result!!) {
+                    Logger.d(document.id + " => " + document.data)
+
+                    val article = document.toObject(Articles::class.java)
+
+                    usersRef.document(article.authorId!!).get().addOnCompleteListener { task1 ->
+                        if (task1.isSuccessful) {
+                            val user = task1.result.toObject(Users::class.java)!!
+                            article.userName = user.name
+
+                            list.add(article)
+                            count += 1
+
+                            if (count == task.result!!.size()){
+                                continuation.resume(Result.Success(list))
+                            }
+                        } else {
+                            task1.exception?.let {e ->
+                                Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                                continuation.resume(Result.Error(e))
+                            }
+                            continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+                        }
+
+                    }
+                }
+
+            } else {
+                task.exception?.let {e ->
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                    continuation.resume(Result.Error(e))
+                }
+                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+        }
+    }
+
+    override fun getRealTimeResponse(articleId: String): MutableLiveData<List<ArticleResponse>> {
+        val liveData = MutableLiveData<List<ArticleResponse>>()
+
+        articleRef.document(articleId).addSnapshotListener { snapshot, exception ->
+
+            Logger.i("addSnapshotListener detect")
+
+            exception?.let {
+                Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+            }
+
+            val list = mutableListOf<ArticleResponse>()
+            val article = snapshot!!.toObject(Articles::class.java)!!
+            Logger.d("article = $article")
+
+            list.addAll(article.responseList)
+
+            liveData.value = list
+        }
+
+        return liveData
     }
 
     override suspend fun responseArticle(articleId: String, response: ArticleResponse): Result<List<ArticleResponse>> = suspendCoroutine{ continuation ->

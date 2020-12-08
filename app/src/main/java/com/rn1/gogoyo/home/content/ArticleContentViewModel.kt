@@ -2,10 +2,7 @@ package com.rn1.gogoyo.home.content
 
 import android.graphics.Rect
 import android.view.View
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.RecyclerView
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
@@ -37,6 +34,12 @@ class ArticleContentViewModel(
 
     val petList: LiveData<List<Pets>>
         get() = _petList
+
+    val hasPet: LiveData<Boolean> =  Transformations.map(petList){
+        it.isNotEmpty()
+    }
+
+    var liveArticleResponse = MutableLiveData<List<ArticleResponse>>()
 
     val response = MutableLiveData<String>()
 
@@ -72,6 +75,7 @@ class ArticleContentViewModel(
 
     init {
         getPets()
+        getLiveArticleResponse()
     }
 
     override fun onCleared() {
@@ -109,31 +113,38 @@ class ArticleContentViewModel(
 
     }
 
+    private fun getLiveArticleResponse() {
+        liveArticleResponse = repository.getRealTimeResponse(arguments.id)
+        Logger.d("liveArticleResponse = $liveArticleResponse")
+    }
+
     fun response(){
         coroutineScope.launch {
             val articleResponse = ArticleResponse()
             articleResponse.userId = UserManager.userUID!!
             articleResponse.content = response.value!!
-            _responseList.value = when (val result = repository.responseArticle(arguments.id, articleResponse)) {
+//            _responseList.value =
+                when (val result = repository.responseArticle(arguments.id, articleResponse)) {
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadStatus.DONE
-                    result.data
+//                    result.data
+                    Logger.d("response article success")
                 }
                 is Result.Fail -> {
                     _error.value = result.error
                     _status.value = LoadStatus.ERROR
-                    null
+//                    null
                 }
                 is Result.Error -> {
                     _error.value = result.exception.toString()
                     _status.value = LoadStatus.ERROR
-                    null
+//                    null
                 }
                 else -> {
                     _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
                     _status.value = LoadStatus.ERROR
-                    null
+//                    null
                 }
             }
 
@@ -156,6 +167,10 @@ class ArticleContentViewModel(
                 outRect.top = GogoyoApplication.instance.resources.getDimensionPixelSize(R.dimen.cell_margin_4dp)
             }
         }
+    }
+
+    fun favArticle(){
+
     }
 
     fun onLeaveArticle() {
