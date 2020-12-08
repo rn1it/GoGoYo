@@ -342,6 +342,53 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
         return liveData
     }
 
+    override fun getRealTimeArticle(articleId: String): MutableLiveData<Articles> {
+        val liveData = MutableLiveData<Articles>()
+
+        articleRef.document(articleId).addSnapshotListener { snapshot, exception ->
+
+            Logger.i("addSnapshotListener detect")
+
+            exception?.let {
+                Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+            }
+
+            val article = snapshot!!.toObject(Articles::class.java)!!
+            Logger.d("article = $article")
+
+
+            liveData.value = article
+        }
+
+        return liveData
+    }
+
+    override suspend fun collectArticle(articleId: String, userId: String): Result<Boolean> = suspendCoroutine{ continuation ->
+
+        articleRef.document(articleId).get().addOnCompleteListener { task1 ->
+            if (task1.isSuccessful) {
+                val articles = task1.result.toObject(Articles::class.java)!!
+
+                if (articles.favoriteUserIdList.contains(userId)) {
+                    articleRef.document(articleId).update("favoriteUserIdList", FieldValue.arrayRemove(userId))
+                    continuation.resume(Result.Success(false))
+                } else {
+                    articleRef.document(articleId).update("favoriteUserIdList", FieldValue.arrayUnion(userId))
+                    continuation.resume(Result.Success(true))
+                }
+            } else {
+                task1.exception?.let {e ->
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                    continuation.resume(Result.Error(e))
+                }
+                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+
+        }
+
+
+    }
+
     override suspend fun responseArticle(articleId: String, response: ArticleResponse): Result<List<ArticleResponse>> = suspendCoroutine{ continuation ->
 
         response.createdTime = Calendar.getInstance().timeInMillis

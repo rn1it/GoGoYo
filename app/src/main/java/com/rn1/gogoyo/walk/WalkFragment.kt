@@ -30,34 +30,7 @@ class WalkFragment : Fragment() {
     private val viewModel by viewModels<WalkViewModel> { getVmFactory() }
 
     private val callback = OnMapReadyCallback { googleMap ->
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
 
-//        var lat: Double
-//        val lng: Double
-//        val lm = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-//        val location: Location? =
-//            lm.getLastKnownLocation(LocationManager.GPS_PROVIDER) // 設定定位資訊由 GPS提供
-//
-//        lat = location.getLatitude() // 取得經度
-//
-//        lng = location.getLongitude() // 取得緯度
-//
-//        val HOME =
-//            LatLng(lat, lng)
-//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(HOME, 15.0f)) //數字越大放越大
-
-
-        val sydney = LatLng(-34.0, 151.0)
-        googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 
     override fun onCreateView(
@@ -70,24 +43,23 @@ class WalkFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        viewModel.navigateToStartWalk.observe(viewLifecycleOwner, Observer {
+
+        val recyclerView = binding.walkDogSelectRv
+        val adapter = WalkPetAdapter(viewModel)
+        recyclerView.adapter = adapter
+
+        viewModel.userPetList.observe(viewLifecycleOwner, Observer {
             it?.let {
-                findNavController().navigate(NavigationDirections.actionGlobalWalkStartFragment())
-                viewModel.onDoneNavigateToStartWalk()
+                adapter.submitList(it)
             }
         })
 
-
-        val pet1 = Pets("001","111")
-        val list = mutableListOf<Pets>()
-        list.add(pet1)
-
-
-        val recyclerView = binding.walkDogSelectRv
-        val adapter = WalkPetAdapter()
-
-        recyclerView.adapter = adapter
-        adapter.submitList(list)
+        viewModel.navigateToStartWalk.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                findNavController().navigate(NavigationDirections.actionGlobalWalkStartFragment(it.toTypedArray()))
+                viewModel.onDoneNavigateToStartWalk()
+            }
+        })
 
         return binding.root
     }

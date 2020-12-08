@@ -23,16 +23,11 @@ import kotlinx.coroutines.launch
 class PostViewModel(private val repository: GogoyoRepository): ViewModel() {
 
     val post = MutableLiveData<Boolean>()
-
-
     /**
      *  do select pet logic
      */
     val selectedPetPositionList = MutableLiveData<MutableList<Int>>()
     val selectedPetIdList = MutableLiveData<MutableList<String>>()
-
-
-
 
     private val _navigateToHome = MutableLiveData<Boolean>()
 

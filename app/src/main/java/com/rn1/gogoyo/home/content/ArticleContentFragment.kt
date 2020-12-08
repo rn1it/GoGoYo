@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -67,9 +66,11 @@ class ArticleContentFragment : Fragment() {
             }
         })
 
-        viewModel.liveArticleResponse.observe(viewLifecycleOwner, Observer {
+        // observe every change in article
+        viewModel.liveArticle.observe(viewLifecycleOwner, Observer {
             it?.let {
-                responseAdapter.submitList(it)
+                responseAdapter.submitList(it.responseList)
+
                 //TODO 發文到最底
 //                binding.articleSv.post(Runnable { binding.articleSv.fullScroll(ScrollView.FOCUS_DOWN) })
             }

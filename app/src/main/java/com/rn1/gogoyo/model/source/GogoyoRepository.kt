@@ -26,5 +26,9 @@ interface GogoyoRepository {
 
     fun getRealTimeResponse(articleId: String): MutableLiveData<List<ArticleResponse>>
 
+    fun getRealTimeArticle(articleId: String): MutableLiveData<Articles>
+
+    suspend fun collectArticle(articleId: String, userId: String): Result<Boolean>
+
     suspend fun responseArticle(articleId: String, response: ArticleResponse): Result<List<ArticleResponse>>
 }

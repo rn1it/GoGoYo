@@ -41,7 +41,7 @@ class FriendFragment : Fragment() {
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
-                0 -> tab.text = "狗友卡"
+                0 -> tab.text = "推薦"
                 1 -> tab.text = "好友列表"
                 2 -> tab.text = "聊天"
             }

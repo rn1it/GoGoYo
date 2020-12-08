@@ -63,7 +63,11 @@
         android:id="@+id/walkStartFragment"
         android:name="com.rn1.gogoyo.walk.start.WalkStartFragment"
         android:label="WalkStartFragment"
-        tools:layout="@layout/fragment_walk_start"/>
+        tools:layout="@layout/fragment_walk_start">
+        <argument
+            android:name="petIdListKey"
+            app:argType="string[]" />
+    </fragment>
     <fragment
         android:id="@+id/walkEndFragment"
         android:name="com.rn1.gogoyo.walk.end.WalkEndFragment"

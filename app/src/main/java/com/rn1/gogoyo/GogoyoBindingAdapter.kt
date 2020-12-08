@@ -1,8 +1,12 @@
 package com.rn1.gogoyo
 
+import android.content.res.ColorStateList
+import android.media.Image
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.rn1.gogoyo.ext.getColor
 import com.rn1.gogoyo.ext.toDisplayFormat
 
 @BindingAdapter("addDecoration")
@@ -13,4 +17,16 @@ fun bindDecoration(recyclerView: RecyclerView, decoration: RecyclerView.ItemDeco
 @BindingAdapter("timeToDisplayFormat")
 fun bindDisplayFormatTime(textView: TextView, time: Long?) {
     textView.text = time?.toDisplayFormat()
+}
+
+@BindingAdapter("changeCollectButtonStatus")
+fun bindCollectButton(imageButton: ImageButton, isCollected: Boolean) {
+    imageButton.apply {
+
+
+                when (isCollected) {
+                    true ->this.setColorFilter(resources.getColor(R.color.red_F44336))
+                    false -> this.setColorFilter(resources.getColor(R.color.grey_999999))
+                }
+    }
 }

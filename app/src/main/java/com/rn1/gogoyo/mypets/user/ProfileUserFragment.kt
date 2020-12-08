@@ -72,6 +72,13 @@ class ProfileUserFragment : Fragment() {
             }
         })
 
+        viewModel.userFavArticles.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                viewPagerList[1] = it
+                pagerAdapter.submitList(viewPagerList)
+            }
+        })
+
         viewModel.navigateToContent.observe(viewLifecycleOwner, Observer {
             it?.let {
                 findNavController().navigate(NavigationDirections.actionGlobalArticleContentFragment(it))

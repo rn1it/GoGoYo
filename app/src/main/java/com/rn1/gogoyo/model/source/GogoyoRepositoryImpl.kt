@@ -48,6 +48,14 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.getRealTimeResponse(articleId)
     }
 
+    override fun getRealTimeArticle(articleId: String): MutableLiveData<Articles> {
+        return remoteDataSource.getRealTimeArticle(articleId)
+    }
+
+    override suspend fun collectArticle(articleId: String, userId: String): Result<Boolean> {
+        return remoteDataSource.collectArticle(articleId, userId)
+    }
+
     override suspend fun responseArticle(articleId: String, response: ArticleResponse): Result<List<ArticleResponse>> {
         return remoteDataSource.responseArticle(articleId, response)
     }
