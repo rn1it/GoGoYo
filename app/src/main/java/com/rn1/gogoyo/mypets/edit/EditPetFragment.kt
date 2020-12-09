@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
+import com.rn1.gogoyo.UserManager
 import com.rn1.gogoyo.databinding.FragmentEditPetBinding
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.mypets.newpets.NewPetViewModel
@@ -50,7 +51,7 @@ class EditPetFragment : Fragment() {
             it?.let {
                 if (it) {
                     Toast.makeText(context, "成員新增成功!", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(NavigationDirections.actionGlobalMyPetsFragment())
+                    findNavController().navigate(NavigationDirections.actionGlobalMyPetsFragment(UserManager.userUID!!))
                 }
                 viewModel.onDoneNavigateToPet()
             }

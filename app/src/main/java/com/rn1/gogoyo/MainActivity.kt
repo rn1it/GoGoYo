@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.nav_mypets -> {
-                navController.navigate(NavigationDirections.actionGlobalMyPetsFragment())
+                navController.navigate(NavigationDirections.actionGlobalMyPetsFragment(UserManager.userUID!!))
                 return@OnNavigationItemSelectedListener true
             }
         }

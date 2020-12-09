@@ -1,14 +1,13 @@
 package com.rn1.gogoyo.model.source
 
 import androidx.lifecycle.MutableLiveData
-import com.rn1.gogoyo.model.ArticleResponse
-import com.rn1.gogoyo.model.Articles
-import com.rn1.gogoyo.model.Pets
-import com.rn1.gogoyo.model.Result
+import com.rn1.gogoyo.model.*
 
 interface GogoyoRepository {
 
     suspend fun login(id: String, name: String): Result<Boolean>
+
+    suspend fun getUserById(id: String): Result<Users>
 
     suspend fun newPets(pet: Pets, userId: String): Result<Boolean>
 

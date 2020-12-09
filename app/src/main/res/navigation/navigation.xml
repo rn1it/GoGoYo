@@ -29,7 +29,11 @@
         android:id="@+id/myPetsFragment"
         android:name="com.rn1.gogoyo.mypets.MyPetsFragment"
         android:label="fragment_my_pets"
-        tools:layout="@layout/fragment_my_pets" />
+        tools:layout="@layout/fragment_my_pets" >
+        <argument
+            android:name="userIdKey"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/walkFragment"
         android:name="com.rn1.gogoyo.walk.WalkFragment"

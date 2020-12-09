@@ -15,7 +15,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class ProfilePetViewModel(val repository: GogoyoRepository): ViewModel() {
+class ProfilePetViewModel(
+    val repository: GogoyoRepository,
+    val userId: String
+    ): ViewModel() {
+
+    // check profile is login user or not
+    val isLoginUser = userId == UserManager.userUID
 
     private val _petList = MutableLiveData<List<Pets>>()
 
@@ -78,12 +84,12 @@ class ProfilePetViewModel(val repository: GogoyoRepository): ViewModel() {
         viewModelJob.cancel()
     }
 
-    fun getMyPets(){
+    private fun getMyPets(){
 
         coroutineScope.launch {
             _status.value = LoadStatus.LOADING
 
-            val result = repository.getAllPetsByUserId(UserManager.userUID!!)
+            val result = repository.getAllPetsByUserId(userId)
 
             _petList.value = when (result) {
                 is Result.Success -> {

@@ -19,10 +19,10 @@ import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.util.Logger
 import kotlin.math.abs
 
-class ProfilePetFragment : Fragment() {
+class ProfilePetFragment(val userId: String) : Fragment() {
 
     private lateinit var binding: FragmentProfilePetBinding
-    private val viewModel by viewModels<ProfilePetViewModel> { getVmFactory() }
+    private val viewModel by viewModels<ProfilePetViewModel> { getVmFactory(userId) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

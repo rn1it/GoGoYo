@@ -42,12 +42,6 @@ class ViewModelFactory constructor(
                 isAssignableFrom(MyPetsViewModel::class.java) ->
                     MyPetsViewModel(repository)
 
-                isAssignableFrom(ProfilePetViewModel::class.java) ->
-                    ProfilePetViewModel(repository)
-
-                isAssignableFrom(ProfileUserViewModel::class.java) ->
-                    ProfileUserViewModel(repository)
-
                 isAssignableFrom(ChatRoomViewModel::class.java) ->
                     ChatRoomViewModel(repository)
 

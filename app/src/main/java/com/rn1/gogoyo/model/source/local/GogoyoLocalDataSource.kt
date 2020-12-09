@@ -2,14 +2,15 @@ package com.rn1.gogoyo.model.source.local
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
-import com.rn1.gogoyo.model.ArticleResponse
-import com.rn1.gogoyo.model.Articles
-import com.rn1.gogoyo.model.Pets
-import com.rn1.gogoyo.model.Result
+import com.rn1.gogoyo.model.*
 import com.rn1.gogoyo.model.source.GogoyoDataSource
 
 class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
     override suspend fun login(id: String, name: String): Result<Boolean> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getUserById(id: String): Result<Users> {
         TODO("Not yet implemented")
     }
 
