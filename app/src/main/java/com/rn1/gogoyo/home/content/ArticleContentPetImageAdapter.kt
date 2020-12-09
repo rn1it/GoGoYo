@@ -38,7 +38,7 @@ class ArticleContentPetImageAdapter(val viewModel: ArticleContentViewModel) : Li
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return PetImageViewHolder.from(viewModel, parent)
     }
-
+ 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val petImageViewHolder = holder as PetImageViewHolder
         val pets = getItem(position)

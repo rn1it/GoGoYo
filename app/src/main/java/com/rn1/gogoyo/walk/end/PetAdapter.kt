@@ -1,6 +1,7 @@
 package com.rn1.gogoyo.walk.end
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -9,12 +10,17 @@ import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.databinding.ItemPetImageLayoutBinding
 import com.rn1.gogoyo.home.post.PostPetAdapter
 import com.rn1.gogoyo.model.Pets
+import com.rn1.gogoyo.util.Logger
 
 class PetAdapter: ListAdapter<Pets, RecyclerView.ViewHolder>(PostPetAdapter) {
 
     class PetViewHolder(val binding: ItemPetImageLayoutBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(pets: Pets){
             binding.pets = pets
+            Logger.d("aaa pet = $pets")
+            binding.petImageOuterSel.visibility = View.GONE
+            binding.petImageOuter.visibility = View.GONE
+            binding.petImageBorder.outlineProvider = MapOutlineProvider()
             binding.petsIv.outlineProvider = MapOutlineProvider()
             binding.executePendingBindings()
         }

@@ -22,11 +22,9 @@ fun bindDisplayFormatTime(textView: TextView, time: Long?) {
 @BindingAdapter("changeCollectButtonStatus")
 fun bindCollectButton(imageButton: ImageButton, isCollected: Boolean) {
     imageButton.apply {
-
-
-                when (isCollected) {
-                    true ->this.setColorFilter(resources.getColor(R.color.red_F44336))
-                    false -> this.setColorFilter(resources.getColor(R.color.grey_999999))
-                }
+        when (isCollected) {
+            true ->this.setColorFilter(resources.getColor(R.color.red_F44336))
+            false -> this.setColorFilter(resources.getColor(R.color.grey_999999))
+        }
     }
 }

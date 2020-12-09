@@ -113,6 +113,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.friendListFragment -> CurrentFragmentType.FRIEND_LIST
                 R.id.friendChatFragment -> CurrentFragmentType.FRIEND_CHAT
                 R.id.myPetsFragment -> CurrentFragmentType.PROFILE_PET
+                R.id.walkStartFragment -> CurrentFragmentType.WALK_START
 
                 else -> viewModel.currentFragmentType.value
             }

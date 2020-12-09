@@ -76,7 +76,11 @@
         android:id="@+id/walkEndFragment"
         android:name="com.rn1.gogoyo.walk.end.WalkEndFragment"
         android:label="WalkEndFragment"
-        tools:layout="@layout/fragment_walk_end"/>
+        tools:layout="@layout/fragment_walk_end">
+        <argument
+            android:name="walkKey"
+            app:argType="com.rn1.gogoyo.model.Walk" />
+    </fragment>
     <fragment
         android:id="@+id/chatRoomFragment"
         android:name="com.rn1.gogoyo.friend.chat.chatRoom.ChatRoomFragment"

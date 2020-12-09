@@ -23,6 +23,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
     private val usersRef =  db.collection("users")
     private val petsRef =  db.collection("pets")
     private val articleRef = db.collection("articles")
+    private val walkRef = db.collection("walks")
 
 
     override suspend fun login(id: String, name: String): Result<Boolean> = suspendCoroutine { continuation ->
@@ -473,7 +474,26 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
         }
     }
 
+    override suspend fun insertWalk(walk: Walk): Result<Walk>  = suspendCoroutine{ continuation ->
 
+        val document = walkRef.document()
+        walk.id = document.id
+        walk.createdTime = Calendar.getInstance().timeInMillis
 
+        walkRef.document().set(walk).addOnCompleteListener { task ->
+
+            if (task.isSuccessful) {
+                Logger.d("insert into walk: $walk")
+                continuation.resume(Result.Success(walk))
+            } else {
+                task.exception?.let {e ->
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                    continuation.resume(Result.Error(e))
+                }
+                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+        }
+
+    }
 
 }

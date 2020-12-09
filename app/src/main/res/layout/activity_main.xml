@@ -22,7 +22,7 @@
             android:layout_height="60dp"
             android:background="#FFC107"
             android:elevation="@dimen/elevation_all"
-            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.ARTICLE_CONTENT ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.ARTICLE_CONTENT || viewModel.currentFragmentType == CurrentFragmentType.WALK_START ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">

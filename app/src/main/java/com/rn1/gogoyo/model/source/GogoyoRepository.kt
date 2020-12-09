@@ -34,4 +34,6 @@ interface GogoyoRepository {
     suspend fun collectArticle(articleId: String, userId: String): Result<Boolean>
 
     suspend fun responseArticle(articleId: String, response: ArticleResponse): Result<List<ArticleResponse>>
+
+    suspend fun insertWalk(walk: Walk): Result<Walk>
 }

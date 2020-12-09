@@ -69,4 +69,8 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.responseArticle(articleId, response)
     }
 
+    override suspend fun insertWalk(walk: Walk): Result<Walk> {
+        return remoteDataSource.insertWalk(walk)
+    }
+
 }
