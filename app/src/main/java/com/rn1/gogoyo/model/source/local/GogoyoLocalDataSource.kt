@@ -82,6 +82,10 @@ class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
         TODO("Not yet implemented")
     }
 
+    override suspend fun getOthersWalkingList(userId: String): Result<List<Walk>> {
+        TODO("Not yet implemented")
+    }
+
 //    override suspend fun getWalkingList(): Result<List<Walk>> {
 //        TODO("Not yet implemented")
 //    }

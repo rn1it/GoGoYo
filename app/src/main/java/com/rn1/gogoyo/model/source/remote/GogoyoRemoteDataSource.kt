@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.auth.User
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
@@ -480,7 +479,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
         walk.id = document.id
         walk.createdTime = Calendar.getInstance().timeInMillis
 
-        walkRef.document().set(walk).addOnCompleteListener { task ->
+        document.set(walk).addOnCompleteListener { task ->
 
             if (task.isSuccessful) {
                 Logger.d("insert into walk: $walk")
@@ -534,7 +533,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
         val liveData = MutableLiveData<List<Walk>>()
 
         walkRef
-            .whereNotEqualTo("userId", userId)
+//            .whereNotEqualTo("userId", userId)
             .whereEqualTo("endTime", null)
             .addSnapshotListener { snapshot, exception ->
 
@@ -558,6 +557,36 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
         return liveData
 
     }
+
+    override suspend fun getOthersWalkingList(userId: String): Result<List<Walk>> = suspendCoroutine { continuation ->
+
+        walkRef
+            .whereNotEqualTo("userId", userId)
+            .whereEqualTo("endTime", null)
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val list = mutableListOf<Walk>()
+
+                    for (document in task.result) {
+                        val walk = document.toObject(Walk::class.java)
+                        list.add(walk)
+                    }
+                    Logger.w("online walk list = $list")
+                    continuation.resume(Result.Success(list))
+                } else {
+                    task.exception?.let {e ->
+                        Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                        continuation.resume(Result.Error(e))
+                    }
+                    continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+
+                }
+            }
+
+
+    }
+
 
 //    override suspend fun getWalkingList(): Result<List<Walk>> = suspendCoroutine{ continuation ->
 //

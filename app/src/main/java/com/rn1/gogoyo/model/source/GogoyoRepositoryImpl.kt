@@ -85,6 +85,10 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.getRealTimeOthersWalkingList(userId)
     }
 
+    override suspend fun getOthersWalkingList(userId: String): Result<List<Walk>> {
+        return remoteDataSource.getOthersWalkingList(userId)
+    }
+
 //    override suspend fun getWalkingList(): Result<List<Walk>> {
 //        return remoteDataSource.getWalkingList()
 //    }

@@ -1,6 +1,8 @@
 package com.rn1.gogoyo.walk.start
 
 import android.Manifest
+import android.app.Activity
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
@@ -9,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -58,7 +61,7 @@ class WalkStartFragment : Fragment(){
 
     private val callback = OnMapReadyCallback { googleMap ->
         myMap = googleMap
-
+        googleMap.setInfoWindowAdapter(CustomInfoWindowForGoogleMap(requireContext()))
 //        googleMap.setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
 //            override fun getInfoWindow(marker: Marker?): View? {
 //                return null
@@ -97,8 +100,19 @@ class WalkStartFragment : Fragment(){
 //        })
 
 
-        viewModel.liveWalks.observe(viewLifecycleOwner, Observer {
+//        viewModel.liveWalks.observe(viewLifecycleOwner, Observer {
+//            it?.let {
+//                if (it.isNotEmpty()) {
+//                    removeMarkers()
+//                }
+//                createMakers(it)
+//            }
+//        })
+
+        viewModel.onLineWalks.observe(viewLifecycleOwner, Observer {
             it?.let {
+
+                Logger.d("current online list = $it")
                 if (it.isNotEmpty()) {
                     removeMarkers()
                 }
@@ -118,6 +132,15 @@ class WalkStartFragment : Fragment(){
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
+
+        viewModel.getCurrentLocation.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                if(it){
+                    getDeviceLocation()
+                    viewModel.onDoneGetCurrentLocation()
+                }
+            }
+        })
 
         viewModel.navigateToEndWalk.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -294,7 +317,7 @@ class WalkStartFragment : Fragment(){
     private fun createMakers(list: List<Walk>){
 
         for (walk in list) {
-            val marker = myMap?.addMarker(MarkerOptions().position(LatLng(walk.currentLat!!, walk.currentLng!!)))!!
+            val marker = myMap?.addMarker(MarkerOptions().position(LatLng(walk.currentLat!!, walk.currentLng!!)).title("HI"))!!
             markList.add(marker)
         }
     }
@@ -305,4 +328,32 @@ class WalkStartFragment : Fragment(){
         }
         markList.clear()
     }
+
+    class CustomInfoWindowForGoogleMap(context: Context) : GoogleMap.InfoWindowAdapter {
+
+        var mContext = context
+        var mWindow = (context as Activity).layoutInflater.inflate(R.layout.marker_info_layout, null)
+
+        private fun rendowWindowText(marker: Marker, view: View){
+
+            val tvTitle = view.findViewById<TextView>(R.id.title)
+            val tvSnippet = view.findViewById<TextView>(R.id.snippet)
+
+            tvTitle.text = marker.title
+            tvSnippet.text = marker.snippet
+
+        }
+
+        override fun getInfoContents(marker: Marker): View {
+            rendowWindowText(marker, mWindow)
+            return mWindow
+        }
+
+        override fun getInfoWindow(marker: Marker): View? {
+            rendowWindowText(marker, mWindow)
+            return mWindow
+        }
+    }
+
+
 }

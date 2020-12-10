@@ -34,7 +34,12 @@ class WalkStartViewModel(
     val walk: LiveData<Walk>
         get() = _walk
 
-    var liveWalks = MutableLiveData<List<Walk>>()
+//    var liveWalks = MutableLiveData<List<Walk>>()
+
+    private val _onLineWalks = MutableLiveData<List<Walk>>()
+
+    val onLineWalks: LiveData<List<Walk>>
+        get() = _onLineWalks
 
     private val pointsList: MutableList<Points> = mutableListOf()
 
@@ -113,8 +118,8 @@ class WalkStartViewModel(
 
         // set user isWalking = true
         setUserWalkingStatus(true)
-
-        getLiveWalkingList()
+        getOnlineWalkList()
+//        getLiveWalkingList()
     }
 
     override fun onCleared() {
@@ -135,10 +140,18 @@ class WalkStartViewModel(
                 if (second % 5 == 0) {
                     _getCurrentLocation.value = true
                 }
+                if (second % 30 == 0){
+                    // 30 second refresh online walk
+                    getOnlineWalkList()
+                }
 
                 formatTime(second)
             }
         }
+    }
+
+    fun onDoneGetCurrentLocation(){
+        _getCurrentLocation.value = null
     }
 
     fun savePoint(lat: Double, lng: Double) {
@@ -274,7 +287,7 @@ class WalkStartViewModel(
                 points = pointsList
                 period = second.toLong()
             }
-            
+
             _navigateToEndWalk.value = when (val result = repository.updateWalk(walk)) {
                 is Result.Success -> {
                     _error.value = null
@@ -340,10 +353,42 @@ class WalkStartViewModel(
         }
     }
 
-    private fun getLiveWalkingList() {
-        liveWalks = repository.getRealTimeOthersWalkingList(UserManager.userUID!!)
-        _status.value = LoadStatus.DONE
-        _refreshStatus.value = false
+//    private fun getLiveWalkingList() {
+//        liveWalks = repository.getRealTimeOthersWalkingList(UserManager.userUID!!)
+//        _status.value = LoadStatus.DONE
+//        _refreshStatus.value = false
+//    }
+
+    private fun getOnlineWalkList(){
+        Logger.d("getOnlineWalkList Second = $second")
+        coroutineScope.launch {
+
+            _onLineWalks.value = when (val result = repository.getOthersWalkingList(UserManager.userUID!!)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    result.data
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+            }
+
+
+        }
+
     }
 
     fun getDistance(start: LatLng, end: LatLng): Double {

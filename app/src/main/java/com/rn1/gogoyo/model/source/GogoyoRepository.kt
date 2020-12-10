@@ -44,4 +44,6 @@ interface GogoyoRepository {
 //    suspend fun getWalkingList(): Result<List<Walk>>
 
     fun getRealTimeOthersWalkingList(userId: String): MutableLiveData<List<Walk>>
+
+    suspend fun getOthersWalkingList(userId: String): Result<List<Walk>>
 }
