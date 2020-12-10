@@ -13,8 +13,10 @@ data class Walk(
     var points : List<Points>? = null,
     var period : Long? = null,
     var distance: Float? = null,
-    val startTime: Long = Calendar.getInstance().timeInMillis,
+    var startTime: Long = Calendar.getInstance().timeInMillis,
     var endTime: Long? = null,
     var images: List<String>? = null,
-    var createdTime: Long? = null
+    var createdTime: Long? = null,
+    var currentLat: Double? = null,
+    var currentLng: Double? = null
 ): Parcelable

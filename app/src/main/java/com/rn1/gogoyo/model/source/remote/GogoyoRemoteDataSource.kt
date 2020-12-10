@@ -474,7 +474,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
         }
     }
 
-    override suspend fun insertWalk(walk: Walk): Result<Walk>  = suspendCoroutine{ continuation ->
+    override suspend fun insertWalk(walk: Walk): Result<Walk> = suspendCoroutine{ continuation ->
 
         val document = walkRef.document()
         walk.id = document.id
@@ -496,4 +496,87 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
 
     }
 
+    override suspend fun updateWalk(walk: Walk): Result<Walk> = suspendCoroutine{ continuation ->
+
+        walkRef.document(walk.id).set(walk).addOnCompleteListener { task ->
+
+            if (task.isSuccessful) {
+                Logger.d("update walk: $walk")
+                continuation.resume(Result.Success(walk))
+            } else {
+                task.exception?.let {e ->
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                    continuation.resume(Result.Error(e))
+                }
+                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+        }
+    }
+
+    override suspend fun setWalkingStatus(userId: String, isWalking: Boolean): Result<Boolean> = suspendCoroutine{ continuation ->
+
+        usersRef.document(userId).update("isWalking", isWalking).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Logger.d("user: $userId walk status: $isWalking")
+                continuation.resume(Result.Success(true))
+            } else {
+                task.exception?.let {e ->
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                    continuation.resume(Result.Error(e))
+                }
+                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+        }
+    }
+
+    override fun getRealTimeOthersWalkingList(userId: String): MutableLiveData<List<Walk>> {
+
+        val liveData = MutableLiveData<List<Walk>>()
+
+        walkRef
+            .whereNotEqualTo("userId", userId)
+            .whereEqualTo("endTime", null)
+            .addSnapshotListener { snapshot, exception ->
+
+                Logger.i("addSnapshotListener detect")
+
+                exception?.let {
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                }
+
+                val list = mutableListOf<Walk>()
+                for (document in snapshot!!) {
+                    Logger.d(document.id + " => " + document.data)
+                    val walk = document.toObject(Walk::class.java)
+
+                    list.add(walk)
+                }
+
+                liveData.value = list
+        }
+
+        return liveData
+
+    }
+
+//    override suspend fun getWalkingList(): Result<List<Walk>> = suspendCoroutine{ continuation ->
+//
+//        walkRef.whereEqualTo("endTime", null).get().addOnCompleteListener { task ->
+//            if (task.isSuccessful) {
+//                val list = mutableListOf<Walk>()
+//                for (document in task.result) {
+//                    val walk = document.toObject(Walk::class.java)
+//                    list.add(walk)
+//                }
+//                Logger.w("walk list = $list")
+//                continuation.resume(Result.Success(list))
+//            } else {
+//                task.exception?.let {e ->
+//                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+//                    continuation.resume(Result.Error(e))
+//                }
+//                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+//            }
+//        }
+//    }
 }

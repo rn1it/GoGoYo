@@ -73,4 +73,20 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.insertWalk(walk)
     }
 
+    override suspend fun updateWalk(walk: Walk): Result<Walk> {
+        return remoteDataSource.updateWalk(walk)
+    }
+
+    override suspend fun setWalkingStatus(userId: String, isWalking: Boolean): Result<Boolean> {
+        return remoteDataSource.setWalkingStatus(userId, isWalking)
+    }
+
+    override fun getRealTimeOthersWalkingList(userId: String): MutableLiveData<List<Walk>> {
+        return remoteDataSource.getRealTimeOthersWalkingList(userId)
+    }
+
+//    override suspend fun getWalkingList(): Result<List<Walk>> {
+//        return remoteDataSource.getWalkingList()
+//    }
+
 }

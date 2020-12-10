@@ -9,8 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -28,13 +26,15 @@ import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentWalkStartBinding
 import com.rn1.gogoyo.ext.getVmFactory
+import com.rn1.gogoyo.model.Points
+import com.rn1.gogoyo.model.Walk
 import com.rn1.gogoyo.util.Logger
-import kotlinx.android.synthetic.main.activity_login.*
+import java.lang.Math.abs
 
 
 private const val PERMISSION_ID = 1
 
-class WalkStartFragment : Fragment() {
+class WalkStartFragment : Fragment(){
 
     private lateinit var binding: FragmentWalkStartBinding
     private val viewModel by viewModels<WalkStartViewModel> { getVmFactory(
@@ -52,7 +52,9 @@ class WalkStartFragment : Fragment() {
     private var lat: Double? = null
     private var lon: Double? = null
 
-    private val pointsList: MutableList<Double> = mutableListOf()
+    private val markList: MutableList<Marker> = mutableListOf()
+
+
 
     private val callback = OnMapReadyCallback { googleMap ->
         myMap = googleMap
@@ -80,18 +82,37 @@ class WalkStartFragment : Fragment() {
 //        })
 
         getLocationPermission()
-
         // Turn on the My Location layer and the related control on the map.
         updateLocationUI()
-
         // get current location
         getDeviceLocation()
+
+//        viewModel.list.observe(viewLifecycleOwner, Observer {
+//            it?.let {
+//                if (markList.isNotEmpty()) {
+//                    removeMarkers()
+//                }
+//                createMakers(it)
+//            }
+//        })
+
+
+        viewModel.liveWalks.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                if (it.isNotEmpty()) {
+                    removeMarkers()
+                }
+                createMakers(it)
+            }
+        })
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_walk_start, container, false)
         binding.viewModel = viewModel
@@ -105,29 +126,25 @@ class WalkStartFragment : Fragment() {
             }
         })
 
-        viewModel.addPoint.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                getDeviceLocation()
-                viewModel.onDoneAddPoint()
-            }
-        })
-
         viewModel.petIdList.observe(viewLifecycleOwner, Observer {
             it?.let {
                 Logger.d("it = $it")
             }
         })
 
+
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val mapFragment = childFragmentManager.findFragmentById(R.id.walkEndMap) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
-
         // 2. init fusedLocationProviderClient and set LocationServices object
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
 
     }
 
@@ -198,38 +215,27 @@ class WalkStartFragment : Fragment() {
                         lastKnownLocation = task.result
                         if (lastKnownLocation != null) {
 
-                            if (null == lat && lon == lon) {
+                            // beginning location
+                            if (null == lat && null == lon) {
                                 lat = lastKnownLocation!!.latitude
                                 lon = lastKnownLocation!!.longitude
 
                                 Logger.d("start: lat = $lat, lon = $lon")
 
-                                viewModel.savePoint(lat!!, lon!!)
+//                                viewModel.currentLat = lat!!
+//                                viewModel.currentLng = lon!!
 
-                                myMap?.apply { addMarker(
-                                    MarkerOptions()
-                                    .position(LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude))
-                                    .title("")
-                                    .snippet("${lastKnownLocation!!.latitude}, ${lastKnownLocation!!.longitude}")
-                                    .anchor(0.5f, 0.5f)
-//                                  .icon(BitmapDescriptorFactory.fromResource(android.R.drawable.ic_menu_mylocation))
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                                    )
+                                viewModel.insertWalk(lat!!, lon!!)
 
-                                    moveCamera(
-                                        CameraUpdateFactory.newLatLngZoom(
-                                            LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude), 17f)
-                                    )
+                                myMap?.apply {
+                                    moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude), 17f))
                                 }
 
                             } else {
-                                drawLine(
-                                    lat!!,
-                                    lon!!,
-                                    lastKnownLocation!!.latitude,
-                                    lastKnownLocation!!.longitude
-                                )
+                                // draw line
+                                drawLine(lat!!, lon!!, lastKnownLocation!!.latitude, lastKnownLocation!!.longitude)
 
+                                // set currentLatLng
                                 lat = lastKnownLocation!!.latitude
                                 lon = lastKnownLocation!!.longitude
 
@@ -252,7 +258,7 @@ class WalkStartFragment : Fragment() {
         // Draw polyline
         val polyline = myMap!!.addPolyline(
             PolylineOptions()
-                .color(Color.YELLOW)
+                .color(R.color.colorPrimaryDark)
                 .width(15f)
                 .add(
                     LatLng(lastLat, lastLon), LatLng(currentLat, currentLon)
@@ -260,7 +266,6 @@ class WalkStartFragment : Fragment() {
         )
 
         polyline.tag = "A"
-//        stylePolyline(polyline)
     }
 
     private fun stylePolyline(polyline: Polyline) {
@@ -285,4 +290,19 @@ class WalkStartFragment : Fragment() {
 //        polyline.setJointType(JointType.ROUND)
     }
 
+
+    private fun createMakers(list: List<Walk>){
+
+        for (walk in list) {
+            val marker = myMap?.addMarker(MarkerOptions().position(LatLng(walk.currentLat!!, walk.currentLng!!)))!!
+            markList.add(marker)
+        }
+    }
+
+    private fun removeMarkers(){
+        for (mark in markList) {
+            mark.remove()
+        }
+        markList.clear()
+    }
 }

@@ -36,4 +36,12 @@ interface GogoyoRepository {
     suspend fun responseArticle(articleId: String, response: ArticleResponse): Result<List<ArticleResponse>>
 
     suspend fun insertWalk(walk: Walk): Result<Walk>
+
+    suspend fun updateWalk(walk: Walk): Result<Walk>
+
+    suspend fun setWalkingStatus(userId: String, isWalking: Boolean): Result<Boolean>
+
+//    suspend fun getWalkingList(): Result<List<Walk>>
+
+    fun getRealTimeOthersWalkingList(userId: String): MutableLiveData<List<Walk>>
 }

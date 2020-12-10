@@ -1,10 +1,10 @@
 package com.rn1.gogoyo.walk.start
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.LatLng
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
@@ -20,15 +20,23 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.concurrent.schedule
+import kotlin.math.acos
+import kotlin.math.cos
+import kotlin.math.sin
 
 class WalkStartViewModel(
     val repository: GogoyoRepository,
     private val arguments: List<String>
     ): ViewModel() {
 
-    private val walk = Walk()
+    private val _walk =  MutableLiveData<Walk>()
 
-    private val pointsList :MutableList<Points> = mutableListOf()
+    val walk: LiveData<Walk>
+        get() = _walk
+
+    var liveWalks = MutableLiveData<List<Walk>>()
+
+    private val pointsList: MutableList<Points> = mutableListOf()
 
     private val _petIdList = MutableLiveData<List<String>>().apply {
         value = arguments
@@ -56,12 +64,13 @@ class WalkStartViewModel(
     val counterBtString: LiveData<String>
         get() = _counterBtString
 
-    private val _addPoint = MutableLiveData<Boolean>()
+    private val _getCurrentLocation = MutableLiveData<Boolean>()
 
-    val addPoint: LiveData<Boolean>
-        get() = _addPoint
+    val getCurrentLocation: LiveData<Boolean>
+        get() = _getCurrentLocation
 
-
+//    var currentLat: Double = 0.0
+//    var currentLng: Double = 0.0
 
     private lateinit var timer : Timer
     private var second = 0
@@ -80,6 +89,12 @@ class WalkStartViewModel(
     val error: LiveData<String>
         get() = _error
 
+    // status for the loading icon of swl
+    private val _refreshStatus = MutableLiveData<Boolean>()
+
+    val refreshStatus: LiveData<Boolean>
+        get() = _refreshStatus
+
     // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
 
@@ -87,8 +102,19 @@ class WalkStartViewModel(
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
 
+//    private val _list = MutableLiveData<List<Points>>()
+//
+//    val list : LiveData<List<Points>>
+//        get() = _list
+
     init {
         startTimer()
+//        createMarker()
+
+        // set user isWalking = true
+        setUserWalkingStatus(true)
+
+        getLiveWalkingList()
     }
 
     override fun onCleared() {
@@ -107,7 +133,7 @@ class WalkStartViewModel(
 
                 // 5 second draw polyline
                 if (second % 5 == 0) {
-                    _addPoint.value = true
+                    _getCurrentLocation.value = true
                 }
 
                 formatTime(second)
@@ -116,16 +142,96 @@ class WalkStartViewModel(
     }
 
     fun savePoint(lat: Double, lng: Double) {
+
         val point = Points()
         point.latitude = lat
         point.longitude = lng
-
         pointsList.add(point)
+
+        val walk = walk.value!!
+        walk.apply {
+            currentLat = lat
+            currentLng = lng
+            points = pointsList
+        }
+
+        // update point
+        coroutineScope.launch {
+
+            _walk.value =  when (val result = repository.updateWalk(walk)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    Logger.d("result.data = ${result.data}")
+                    setUserWalkingStatus(false)
+                    result.data
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+            }
+        }
     }
 
-    fun onDoneAddPoint(){
-        _addPoint.value = null
+    fun insertWalk(lat: Double, lng:Double){
+
+        coroutineScope.launch {
+
+            val walk = Walk().apply {
+                userId = UserManager.userUID!!
+                startTime = Calendar.getInstance().timeInMillis
+                petsIdList = arguments
+                period = second.toLong()
+                currentLat = lat
+                currentLng = lng
+            }
+
+            val point = Points()
+            point.latitude = lat
+            point.longitude = lng
+            pointsList.add(point)
+
+            _walk.value =  when (val result = repository.insertWalk(walk)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    Logger.d("result.data = ${result.data}")
+                    result.data
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+
+            }
+
+        }
+
     }
+
 
     fun stopOrContinueCounter(){
         if (stopCount) {
@@ -161,19 +267,20 @@ class WalkStartViewModel(
 
         coroutineScope.launch {
 
+            val walk = walk.value!!
+
             walk.apply {
-                userId = UserManager.userUID!!
                 endTime = Calendar.getInstance().timeInMillis
-                petsIdList = arguments
                 points = pointsList
                 period = second.toLong()
             }
-
-            _navigateToEndWalk.value = when (val result = repository.insertWalk(walk)) {
+            
+            _navigateToEndWalk.value = when (val result = repository.updateWalk(walk)) {
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadStatus.DONE
                     Logger.d("result.data = ${result.data}")
+                    setUserWalkingStatus(false)
                     result.data
                 }
                 is Result.Fail -> {
@@ -200,6 +307,58 @@ class WalkStartViewModel(
 
     fun onDoneNavigateToEndWalk(){
         _navigateToEndWalk.value = null
+    }
+
+    private fun setUserWalkingStatus(isWalking: Boolean){
+
+        coroutineScope.launch {
+
+            when (val result = repository.setWalkingStatus(UserManager.userUID!!, isWalking)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+
+                    if (isWalking) {
+                        Logger.d("user is walking!")
+                    } else {
+                        Logger.d("walk finished!")
+                    }
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                }
+            }
+        }
+    }
+
+    private fun getLiveWalkingList() {
+        liveWalks = repository.getRealTimeOthersWalkingList(UserManager.userUID!!)
+        _status.value = LoadStatus.DONE
+        _refreshStatus.value = false
+    }
+
+    fun getDistance(start: LatLng, end: LatLng): Double {
+
+        val lat1 = Math.PI / 180 * start.latitude
+        val lat2 = Math.PI / 180 * end.latitude
+        val lon1 = Math.PI / 180 * start.longitude
+        val lon2 = Math.PI / 180 * end.longitude
+
+        //radius of earth
+        val radius = 6371.0
+
+        // distance between two points, return kilometer
+        val d = acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2 - lon1)) * radius
+        return d * 1000
     }
 
 }

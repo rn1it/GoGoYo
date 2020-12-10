@@ -73,17 +73,6 @@ class WalkEndFragment : Fragment() {
 
         recyclerView.adapter = adapter
 
-        val pet1 = Pets("001","111")
-        val list = mutableListOf<Pets>()
-        list.add(pet1)
-        list.add(pet1)
-        list.add(pet1)
-        list.add(pet1)
-        list.add(pet1)
-
-        adapter.submitList(list)
-
-
         viewModel.walk.observe(viewLifecycleOwner, Observer {
             it?.let {
                 walk = it

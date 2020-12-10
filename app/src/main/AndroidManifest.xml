@@ -2,19 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.rn1.gogoyo">
 
-    <!-- GPS access permission -->
+    <!--
+         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+         Google Maps Android API v2, but you must specify either coarse or fine
+         location permissions for the "MyLocation" functionality.
+    -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <!-- NET access permission -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- INTERNET -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-
-    <!-- UPLOAD / DOWNLOAD-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- INTERNET -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- UPLOAD / DOWNLOAD -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <!--允許 API 存取以網頁為基礎的服務 (web-based services) -->
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 允許 API 存取以網頁為基礎的服務 (web-based services) -->
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <application
         android:name=".GogoyoApplication"
@@ -24,11 +24,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Fab_Bottom_app_bar">
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login"
-            android:theme="@style/Theme.Fab_Bottom_app_bar.NoActionBar">
-        </activity>
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -39,7 +35,12 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" /> <!-- 編譯時所用Google Play服務的版本 -->
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
+            android:theme="@style/Theme.Fab_Bottom_app_bar.NoActionBar"></activity> <!-- 編譯時所用Google Play服務的版本 -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
