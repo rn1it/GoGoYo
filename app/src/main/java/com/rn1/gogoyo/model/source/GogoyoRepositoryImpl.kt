@@ -1,10 +1,7 @@
 package com.rn1.gogoyo.model.source
 
 import androidx.lifecycle.MutableLiveData
-import com.rn1.gogoyo.model.ArticleResponse
-import com.rn1.gogoyo.model.Articles
-import com.rn1.gogoyo.model.Pets
-import com.rn1.gogoyo.model.Result
+import com.rn1.gogoyo.model.*
 
 
 class GogoyoRepositoryImpl(
@@ -16,12 +13,24 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.login(id, name)
     }
 
+    override suspend fun getUserById(id: String): Result<Users> {
+        return remoteDataSource.getUserById(id)
+    }
+
     override suspend fun newPets(pet: Pets, userId: String): Result<Boolean> {
         return remoteDataSource.newPets(pet, userId)
     }
 
+    override suspend fun editPets(pet: Pets): Result<Boolean> {
+        return remoteDataSource.editPets(pet)
+    }
+
     override suspend fun getAllPetsByUserId(userId: String): Result<List<Pets>> {
         return remoteDataSource.getAllPetsByUserId(userId)
+    }
+
+    override suspend fun getPetsById(id: String): Result<Pets> {
+        return remoteDataSource.getPetsById(id)
     }
 
     override suspend fun getPetsByIdList(idList: List<String>): Result<List<Pets>> {
@@ -59,5 +68,29 @@ class GogoyoRepositoryImpl(
     override suspend fun responseArticle(articleId: String, response: ArticleResponse): Result<List<ArticleResponse>> {
         return remoteDataSource.responseArticle(articleId, response)
     }
+
+    override suspend fun insertWalk(walk: Walk): Result<Walk> {
+        return remoteDataSource.insertWalk(walk)
+    }
+
+    override suspend fun updateWalk(walk: Walk): Result<Walk> {
+        return remoteDataSource.updateWalk(walk)
+    }
+
+    override suspend fun setWalkingStatus(userId: String, isWalking: Boolean): Result<Boolean> {
+        return remoteDataSource.setWalkingStatus(userId, isWalking)
+    }
+
+    override fun getRealTimeOthersWalkingList(userId: String): MutableLiveData<List<Walk>> {
+        return remoteDataSource.getRealTimeOthersWalkingList(userId)
+    }
+
+    override suspend fun getOthersWalkingList(userId: String): Result<List<Walk>> {
+        return remoteDataSource.getOthersWalkingList(userId)
+    }
+
+//    override suspend fun getWalkingList(): Result<List<Walk>> {
+//        return remoteDataSource.getWalkingList()
+//    }
 
 }

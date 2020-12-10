@@ -1,11 +1,13 @@
 package com.rn1.gogoyo.home.content
 
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.databinding.ItemPetImageLayoutBinding
 import com.rn1.gogoyo.model.Pets
@@ -22,7 +24,12 @@ class ArticleContentPetImageAdapter(val viewModel: ArticleContentViewModel) : Li
 
             binding.petImageOuterSel.visibility = View.GONE
             binding.petImageOuter.visibility = View.GONE
-            binding.petImageBorder.outlineProvider = MapOutlineProvider()
+            binding.petImageBorder.apply {
+                outlineProvider = MapOutlineProvider()
+                layoutParams.width =
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 65f, GogoyoApplication.instance.resources.getDisplayMetrics())
+                        .toInt()
+            }
             binding.petsIv.outlineProvider = MapOutlineProvider()
             binding.executePendingBindings()
         }

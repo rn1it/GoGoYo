@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="com.rn1.gogoyo.mypets.pet.ProfilePetViewModel" />
@@ -43,6 +44,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:clickable="true"
+                android:visibility="@{viewModel.isLoginUser ? View.VISIBLE : View.GONE}"
                 android:onClick="@{() -> viewModel.onNavigateToNewPet()}"
                 android:src="@drawable/add_pet3"
                 app:backgroundTint="@color/white"
@@ -83,42 +85,43 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
                     android:elevation="@dimen/elevation_all"
-                    android:onClick="@{()->viewModel.edit()}"
+                    android:onClick="@{()->viewModel.editPet()}"
+                    android:visibility="@{viewModel.isLoginUser ? viewModel.pet != null ? View.VISIBLE : View.GONE : View.GONE }"
                     android:scaleType="centerCrop"
                     android:src="@drawable/edit_pet"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:maxImageSize="50dp" />
 
-                <Button
-                    android:id="@+id/sureEditBt"
-                    android:layout_width="59dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:backgroundTint="#DCD9D9"
-                    android:onClick="@{()->viewModel.onSureEdit()}"
-                    android:text="確定"
-                    android:visibility="gone"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:maxImageSize="50dp" />
+<!--                <Button-->
+<!--                    android:id="@+id/sureEditBt"-->
+<!--                    android:layout_width="59dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="16dp"-->
+<!--                    android:layout_marginEnd="8dp"-->
+<!--                    android:backgroundTint="#DCD9D9"-->
+<!--                    android:onClick="@{()->viewModel.onSureEdit()}"-->
+<!--                    android:text="確定"-->
+<!--                    android:visibility="gone"-->
+<!--                    android:textSize="12sp"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent"-->
+<!--                    app:maxImageSize="50dp" />-->
 
-                <Button
-                    android:id="@+id/cancelEditBt"
-                    android:layout_width="59dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:backgroundTint="#F95555"
-                    android:onClick="@{()->viewModel.onCancelEdit()}"
-                    android:text="取消"
-                    android:textSize="12sp"
-                    android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/sureEditBt"
-                    app:maxImageSize="50dp" />
+<!--                <Button-->
+<!--                    android:id="@+id/cancelEditBt"-->
+<!--                    android:layout_width="59dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="8dp"-->
+<!--                    android:layout_marginEnd="8dp"-->
+<!--                    android:backgroundTint="#F95555"-->
+<!--                    android:onClick="@{()->viewModel.onCancelEdit()}"-->
+<!--                    android:text="取消"-->
+<!--                    android:textSize="12sp"-->
+<!--                    android:visibility="gone"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/sureEditBt"-->
+<!--                    app:maxImageSize="50dp" />-->
 
                 <TextView
                     android:id="@+id/breedTitleTv"
@@ -163,17 +166,6 @@
                     android:text="@string/text_introduction"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/birthTitleTv" />
-
-                <!--                <TextView-->
-                <!--                    android:id="@+id/photoTitleTv"-->
-                <!--                    style="@style/TextStyleTitle1"-->
-                <!--                    android:layout_width="wrap_content"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_marginStart="16dp"-->
-                <!--                    android:layout_marginTop="24dp"-->
-                <!--                    android:text="@string/text_photo"-->
-                <!--                    app:layout_constraintStart_toStartOf="parent"-->
-                <!--                    app:layout_constraintTop_toBottomOf="@+id/introductionTitleTv" />-->
 
                 <TextView
                     android:id="@+id/voiceTitleTv"

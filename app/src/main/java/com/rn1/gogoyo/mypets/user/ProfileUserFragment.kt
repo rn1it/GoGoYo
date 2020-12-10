@@ -16,10 +16,10 @@ import com.rn1.gogoyo.databinding.FragmentProfileUserBinding
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.model.Articles
 
-class ProfileUserFragment : Fragment() {
+class ProfileUserFragment(val userId: String) : Fragment() {
 
     private lateinit var binding: FragmentProfileUserBinding
-    private val viewModel by viewModels<ProfileUserViewModel> { getVmFactory() }
+    private val viewModel by viewModels<ProfileUserViewModel> { getVmFactory(userId) }
 
 
     override fun onCreateView(

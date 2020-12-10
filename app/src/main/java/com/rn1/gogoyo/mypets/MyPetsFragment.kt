@@ -25,7 +25,7 @@ import com.rn1.gogoyo.mypets.pet.ProfilePetFragment
 import com.rn1.gogoyo.mypets.user.ProfileUserFragment
 import kotlin.math.abs
 
-class MyPetsFragment : Fragment() {
+class MyPetsFragment() : Fragment() {
 
     private lateinit var binding: FragmentMyPetsBinding
     private val viewModel by viewModels<MyPetsViewModel> { getVmFactory() }
@@ -35,13 +35,15 @@ class MyPetsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        val userId = MyPetsFragmentArgs.fromBundle(requireArguments()).userIdKey
+
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_pets, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
         val fragmentList = mutableListOf<Fragment>()
-        fragmentList.add(ProfilePetFragment())
-        fragmentList.add(ProfileUserFragment())
+        fragmentList.add(ProfilePetFragment(userId))
+        fragmentList.add(ProfileUserFragment(userId))
 
         val tabLayout = binding.profileTabLayout
 

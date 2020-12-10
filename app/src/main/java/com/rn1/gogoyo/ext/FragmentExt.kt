@@ -2,10 +2,9 @@ package com.rn1.gogoyo.ext
 
 import androidx.fragment.app.Fragment
 import com.rn1.gogoyo.GogoyoApplication
-import com.rn1.gogoyo.factory.ArticleViewModelFactory
-import com.rn1.gogoyo.factory.ViewModelFactory
-import com.rn1.gogoyo.factory.WalkStartViewModelFactory
+import com.rn1.gogoyo.factory.*
 import com.rn1.gogoyo.model.Articles
+import com.rn1.gogoyo.model.Walk
 
 fun Fragment.getVmFactory(): ViewModelFactory{
     val repository = (requireContext().applicationContext as GogoyoApplication).repository
@@ -21,3 +20,15 @@ fun Fragment.getVmFactory(petIdList: List<String>): WalkStartViewModelFactory{
     val repository = (requireContext().applicationContext as GogoyoApplication).repository
     return WalkStartViewModelFactory(repository, petIdList)
 }
+
+fun Fragment.getVmFactory(id: String): IdStringViewModelFactory{
+    val repository = (requireContext().applicationContext as GogoyoApplication).repository
+    return IdStringViewModelFactory(repository, id)
+}
+
+fun Fragment.getVmFactory(walk: Walk): WalkEndViewModelFactory{
+    val repository = (requireContext().applicationContext as GogoyoApplication).repository
+    return WalkEndViewModelFactory(repository, walk)
+}
+
+

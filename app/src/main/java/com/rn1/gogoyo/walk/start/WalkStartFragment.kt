@@ -1,6 +1,8 @@
 package com.rn1.gogoyo.walk.start
 
 import android.Manifest
+import android.app.Activity
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
@@ -9,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -26,14 +29,22 @@ import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentWalkStartBinding
 import com.rn1.gogoyo.ext.getVmFactory
+import com.rn1.gogoyo.model.Points
+import com.rn1.gogoyo.model.Walk
 import com.rn1.gogoyo.util.Logger
+import java.lang.Math.abs
+
 
 private const val PERMISSION_ID = 1
 
-class WalkStartFragment : Fragment() {
+class WalkStartFragment : Fragment(){
 
     private lateinit var binding: FragmentWalkStartBinding
-    private val viewModel by viewModels<WalkStartViewModel> { getVmFactory(WalkStartFragmentArgs.fromBundle(requireArguments()).petIdListKey.asList()) }
+    private val viewModel by viewModels<WalkStartViewModel> { getVmFactory(
+        WalkStartFragmentArgs.fromBundle(
+            requireArguments()
+        ).petIdListKey.asList()
+    ) }
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var locationPermission = false
@@ -44,20 +55,70 @@ class WalkStartFragment : Fragment() {
     private var lat: Double? = null
     private var lon: Double? = null
 
+    private val markList: MutableList<Marker> = mutableListOf()
+
+
+
     private val callback = OnMapReadyCallback { googleMap ->
         myMap = googleMap
+        googleMap.setInfoWindowAdapter(CustomInfoWindowForGoogleMap(requireContext()))
+//        googleMap.setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
+//            override fun getInfoWindow(marker: Marker?): View? {
+//                return null
+//            }
+//
+//            // custom info layout
+//            override fun getInfoContents(marker: Marker?): View {
+//                val view: View = layoutInflater.inflate(R.layout.marker_info_layout, null)
+//                val  latLng = marker?.position
+////                val icon = view.findViewById<ImageView>(R.id.icon)
+//                val title = view.findViewById<TextView>(R.id.title)
+//                val snippet = view.findViewById<TextView>(R.id.snippet)
+//                val lat = view.findViewById<TextView>(R.id.lat)
+//                val lng = view.findViewById<TextView>(R.id.lng)
+//                title.text = marker?.title
+//                snippet.text = marker?.snippet
+//                lat.text = "Latitude：" + latLng?.latitude
+//                lng.text = "Longitude：" + latLng?.longitude
+//                return view
+//            }
+//        })
+
         getLocationPermission()
-
-
         // Turn on the My Location layer and the related control on the map.
-        updateLocationUI();
-
+        updateLocationUI()
         // get current location
-        getDeviceLocation();
+        getDeviceLocation()
+
+//        viewModel.list.observe(viewLifecycleOwner, Observer {
+//            it?.let {
+//                if (markList.isNotEmpty()) {
+//                    removeMarkers()
+//                }
+//                createMakers(it)
+//            }
+//        })
 
 
+//        viewModel.liveWalks.observe(viewLifecycleOwner, Observer {
+//            it?.let {
+//                if (it.isNotEmpty()) {
+//                    removeMarkers()
+//                }
+//                createMakers(it)
+//            }
+//        })
 
+        viewModel.onLineWalks.observe(viewLifecycleOwner, Observer {
+            it?.let {
 
+                Logger.d("current online list = $it")
+                if (it.isNotEmpty()) {
+                    removeMarkers()
+                }
+                createMakers(it)
+            }
+        })
     }
 
     override fun onCreateView(
@@ -65,22 +126,26 @@ class WalkStartFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+
+
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_walk_start, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
 
-        viewModel.navigateToEndWalk.observe(viewLifecycleOwner, Observer {
+        viewModel.getCurrentLocation.observe(viewLifecycleOwner, Observer {
             it?.let {
-                findNavController().navigate(NavigationDirections.actionGlobalWalkEndFragment())
-                viewModel.onDoneNavigateToEndWalk()
+                if(it){
+                    getDeviceLocation()
+                    viewModel.onDoneGetCurrentLocation()
+                }
             }
         })
 
-        viewModel.addPoint.observe(viewLifecycleOwner, Observer {
+        viewModel.navigateToEndWalk.observe(viewLifecycleOwner, Observer {
             it?.let {
-                getDeviceLocation()
-                viewModel.onDoneAddPoint()
+                findNavController().navigate(NavigationDirections.actionGlobalWalkEndFragment(it))
+                viewModel.onDoneNavigateToEndWalk()
             }
         })
 
@@ -90,24 +155,34 @@ class WalkStartFragment : Fragment() {
             }
         })
 
+
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        mapFragment?.getMapAsync(callback)
 
+        val mapFragment = childFragmentManager.findFragmentById(R.id.walkEndMap) as SupportMapFragment?
+        mapFragment?.getMapAsync(callback)
         // 2. init fusedLocationProviderClient and set LocationServices object
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
 
     }
 
     // 1. check Permission and get user get permission
     private fun getLocationPermission() {
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_DENIED) {
             locationPermission = false
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), PERMISSION_ID)
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                PERMISSION_ID
+            )
         } else {
             locationPermission = true
         }
@@ -115,8 +190,6 @@ class WalkStartFragment : Fragment() {
 
     // 3. set map UI isMyLocationButton Enabled
     private fun updateLocationUI() {
-
-
         if (myMap == null) {
             return
         }
@@ -132,20 +205,6 @@ class WalkStartFragment : Fragment() {
         } catch (e: SecurityException) {
             e.printStackTrace()
         }
-
-//        myMap?.apply {
-//            try {
-//                if (locationPermission) {
-//                    isMyLocationEnabled = true
-//                    uiSettings.isMyLocationButtonEnabled = true
-//                } else {
-//                    isMyLocationEnabled = false
-//                    uiSettings.isMyLocationButtonEnabled = false
-//                }
-//            } catch (e: SecurityException) {
-//                e.printStackTrace()
-//            }
-//        }
     }
 
     // 4. get permission and update LocationUI: set map UI isMyLocationButton Enabled
@@ -172,36 +231,39 @@ class WalkStartFragment : Fragment() {
                 val locationRequest = fusedLocationProviderClient.lastLocation
                 locationRequest.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
+
+                        /**
+                         * get current position success!!
+                          */
                         lastKnownLocation = task.result
                         if (lastKnownLocation != null) {
 
-                            Log.d("aaa", "0 lat = $lat, lon = $lon")
-
-                            if (null == lat && lon == lon) {
+                            // beginning location
+                            if (null == lat && null == lon) {
                                 lat = lastKnownLocation!!.latitude
                                 lon = lastKnownLocation!!.longitude
 
+                                Logger.d("start: lat = $lat, lon = $lon")
+
+//                                viewModel.currentLat = lat!!
+//                                viewModel.currentLng = lon!!
+
+                                viewModel.insertWalk(lat!!, lon!!)
 
                                 myMap?.apply {
-                                    addMarker(MarkerOptions()
-                                        .position(LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude))
-                                        .title("It's ME!!")
-                                        .snippet("${lastKnownLocation!!.latitude}, ${lastKnownLocation!!.longitude}")
-                                    )
-
-                                    moveCamera(
-                                        CameraUpdateFactory.newLatLngZoom(
-                                            LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude), 30f))
+                                    moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude), 17f))
                                 }
 
-                                Log.d("aaa", "1 st lat = $lat, lon = $lon")
-
                             } else {
+                                // draw line
                                 drawLine(lat!!, lon!!, lastKnownLocation!!.latitude, lastKnownLocation!!.longitude)
 
+                                // set currentLatLng
                                 lat = lastKnownLocation!!.latitude
                                 lon = lastKnownLocation!!.longitude
-                                Log.d("bbb", "lat = $lat, lon = $lon")
+
+                                viewModel.savePoint(lat!!, lon!!)
+                                Logger.d("current at : lat = $lat, lon = $lon")
                             }
 
                         }
@@ -217,15 +279,16 @@ class WalkStartFragment : Fragment() {
 
     private fun drawLine(lastLat: Double, lastLon: Double, currentLat: Double, currentLon: Double){
         // Draw polyline
-        val polyline = myMap!!.addPolyline(PolylineOptions()
-            .color(Color.YELLOW)
-            .width(15f)
-            .add(
-                LatLng(lastLat, lastLon), LatLng(currentLat, currentLon)
-            ))
+        val polyline = myMap!!.addPolyline(
+            PolylineOptions()
+                .color(R.color.colorPrimaryDark)
+                .width(15f)
+                .add(
+                    LatLng(lastLat, lastLon), LatLng(currentLat, currentLon)
+                )
+        )
 
         polyline.tag = "A"
-//        stylePolyline(polyline)
     }
 
     private fun stylePolyline(polyline: Polyline) {
@@ -249,5 +312,48 @@ class WalkStartFragment : Fragment() {
         polyline.setColor(R.color.app_main_color)
 //        polyline.setJointType(JointType.ROUND)
     }
+
+
+    private fun createMakers(list: List<Walk>){
+
+        for (walk in list) {
+            val marker = myMap?.addMarker(MarkerOptions().position(LatLng(walk.currentLat!!, walk.currentLng!!)).title("HI"))!!
+            markList.add(marker)
+        }
+    }
+
+    private fun removeMarkers(){
+        for (mark in markList) {
+            mark.remove()
+        }
+        markList.clear()
+    }
+
+    class CustomInfoWindowForGoogleMap(context: Context) : GoogleMap.InfoWindowAdapter {
+
+        var mContext = context
+        var mWindow = (context as Activity).layoutInflater.inflate(R.layout.marker_info_layout, null)
+
+        private fun rendowWindowText(marker: Marker, view: View){
+
+            val tvTitle = view.findViewById<TextView>(R.id.title)
+            val tvSnippet = view.findViewById<TextView>(R.id.snippet)
+
+            tvTitle.text = marker.title
+            tvSnippet.text = marker.snippet
+
+        }
+
+        override fun getInfoContents(marker: Marker): View {
+            rendowWindowText(marker, mWindow)
+            return mWindow
+        }
+
+        override fun getInfoWindow(marker: Marker): View? {
+            rendowWindowText(marker, mWindow)
+            return mWindow
+        }
+    }
+
 
 }

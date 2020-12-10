@@ -29,7 +29,11 @@
         android:id="@+id/myPetsFragment"
         android:name="com.rn1.gogoyo.mypets.MyPetsFragment"
         android:label="fragment_my_pets"
-        tools:layout="@layout/fragment_my_pets" />
+        tools:layout="@layout/fragment_my_pets" >
+        <argument
+            android:name="userIdKey"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/walkFragment"
         android:name="com.rn1.gogoyo.walk.WalkFragment"
@@ -72,7 +76,11 @@
         android:id="@+id/walkEndFragment"
         android:name="com.rn1.gogoyo.walk.end.WalkEndFragment"
         android:label="WalkEndFragment"
-        tools:layout="@layout/fragment_walk_end"/>
+        tools:layout="@layout/fragment_walk_end">
+        <argument
+            android:name="walkKey"
+            app:argType="com.rn1.gogoyo.model.Walk" />
+    </fragment>
     <fragment
         android:id="@+id/chatRoomFragment"
         android:name="com.rn1.gogoyo.friend.chat.chatRoom.ChatRoomFragment"
@@ -82,7 +90,17 @@
         android:id="@+id/newPetFragment"
         android:name="com.rn1.gogoyo.mypets.newpets.NewPetFragment"
         android:label="NewPetFragment"
-        tools:layout="@layout/fragment_new_pet"/>
+        tools:layout="@layout/fragment_new_pet">
+    </fragment>
+    <fragment
+        android:id="@+id/editPetFragment"
+        android:name="com.rn1.gogoyo.mypets.edit.EditPetFragment"
+        android:label="EditPetFragment"
+        tools:layout="@layout/fragment_edit_pet">
+        <argument
+            android:name="petIdKey"
+            app:argType="string" />
+    </fragment>
 
     <action android:id="@+id/action_global_homeFragment" app:destination="@id/homeFragment" />
     <action android:id="@+id/action_global_makeFriendsFragment" app:destination="@id/friendCardsFragment" />
@@ -101,5 +119,6 @@
     <action android:id="@+id/action_global_walkEndFragment" app:destination="@id/walkEndFragment" />
     <action android:id="@+id/action_global_chatRoomFragment" app:destination="@id/chatRoomFragment" />
     <action android:id="@+id/action_global_newPetFragment" app:destination="@id/newPetFragment"/>
+    <action android:id="@+id/action_global_editPetFragment" app:destination="@id/editPetFragment" />
 
 </navigation>

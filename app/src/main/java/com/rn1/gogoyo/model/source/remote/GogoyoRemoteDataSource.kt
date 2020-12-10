@@ -22,6 +22,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
     private val usersRef =  db.collection("users")
     private val petsRef =  db.collection("pets")
     private val articleRef = db.collection("articles")
+    private val walkRef = db.collection("walks")
 
 
     override suspend fun login(id: String, name: String): Result<Boolean> = suspendCoroutine { continuation ->
@@ -61,6 +62,26 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
                 continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
             }
         }
+    }
+
+    override suspend fun getUserById(id: String): Result<Users> = suspendCoroutine { continuation ->
+
+        usersRef.document(id).get().addOnCompleteListener { task ->
+
+            if (task.isSuccessful) {
+                val user = task.result.toObject(Users::class.java)!!
+                continuation.resume(Result.Success(user))
+
+            } else {
+                task.exception?.let {e ->
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                    continuation.resume(Result.Error(e))
+                }
+                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+        }
+
+
     }
 
     override suspend fun newPets(pet: Pets, userId: String): Result<Boolean> = suspendCoroutine { continuation ->
@@ -135,6 +156,38 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
                     continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
                 }
             }
+    }
+
+    override suspend fun getPetsById(id: String): Result<Pets> = suspendCoroutine{ continuation ->
+
+        petsRef.document(id).get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val pet = task.result.toObject(Pets::class.java)!!
+                continuation.resume(Result.Success(pet))
+            } else {
+                task.exception?.let {e ->
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                    continuation.resume(Result.Error(e))
+                }
+                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+        }
+    }
+
+    override suspend fun editPets(pet: Pets): Result<Boolean> = suspendCoroutine{ continuation ->
+
+        petsRef.document(pet.id).set(pet).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Logger.i("edit pet: $pet")
+                continuation.resume(Result.Success(true))
+            } else {
+                task.exception?.let {e ->
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                    continuation.resume(Result.Error(e))
+                }
+                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+        }
     }
 
     override suspend fun getPetsByIdList(idList: List<String>): Result<List<Pets>> = suspendCoroutine{ continuation ->
@@ -420,7 +473,139 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
         }
     }
 
+    override suspend fun insertWalk(walk: Walk): Result<Walk> = suspendCoroutine{ continuation ->
+
+        val document = walkRef.document()
+        walk.id = document.id
+        walk.createdTime = Calendar.getInstance().timeInMillis
+
+        document.set(walk).addOnCompleteListener { task ->
+
+            if (task.isSuccessful) {
+                Logger.d("insert into walk: $walk")
+                continuation.resume(Result.Success(walk))
+            } else {
+                task.exception?.let {e ->
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                    continuation.resume(Result.Error(e))
+                }
+                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+        }
+
+    }
+
+    override suspend fun updateWalk(walk: Walk): Result<Walk> = suspendCoroutine{ continuation ->
+
+        walkRef.document(walk.id).set(walk).addOnCompleteListener { task ->
+
+            if (task.isSuccessful) {
+                Logger.d("update walk: $walk")
+                continuation.resume(Result.Success(walk))
+            } else {
+                task.exception?.let {e ->
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                    continuation.resume(Result.Error(e))
+                }
+                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+        }
+    }
+
+    override suspend fun setWalkingStatus(userId: String, isWalking: Boolean): Result<Boolean> = suspendCoroutine{ continuation ->
+
+        usersRef.document(userId).update("isWalking", isWalking).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Logger.d("user: $userId walk status: $isWalking")
+                continuation.resume(Result.Success(true))
+            } else {
+                task.exception?.let {e ->
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                    continuation.resume(Result.Error(e))
+                }
+                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+        }
+    }
+
+    override fun getRealTimeOthersWalkingList(userId: String): MutableLiveData<List<Walk>> {
+
+        val liveData = MutableLiveData<List<Walk>>()
+
+        walkRef
+//            .whereNotEqualTo("userId", userId)
+            .whereEqualTo("endTime", null)
+            .addSnapshotListener { snapshot, exception ->
+
+                Logger.i("addSnapshotListener detect")
+
+                exception?.let {
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                }
+
+                val list = mutableListOf<Walk>()
+                for (document in snapshot!!) {
+                    Logger.d(document.id + " => " + document.data)
+                    val walk = document.toObject(Walk::class.java)
+
+                    list.add(walk)
+                }
+
+                liveData.value = list
+        }
+
+        return liveData
+
+    }
+
+    override suspend fun getOthersWalkingList(userId: String): Result<List<Walk>> = suspendCoroutine { continuation ->
+
+        walkRef
+            .whereNotEqualTo("userId", userId)
+            .whereEqualTo("endTime", null)
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val list = mutableListOf<Walk>()
+
+                    for (document in task.result) {
+                        val walk = document.toObject(Walk::class.java)
+                        list.add(walk)
+                    }
+                    Logger.w("online walk list = $list")
+                    continuation.resume(Result.Success(list))
+                } else {
+                    task.exception?.let {e ->
+                        Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                        continuation.resume(Result.Error(e))
+                    }
+                    continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+
+                }
+            }
 
 
+    }
 
+
+//    override suspend fun getWalkingList(): Result<List<Walk>> = suspendCoroutine{ continuation ->
+//
+//        walkRef.whereEqualTo("endTime", null).get().addOnCompleteListener { task ->
+//            if (task.isSuccessful) {
+//                val list = mutableListOf<Walk>()
+//                for (document in task.result) {
+//                    val walk = document.toObject(Walk::class.java)
+//                    list.add(walk)
+//                }
+//                Logger.w("walk list = $list")
+//                continuation.resume(Result.Success(list))
+//            } else {
+//                task.exception?.let {e ->
+//                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+//                    continuation.resume(Result.Error(e))
+//                }
+//                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+//            }
+//        }
+//    }
 }

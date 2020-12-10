@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.nav_mypets -> {
-                navController.navigate(NavigationDirections.actionGlobalMyPetsFragment())
+                navController.navigate(NavigationDirections.actionGlobalMyPetsFragment(UserManager.userUID!!))
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -113,6 +113,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.friendListFragment -> CurrentFragmentType.FRIEND_LIST
                 R.id.friendChatFragment -> CurrentFragmentType.FRIEND_CHAT
                 R.id.myPetsFragment -> CurrentFragmentType.PROFILE_PET
+                R.id.walkStartFragment -> CurrentFragmentType.WALK_START
 
                 else -> viewModel.currentFragmentType.value
             }

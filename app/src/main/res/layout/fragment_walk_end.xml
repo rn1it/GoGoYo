@@ -17,12 +17,11 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/walkEndPetRv"
-            android:layout_width="362dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="16dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="32dp"
             android:orientation="horizontal"
             app:addDecoration="@{viewModel.decoration}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -59,17 +58,17 @@
             android:id="@+id/textView19"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="26dp"
             android:text="時間"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView10" />
+            app:layout_constraintTop_toBottomOf="@+id/walkEndMap" />
 
         <TextView
             android:id="@+id/textView20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="24dp"
             android:text="路程"
             app:layout_constraintStart_toStartOf="parent"
@@ -79,43 +78,54 @@
             android:id="@+id/textView21"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="24dp"
-            android:text="一起散步的夥伴"
+            android:text="散步好夥伴"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView20" />
 
-        <ImageView
-            android:id="@+id/imageView10"
-            android:layout_width="139dp"
-            android:layout_height="157dp"
-            android:layout_marginTop="16dp"
-            android:src="@drawable/add_image"
+        <fragment
+            android:id="@+id/walkEndMap"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
+        <!--        <ImageView-->
+        <!--            android:id="@+id/imageView10"-->
+        <!--            android:layout_width="139dp"-->
+        <!--            android:layout_height="157dp"-->
+        <!--            android:layout_marginTop="16dp"-->
+        <!--            android:src="@drawable/add_image"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.5"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/textView17" />-->
+
         <Button
             android:id="@+id/button7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="64dp"
+            android:layout_marginBottom="56dp"
             android:backgroundTint="#FF9800"
-            android:text="確定"
+            android:text="查看紀錄"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/button9" />
 
         <TextView
             android:id="@+id/textView22"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="TextView"
             app:layout_constraintStart_toEndOf="@+id/textView19"
-            app:layout_constraintTop_toTopOf="@+id/textView19" />
+            app:layout_constraintTop_toTopOf="@+id/textView19"
+            app:timeToDisplayFormat="@{viewModel.walk.period}" />
 
         <TextView
             android:id="@+id/textView23"
@@ -125,6 +135,18 @@
             android:text="TextView"
             app:layout_constraintStart_toEndOf="@+id/textView20"
             app:layout_constraintTop_toTopOf="@+id/textView20" />
+
+        <Button
+            android:id="@+id/button9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="56dp"
+            android:backgroundTint="#FF9800"
+            android:text="分享動態"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/button7"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
