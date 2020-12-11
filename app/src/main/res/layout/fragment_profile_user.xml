@@ -14,48 +14,143 @@
         android:layout_height="match_parent"
         tools:context=".mypets.user.ProfileUserFragment">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <ImageView
             android:id="@+id/imageView9"
-            android:layout_width="200dp"
-            android:layout_height="300dp"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/profile"
+            android:src="@drawable/pp"
+            android:outlineProvider="@{viewModel.outlineProvider}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
 
         <TextView
-            android:id="@+id/textView24"
+            android:id="@+id/postValueTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="116dp"
-            android:text="@{viewModel.user.id}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/imageView9"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginBottom="8dp"
+            android:text=""
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/postTitleTv"
+            app:layout_constraintEnd_toEndOf="@+id/postTitleTv"
+            app:layout_constraintStart_toStartOf="@+id/postTitleTv"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="10" />
 
         <TextView
-            android:id="@+id/textView10"
+            android:id="@+id/friendCountValueTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@{viewModel.user.name}"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text=""
+            android:textSize="24sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/postValueTv"
+            app:layout_constraintEnd_toEndOf="@+id/friendCountTitleTv"
+            app:layout_constraintStart_toStartOf="@+id/friendCountTitleTv"
+            tools:text="10" />
+
+
+        <TextView
+            android:id="@+id/postTitleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="POSTS"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout7"
+            app:layout_constraintEnd_toStartOf="@+id/friendCountTitleTv"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/imageView9"
-            app:layout_constraintTop_toBottomOf="@+id/textView24" />
+            app:layout_constraintTop_toBottomOf="@+id/postValueTv" />
+
+        <TextView
+            android:id="@+id/friendCountTitleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FRIENDS"
+            app:layout_constraintBaseline_toBaselineOf="@+id/postTitleTv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/postTitleTv" />
+
+        <Button
+            android:id="@+id/button8"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="#ffffff"
+            android:insetTop="10dp"
+            android:insetBottom="10dp"
+            tools:text="修改資料"
+            android:onClick="@{() -> viewModel.onClickProfileBt()}"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout7"
+            app:layout_constraintEnd_toEndOf="@+id/friendCountTitleTv"
+            app:layout_constraintStart_toStartOf="@+id/postTitleTv"
+            app:setProfileButton="@{viewModel.isLoginUser}" />
+
+        <ScrollView
+            android:id="@+id/constraintLayout7"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView9">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/textView24"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@{viewModel.user.name}"
+                    tools:text="Gary"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView34"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="@{viewModel.user.introduction}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView24"
+                    tools:text="你好，我愛狗" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/profileArticleTabLayout"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            app:tabIndicatorColor="#999999"
-            app:tabSelectedTextColor="#999999"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView9" />
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout7"
+            app:tabIndicatorColor="#999999"
+            app:tabSelectedTextColor="#999999" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/profileArticleViewPager"
@@ -66,15 +161,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profileArticleTabLayout" />
 
-        <Button
-            android:id="@+id/button8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Button"
-            app:layout_constraintBottom_toTopOf="@+id/profileArticleTabLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView9"
-            app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

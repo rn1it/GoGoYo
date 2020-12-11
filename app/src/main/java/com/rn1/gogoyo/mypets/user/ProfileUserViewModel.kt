@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
+import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.model.Articles
 import com.rn1.gogoyo.model.Result
 import com.rn1.gogoyo.model.Users
@@ -20,6 +21,8 @@ class ProfileUserViewModel(
     val repository: GogoyoRepository,
     val userId: String
     ): ViewModel() {
+
+    val outlineProvider =  MapOutlineProvider()
 
     // check profile is login user or not
     val isLoginUser = userId == UserManager.userUID
@@ -44,6 +47,10 @@ class ProfileUserViewModel(
     val navigateToContent: LiveData<Articles>
         get() = _navigateToContent
 
+    private val _navigateToEdit = MutableLiveData<String>()
+
+    val navigateToEdit: LiveData<String>
+        get() = _navigateToEdit
 
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadStatus>()
@@ -173,4 +180,17 @@ class ProfileUserViewModel(
     fun onDoneNavigateToContent(){
         _navigateToContent.value = null
     }
+
+    fun onClickProfileBt(){
+        if (isLoginUser) {
+            _navigateToEdit.value = userId
+        } else {
+
+        }
+    }
+
+    fun onDoneNavigateToEdit(){
+        _navigateToEdit.value = null
+    }
+
 }

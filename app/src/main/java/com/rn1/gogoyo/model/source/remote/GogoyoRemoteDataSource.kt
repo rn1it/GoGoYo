@@ -190,6 +190,22 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
         }
     }
 
+    override suspend fun editUsers(user: Users): Result<Boolean> = suspendCoroutine{ continuation ->
+
+        usersRef.document(user.id).set(user).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Logger.i("edit user: $user")
+                continuation.resume(Result.Success(true))
+            } else {
+                task.exception?.let {e ->
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                    continuation.resume(Result.Error(e))
+                }
+                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+        }
+    }
+
     override suspend fun getPetsByIdList(idList: List<String>): Result<List<Pets>> = suspendCoroutine{ continuation ->
 
         val list = mutableListOf<Pets>()

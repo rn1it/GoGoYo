@@ -25,12 +25,11 @@ class ProfileUserFragment(val userId: String) : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile_user, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-
 
         val tabLayout = binding.profileArticleTabLayout
 
@@ -40,17 +39,6 @@ class ProfileUserFragment(val userId: String) : Fragment() {
         // disable outer fragment slide
         viewPager.isUserInputEnabled = false
         viewPager.adapter = pagerAdapter
-
-//        val article = Articles("1","1")
-//        val list1 = mutableListOf<Articles>()
-//        val list2 = mutableListOf<Articles>()
-//        list1.add(article)
-//        list1.add(article)
-//        list1.add(article)
-//        list2.add(article)
-//        list2.add(article)
-//        list2.add(article)
-//        list2.add(article)
 
         // Default no value for viewPager list
         val viewPagerList = mutableListOf<List<Articles>>()
@@ -83,6 +71,13 @@ class ProfileUserFragment(val userId: String) : Fragment() {
             it?.let {
                 findNavController().navigate(NavigationDirections.actionGlobalArticleContentFragment(it))
                 viewModel.onDoneNavigateToContent()
+            }
+        })
+
+        viewModel.navigateToEdit.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                findNavController().navigate(NavigationDirections.actionGlobalEditUserFragment(it))
+                viewModel.onDoneNavigateToEdit()
             }
         })
 

@@ -2,6 +2,7 @@ package com.rn1.gogoyo
 
 import android.content.res.ColorStateList
 import android.media.Image
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -25,6 +26,24 @@ fun bindCollectButton(imageButton: ImageButton, isCollected: Boolean) {
         when (isCollected) {
             true ->this.setColorFilter(resources.getColor(R.color.red_F44336))
             false -> this.setColorFilter(resources.getColor(R.color.grey_999999))
+        }
+    }
+}
+
+@BindingAdapter("setProfileButton")
+fun bindUserProfileButton(button: Button, isLoginUser: Boolean?){
+    isLoginUser.let {
+        button.apply {
+            when (isLoginUser) {
+                true -> {
+                    isClickable = true
+                    text = "修改資料"
+                }
+                false -> {
+                    isClickable = false
+                    text = "朋友"
+                }
+            }
         }
     }
 }
