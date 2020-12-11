@@ -17,8 +17,10 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.rn1.gogoyo.databinding.ActivityLoginBinding
-import com.rn1.gogoyo.model.Users
+import com.rn1.gogoyo.util.Logger
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.fragment_profile_pet.*
+import kotlinx.android.synthetic.main.fragment_profile_pet.view
 
 private const val RC_SIGN_IN = 20
 class LoginActivity : AppCompatActivity() {
@@ -62,41 +64,18 @@ class LoginActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
-            val task =
-                GoogleSignIn.getSignedInAccountFromIntent(data)
-            handleSignInResult(task)
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                val account = task.getResult(ApiException::class.java)!!
+                Logger.d("firebaseAuthWithGoogle:" + account.id)
+                firebaseAuthWithGoogle(account.idToken!!)
 
-        }
-    }
-
-    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
-        try {
-            val account =
-                completedTask.getResult(ApiException::class.java)
-
-            account.idToken?.let { firebaseAuthWithGoogle(it) }
-            // Signed in successfully, show authenticated UI.
-
-            val firebaseUser = Firebase.auth.currentUser
-            firebaseUser?.let {
-                // displayName, email, and profile photo Url
-                // Check if user's email is verified: isEmailVerified
-                UserManager.userUID = firebaseUser.uid
-                UserManager.userName = firebaseUser.displayName
+            } catch (e: ApiException) {
+                // Google Sign In failed, update UI appropriately
+                Log.w(TAG, "Google sign in failed", e)
             }
-
-            Log.d("firebaseUser", "name = ${firebaseUser?.displayName}, email = ${firebaseUser?.email}, uid = ${firebaseUser?.uid}")
-
-            startActivity(Intent(this, MainActivity::class.java))
-
-        } catch (e: ApiException) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w(TAG, "signInResult:failed code=" + e.statusCode)
         }
     }
 
@@ -104,13 +83,21 @@ class LoginActivity : AppCompatActivity() {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential).addOnCompleteListener(this) { task ->
             if (task.isSuccessful) {
-                // Sign in success, update UI with the signed-in user's information
-                Log.d(TAG, "signInWithCredential:success")
+
+                // Sign in success, intent to main activity with the signed-in user's information
+                Logger.d( "signInWithCredential:success")
                 val user = auth.currentUser
+                Logger.d("user = $user")
+                if (user != null) {
+                    UserManager.userUID = user.uid
+                    UserManager.userName = user.displayName
+                }
+                startActivity(Intent(this, MainActivity::class.java))
+
             } else {
                 // If sign in fails, display a message to the user.
-                Snackbar.make(view, "Authentication Failed.", Snackbar.LENGTH_SHORT).show()
-                Log.w(TAG, "signInWithCredential:failure", task.exception)
+                Snackbar.make(container, "Authentication Failed.", Snackbar.LENGTH_SHORT).show()
+                Log.w(TAG,"signInWithCredential:failure", task.exception)
             }
         }
     }

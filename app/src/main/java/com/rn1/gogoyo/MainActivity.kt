@@ -14,7 +14,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.rn1.gogoyo.databinding.ActivityMainBinding
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.util.CurrentFragmentType
-
+import com.rn1.gogoyo.util.Logger
 
 
 class MainActivity : AppCompatActivity() {
@@ -52,40 +52,41 @@ class MainActivity : AppCompatActivity() {
 
         //Login Check
         if (!UserManager.isLoggedIn) {
+
+            // if user not login, intent to login activity
             startActivity(Intent(this, LoginActivity::class.java))
         }
         else {
-
             val userName = UserManager.userName  ?:  "No Name"
             viewModel.loginAndSetUser(UserManager.userUID!!, userName)
+
+            binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+            binding.lifecycleOwner = this
+            binding.viewModel = viewModel
+
+            // observe current fragment change, only for show info
+            viewModel.currentFragmentType.observe(this, Observer {
+                Log.d(TAG,"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+                Log.d(TAG,"[${viewModel.currentFragmentType.value}]")
+                Log.d(TAG,"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+            })
+
+            viewModel.navigateToWalk.observe(this, Observer {
+                it?.let {
+                    setUpWalkBottom()
+                    viewModel.onDoneNavigateToWalk()
+                }
+            })
+
+            viewModel.popBack.observe(this, Observer {
+                it?.let {
+                    findNavController(R.id.myNavHostFragment).popBackStack()
+                }
+            })
+
+            setUpBottomNav()
+            setupNavController()
         }
-
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        binding.lifecycleOwner = this
-        binding.viewModel = viewModel
-
-        // observe current fragment change, only for show info
-        viewModel.currentFragmentType.observe(this, Observer {
-            Log.d(TAG,"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-            Log.d(TAG,"[${viewModel.currentFragmentType.value}]")
-            Log.d(TAG,"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        })
-
-        viewModel.navigateToWalk.observe(this, Observer {
-            it?.let {
-                setUpWalkBottom()
-                viewModel.onDoneNavigateToWalk()
-            }
-        })
-
-        viewModel.popBack.observe(this, Observer {
-            it?.let {
-                findNavController(R.id.myNavHostFragment).popBackStack()
-            }
-        })
-
-        setUpBottomNav()
-        setupNavController()
     }
 
     private fun setUpWalkBottom() {
