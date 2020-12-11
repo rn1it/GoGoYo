@@ -2,6 +2,7 @@ package com.rn1.gogoyo.model.source
 
 import androidx.lifecycle.MutableLiveData
 import com.rn1.gogoyo.model.*
+import kotlin.coroutines.suspendCoroutine
 
 interface GogoyoDataSource {
 
@@ -16,6 +17,8 @@ interface GogoyoDataSource {
     suspend fun getPetsById(id: String): Result<Pets>
 
     suspend fun editPets(pet: Pets): Result<Boolean>
+
+    suspend fun editUsers(user: Users): Result<Boolean>
 
     suspend fun getPetsByIdList(idList: List<String>): Result<List<Pets>>
 

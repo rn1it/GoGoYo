@@ -6,7 +6,8 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Users(
     var id: String = "",
-    val name: String = "",
+    var name: String = "",
+    var introduction: String = "",
     val petList: List<String>? = null,
     val location: String? = null,
     val qrCode: String? = null,

@@ -25,6 +25,10 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.editPets(pet)
     }
 
+    override suspend fun editUsers(user: Users): Result<Boolean> {
+        return remoteDataSource.editUsers(user)
+    }
+
     override suspend fun getAllPetsByUserId(userId: String): Result<List<Pets>> {
         return remoteDataSource.getAllPetsByUserId(userId)
     }
