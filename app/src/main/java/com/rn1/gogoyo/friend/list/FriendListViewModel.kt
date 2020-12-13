@@ -16,7 +16,10 @@ import kotlinx.coroutines.launch
 import com.rn1.gogoyo.model.Result
 import com.rn1.gogoyo.model.Users
 
-class FriendListViewModel(val repository: GogoyoRepository, val userId: String): ViewModel() {
+class FriendListViewModel(
+    val repository: GogoyoRepository,
+    val userId: String
+): ViewModel() {
 
     private val _friendList = MutableLiveData<List<Users>>()
 
@@ -45,7 +48,7 @@ class FriendListViewModel(val repository: GogoyoRepository, val userId: String):
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
-        getUserFriends("朋友")
+//        getUserFriends("朋友")
     }
 
     override fun onCleared() {

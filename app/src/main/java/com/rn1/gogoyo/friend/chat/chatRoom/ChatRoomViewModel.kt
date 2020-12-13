@@ -17,6 +17,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import com.rn1.gogoyo.model.Result
 import com.rn1.gogoyo.util.Logger
+import java.util.*
 
 class ChatRoomViewModel(
     val repository: GogoyoRepository,
@@ -116,7 +117,36 @@ class ChatRoomViewModel(
             val message = Messages(UserManager.userUID!!, friendId, content.value!!)
             Logger.d("message = $message")
 
-            _clearMsg.value = when (val result = repository.sendMessage(chatRoom.id, message)) {
+            when (val result = repository.sendMessage(chatRoom.id, message)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    updateChatRoom()
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                }
+            }
+        }
+    }
+
+    private fun updateChatRoom(){
+        coroutineScope.launch {
+
+            chatRoom.lastMsg = content.value!!
+            chatRoom.msgTime = Calendar.getInstance().timeInMillis
+            chatRoom.lastSenderId = UserManager.userUID
+
+            _clearMsg.value = when (val result = repository.updateChatRoom(chatRoom)) {
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadStatus.DONE

@@ -55,6 +55,12 @@ interface GogoyoRepository {
 
     suspend fun getChatRoom(userId: String, friendId: String): Result<Chatroom>
 
+    suspend fun updateChatRoom(chatroom: Chatroom): Result<Boolean>
+
+    fun getUserChatList(userId: String): MutableLiveData<List<Chatroom>>
+
+    suspend fun getChatRoomListWithUserInfo(list: List<Chatroom>): Result<List<Chatroom>>
+
     suspend fun getChatRoomMessages(chatroomId: String): Result<List<Messages>>
 
     fun getLiveChatRoomMessages(chatroomId: String): MutableLiveData<List<Messages>>

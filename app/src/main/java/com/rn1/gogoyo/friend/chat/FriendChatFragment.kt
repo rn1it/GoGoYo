@@ -17,14 +17,13 @@ import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentFriendChatBinding
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.model.Chatroom
-import com.rn1.gogoyo.model.Friends
 import java.util.*
 
 
-class FriendChatFragment : Fragment() {
+class FriendChatFragment(val userId: String) : Fragment() {
 
     private lateinit var binding: FragmentFriendChatBinding
-    private val viewModel by viewModels<FriendChatViewModel> { getVmFactory() }
+    private val viewModel by viewModels<FriendChatViewModel> { getVmFactory(userId) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,43 +32,48 @@ class FriendChatFragment : Fragment() {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_friend_chat, container, false)
         binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+
+
 
         val recyclerView = binding.chatListRv
-        val adapter = FriendChatAdapter(FriendChatAdapter.OnClickListener{
-            viewModel.navigateToChatRoom()
+        val adapter = FriendChatAdapter(viewModel, FriendChatAdapter.OnClickListener{
+            viewModel.navigateToChatRoom(it)
         })
 
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
 
-//        val chat1 = Chatroom("001", "dog1", "dog2", lastMsg = "回我訊息")
-//        val chat2 = Chatroom("002", "dog2", "dog3", lastMsg = "你: 理我一下")
-//        val chat3 = Chatroom("003", "dog3", "dog4", lastMsg = "你: 拜託")
-
-        val list = mutableListOf<Chatroom>()
-//        list.add(chat1)
-//        list.add(chat2)
-//        list.add(chat3)
-
-        adapter.submitList(list)
-
-
-    //TODO
-//        viewModel.navigateToChatRoom.observe(viewLifecycleOwner, Observer {
-//            it?.let {
-//                findNavController().navigate(NavigationDirections.actionGlobalChatRoomFragment())
-//                viewModel.onDoneNavigateToChatRoom()
-//            }
-//        })
-
-        binding.friendChatListSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?) = false
-
-            override fun onQueryTextChange(query: String): Boolean {
-                adapter.submitList(filter(list, query))
-                return true
+        viewModel.liveChatRoomList.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                viewModel.getChatRoomWithFriendInfo(it)
             }
         })
+
+        viewModel.chatList.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                adapter.submitList(it)
+
+                binding.friendChatListSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?) = false
+
+                    override fun onQueryTextChange(query: String): Boolean {
+                        adapter.submitList(filter(it, query))
+                        return true
+                    }
+                })
+            }
+        })
+
+
+        viewModel.navigateToChatRoom.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                findNavController().navigate(NavigationDirections.actionGlobalChatRoomFragment(it))
+                viewModel.onDoneNavigateToChatRoom()
+            }
+        })
+
+
 
         return binding.root
     }

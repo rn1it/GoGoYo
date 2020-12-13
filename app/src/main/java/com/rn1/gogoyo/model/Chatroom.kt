@@ -7,7 +7,9 @@ import kotlinx.android.parcel.Parcelize
 data class Chatroom(
     val id: String = "",
     val userList: List<String> = mutableListOf(),
-    val msgTime: Long = -1,
-    val lastMsg: String? = "",
-    var lastSenderId: String? = ""
+    var msgTime: Long = -1,
+    var lastMsg: String? = "",
+    var lastSenderId: String? = "",
+    var friend: Users? = null
+
 ): Parcelable
