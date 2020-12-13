@@ -19,7 +19,11 @@
         android:id="@+id/friendListFragment"
         android:name="com.rn1.gogoyo.friend.list.FriendListFragment"
         android:label="FriendListFragment"
-        tools:layout="@layout/fragment_friend_list"/>
+        tools:layout="@layout/fragment_friend_list">
+        <argument
+            android:name="userIdKey"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/friendChatFragment"
         android:name="com.rn1.gogoyo.friend.chat.FriendChatFragment"
@@ -48,7 +52,11 @@
         android:id="@+id/friendFragment"
         android:name="com.rn1.gogoyo.friend.FriendFragment"
         android:label="FriendFragment"
-        tools:layout="@layout/fragment_friend"/>
+        tools:layout="@layout/fragment_friend">
+        <argument
+            android:name="userIdKey"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/postFragment"
         android:name="com.rn1.gogoyo.home.post.PostFragment"
@@ -85,7 +93,11 @@
         android:id="@+id/chatRoomFragment"
         android:name="com.rn1.gogoyo.friend.chat.chatRoom.ChatRoomFragment"
         android:label="ChatRoomFragment"
-        tools:layout="@layout/fragment_chat_room"/>
+        tools:layout="@layout/fragment_chat_room">
+        <argument
+            android:name="chatRoomKey"
+            app:argType="com.rn1.gogoyo.model.Chatroom" />
+    </fragment>
     <fragment
         android:id="@+id/newPetFragment"
         android:name="com.rn1.gogoyo.mypets.newpets.NewPetFragment"

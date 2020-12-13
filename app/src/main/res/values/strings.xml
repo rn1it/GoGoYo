@@ -29,4 +29,10 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="age">年紀</string>
+
+    <string-array name="relation_array">
+        <item>朋友</item>
+        <item>好友邀請</item>
+        <item>等待中</item>
+    </string-array>
 </resources>

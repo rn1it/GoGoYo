@@ -23,6 +23,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:windowSoftInputMode="stateHidden|adjustPan"
         android:theme="@style/Theme.Fab_Bottom_app_bar">
 
         <!--
@@ -40,7 +41,7 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
-            android:theme="@style/Theme.Fab_Bottom_app_bar.NoActionBar"></activity> <!-- 編譯時所用Google Play服務的版本 -->
+            android:theme="@style/Theme.Fab_Bottom_app_bar.NoActionBar"/> <!-- 編譯時所用Google Play服務的版本 -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

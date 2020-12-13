@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.factory.*
 import com.rn1.gogoyo.model.Articles
+import com.rn1.gogoyo.model.Chatroom
 import com.rn1.gogoyo.model.Walk
 
 fun Fragment.getVmFactory(): ViewModelFactory{
@@ -31,4 +32,7 @@ fun Fragment.getVmFactory(walk: Walk): WalkEndViewModelFactory{
     return WalkEndViewModelFactory(repository, walk)
 }
 
-
+fun Fragment.getVmFactory(chatRoom: Chatroom): ChatRoomViewModelFactory{
+    val repository = (requireContext().applicationContext as GogoyoApplication).repository
+    return ChatRoomViewModelFactory(repository, chatRoom)
+}

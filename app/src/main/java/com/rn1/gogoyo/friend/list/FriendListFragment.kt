@@ -5,19 +5,26 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.SearchView
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentFriendListBinding
-import com.rn1.gogoyo.model.Articles
-import com.rn1.gogoyo.model.Friends
+import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.model.Users
+import com.rn1.gogoyo.util.Logger
 import java.util.*
 
 
-class FriendListFragment : Fragment() {
+class FriendListFragment(val userId: String) : Fragment() {
 
     private lateinit var binding: FragmentFriendListBinding
+    private val viewModel by viewModels<FriendListViewModel> { getVmFactory(userId) }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,51 +33,65 @@ class FriendListFragment : Fragment() {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_friend_list, container, false)
         binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+
 
         val recyclerView = binding.friendListRv
-        val adapter = FriendListAdapter()
-
+        val adapter = FriendListAdapter(viewModel)
         recyclerView.adapter = adapter
 
-        val f1 = Friends(Users("01", "01"))
-        val f2 = Friends(Users("02", "02"))
-        val f3 = Friends(Users("03", "03"))
-        val f4 = Friends(Users("04", "04"))
-        val list = mutableListOf<Friends>()
+        viewModel.friendList.observe(viewLifecycleOwner, Observer {
+                it?.let {
+                    adapter.submitList(it)
+                    Logger.d("friendlist = $it")
+                    binding.friendListSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?) = false
 
-        list.add(f1)
-        list.add(f2)
-        list.add(f3)
-        list.add(f4)
+                        override fun onQueryTextChange(query: String): Boolean {
+                            adapter.submitList(filter(it, query))
+                            return true
+                        }
+                    })
+                }
+        })
 
-        adapter.submitList(list)
+        viewModel.navigateToChatRoom.observe(viewLifecycleOwner, Observer {
+            it?.let {
 
-        binding.friendListSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?) = false
-
-            override fun onQueryTextChange(query: String): Boolean {
-                adapter.submitList(filter(list, query))
-                return true
+                findNavController().navigate(NavigationDirections.actionGlobalChatRoomFragment(it))
+                viewModel.toChatRoomDone()
             }
         })
+
+        setUpSpinner()
 
         return binding.root
     }
 
     // return query list
-    fun filter(list: List<Friends>, query: String): List<Friends> {
+    fun filter(list: List<Users>, query: String): List<Users> {
 
         val lowerCaseQueryString = query.toLowerCase(Locale.ROOT)
-        val filteredList = mutableListOf<Friends>()
+        val filteredList = mutableListOf<Users>()
 
-        for (friend in list) {
-            val name = friend.user!!.name.toLowerCase(Locale.ROOT)
+        for (user in list) {
+            val name = user.name.toLowerCase(Locale.ROOT)
 
             if (name.contains(lowerCaseQueryString)) {
-                filteredList.add(friend)
+                filteredList.add(user)
             }
         }
 
         return filteredList
+    }
+
+    private fun setUpSpinner(){
+        binding.relationshipSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val friendShip = parent?.getItemAtPosition(position) as String
+                viewModel.getUserFriends(friendShip)
+            }
+            override fun onNothingSelected(p0: AdapterView<*>?) {}
+        }
     }
 }

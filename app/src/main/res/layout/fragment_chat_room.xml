@@ -41,6 +41,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="8dp"
                 android:ems="10"
+                android:text="@={viewModel.content}"
                 android:hint="我想說..."
                 android:inputType="textPersonName"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -55,6 +56,8 @@
                 android:layout_marginEnd="16dp"
                 android:backgroundTint="#FF9800"
                 android:text="送出"
+                android:onClick="@{() -> viewModel.sendMessage()}"
+                android:clickable='@{viewModel.content == null || viewModel.content.trim() == "" ? false : true}'
                 app:layout_constraintBottom_toBottomOf="@+id/msgEt"
                 app:layout_constraintEnd_toEndOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>

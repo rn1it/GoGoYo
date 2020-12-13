@@ -1,10 +1,12 @@
 package com.rn1.gogoyo.model
 
+import java.util.*
+
 data class Messages(
-    val id: String,
-    val sender: Users,
-    val receiver: Users,
+    val senderId: String = "",
+    val receiverId: String = "",
     val content: String? = "",
+    val id: String = "",
     val isRead: Boolean = false,
-    val msgTime: Long = System.currentTimeMillis()
+    val msgTime: Long = Calendar.getInstance().timeInMillis
 )

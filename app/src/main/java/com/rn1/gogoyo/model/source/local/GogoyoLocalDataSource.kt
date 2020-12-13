@@ -14,6 +14,10 @@ class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
         TODO("Not yet implemented")
     }
 
+    override suspend fun getUsersById(idList: List<String>): Result<List<Users>> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun newPets(pet: Pets, userId: String): Result<Boolean> {
         TODO("Not yet implemented")
     }
@@ -87,6 +91,26 @@ class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
     }
 
     override suspend fun getOthersWalkingList(userId: String): Result<List<Walk>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getUserFriends(userId: String, status: Int?): Result<List<Friends>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getChatRoom(userId: String, friendId: String): Result<Chatroom> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getChatRoomMessages(chatroomId: String): Result<List<Messages>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getLiveChatRoomMessages(chatroomId: String): MutableLiveData<List<Messages>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun sendMessage(chatroomId: String, message: Messages): Result<Boolean> {
         TODO("Not yet implemented")
     }
 

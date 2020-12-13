@@ -13,7 +13,7 @@ enum class CurrentFragmentType(val value: String){
     FRIEND_CHAT("好友"),
     PROFILE_USER(""),
     PROFILE_PET("個人"),
-
+    CHAT_ROOM("聊聊")
 
 
 

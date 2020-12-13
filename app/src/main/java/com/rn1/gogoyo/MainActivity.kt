@@ -31,12 +31,12 @@ class MainActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.nav_event -> {
-                navController.navigate(NavigationDirections.actionGlobalChatRoomFragment())
-                return@OnNavigationItemSelectedListener true
+//                navController.navigate(NavigationDirections.actionGlobalChatRoomFragment())
+//                return@OnNavigationItemSelectedListener true
             }
             R.id.nav_friend -> {
 //                navController.navigate(NavigationDirections.actionGlobalMakeFriendsFragment())
-                navController.navigate(NavigationDirections.actionGlobalFriendFragment())
+                navController.navigate(NavigationDirections.actionGlobalFriendFragment(UserManager.userUID!!))
                 return@OnNavigationItemSelectedListener true
             }
             R.id.nav_mypets -> {
@@ -115,6 +115,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.friendChatFragment -> CurrentFragmentType.FRIEND_CHAT
                 R.id.myPetsFragment -> CurrentFragmentType.PROFILE_PET
                 R.id.walkStartFragment -> CurrentFragmentType.WALK_START
+                R.id.chatRoomFragment -> CurrentFragmentType.CHAT_ROOM
 
                 else -> viewModel.currentFragmentType.value
             }

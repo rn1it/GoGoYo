@@ -6,18 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import com.google.firebase.firestore.auth.User
 import com.rn1.gogoyo.DataBinderMapperImpl
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentFriendCardsBinding
+import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.model.Users
 
-class FriendCardsFragment : Fragment() {
+class FriendCardsFragment(userId: String) : Fragment() {
 
     private lateinit var binding: FragmentFriendCardsBinding
-
+    private val viewModel by viewModels<FriendCardsViewModel> { getVmFactory(userId) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
