@@ -22,12 +22,14 @@ import kotlin.coroutines.suspendCoroutine
 object GogoyoRemoteDataSource: GogoyoDataSource{
 
     private const val KEY_CREATED_TIME = "createdTime"
+    private const val KEY_COLLECTION_MESSAGE = "message"
 
     private val db = FirebaseFirestore.getInstance()
     private val usersRef =  db.collection("users")
     private val petsRef =  db.collection("pets")
     private val articleRef = db.collection("articles")
     private val walkRef = db.collection("walks")
+    private val chatRoomRef = db.collection("chatrooms")
 
 
     override suspend fun login(id: String, name: String): Result<Boolean> = suspendCoroutine { continuation ->
@@ -109,8 +111,6 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
 //
 //                Tasks.whenAllSuccess(tasks)
 //            })
-
-
 
 
 
@@ -748,6 +748,144 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
             }
         }
 
+    }
+
+    override suspend fun getChatRoom(userId: String, friendId: String): Result<Chatroom> = suspendCoroutine { continuation ->
+
+//        chatRoomRef.whereArrayContainsAny("userList", listOf(userId, friendId)).get().addOnCompleteListener { task ->
+        chatRoomRef.whereArrayContains("userList", userId).get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                if (task.result.size() > 0) {
+                    var count = 0
+                    for (document in task.result) {
+                        val chatroom = document.toObject(Chatroom::class.java)
+                        if (chatroom.userList.containsAll(listOf(userId, friendId))) {
+                            Logger.i("get chatroom: $chatroom")
+                            continuation.resume(Result.Success(chatroom))
+                        } else {
+                            count += 1
+                            if (count == task.result.size()) {
+                                val chatRoomRefDocument = chatRoomRef.document()
+                                val chatRoom = Chatroom(
+                                    document.id,
+                                    mutableListOf(userId, friendId),
+                                    Calendar.getInstance().timeInMillis
+                                )
+
+                                chatRoomRefDocument.set(chatRoom).addOnCompleteListener { task2 ->
+
+                                    if (task2.isSuccessful) {
+                                        Logger.i("create chatroom: $chatRoom")
+                                        continuation.resume(Result.Success(chatRoom))
+
+                                    } else {
+                                        task2.exception?.let { e ->
+                                            Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                                            continuation.resume(Result.Error(e))
+                                        }
+                                        continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+
+                    val document = chatRoomRef.document()
+                    val chatroom = Chatroom(
+                        document.id,
+                        mutableListOf(userId, friendId),
+                        Calendar.getInstance().timeInMillis
+                        )
+
+                    document.set(chatroom).addOnCompleteListener { task2 ->
+
+                        if (task2.isSuccessful) {
+                            Logger.i("create chatroom: $chatroom")
+                            continuation.resume(Result.Success(chatroom))
+
+                        } else {
+                            task2.exception?.let { e ->
+                                Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                                continuation.resume(Result.Error(e))
+                            }
+                            continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+                        }
+                    }
+                }
+            } else {
+                task.exception?.let { e ->
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                    continuation.resume(Result.Error(e))
+                }
+                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+        }
+
+    }
+
+    override suspend fun getChatRoomMessages(chatroomId: String): Result<List<Messages>>  = suspendCoroutine { continuation ->
+
+        chatRoomRef.document(chatroomId).collection("messages").get().addOnCompleteListener { task ->
+
+            if (task.isSuccessful){
+                val messages = task.result.toObjects(Messages::class.java)
+                Logger.i("get messages: $messages")
+                continuation.resume(Result.Success(messages))
+            } else {
+                task.exception?.let { e ->
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                    continuation.resume(Result.Error(e))
+                }
+                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+        }
+    }
+
+    override fun getLiveChatRoomMessages(chatroomId: String): MutableLiveData<List<Messages>> {
+
+        val liveData = MutableLiveData<List<Messages>>()
+
+        chatRoomRef.document(chatroomId).collection(KEY_COLLECTION_MESSAGE)
+            .orderBy("msgTime", Query.Direction.ASCENDING)
+            .addSnapshotListener { snapshot, exception ->
+
+                Logger.i("addSnapshotListener detect")
+
+                exception?.let {
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                }
+
+                val list = mutableListOf<Messages>()
+                for (document in snapshot!!) {
+                    Logger.d(document.id + " => " + document.data)
+                    val message = document.toObject(Messages::class.java)
+
+                    list.add(message)
+                }
+
+                liveData.value = list
+            }
+
+        return liveData
+    }
+
+    override suspend fun sendMessage(chatroomId: String, message: Messages): Result<Boolean> = suspendCoroutine { continuation ->
+
+        chatRoomRef.document(chatroomId).collection(KEY_COLLECTION_MESSAGE).document().set(message).addOnCompleteListener { task ->
+
+            if (task.isSuccessful) {
+                Logger.w("send msg : $message")
+                continuation.resume(Result.Success(true))
+
+            } else {
+                task.exception?.let { e ->
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                    continuation.resume(Result.Error(e))
+                }
+                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+        }
     }
 //    override suspend fun getWalkingList(): Result<List<Walk>> = suspendCoroutine{ continuation ->
 //

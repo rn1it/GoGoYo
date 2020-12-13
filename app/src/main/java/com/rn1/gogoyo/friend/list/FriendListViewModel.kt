@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
+import com.rn1.gogoyo.model.Chatroom
 import com.rn1.gogoyo.model.Friends
 import com.rn1.gogoyo.model.source.GogoyoRepository
 import com.rn1.gogoyo.util.LoadStatus
@@ -23,6 +24,11 @@ class FriendListViewModel(val repository: GogoyoRepository, val userId: String):
         get() = _friendList
 
     val friendStatus = MutableLiveData<String>()
+
+    private val _navigateToChatRoom = MutableLiveData<Chatroom>()
+
+    val navigateToChatRoom: LiveData<Chatroom>
+        get() = _navigateToChatRoom
 
     private val _status = MutableLiveData<LoadStatus>()
 
@@ -118,5 +124,40 @@ class FriendListViewModel(val repository: GogoyoRepository, val userId: String):
                 }
             }
         }
+    }
+
+    fun toChatRoom(friend: Users){
+
+        coroutineScope.launch {
+
+            _navigateToChatRoom.value = when (val result = repository.getChatRoom(userId, friend.id)) {
+
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    result.data
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+            }
+        }
+
+    }
+
+    fun toChatRoomDone(){
+        _navigateToChatRoom.value = null
     }
 }

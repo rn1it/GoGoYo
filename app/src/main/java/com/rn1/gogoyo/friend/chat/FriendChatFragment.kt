@@ -54,13 +54,13 @@ class FriendChatFragment : Fragment() {
         adapter.submitList(list)
 
 
-
-        viewModel.navigateToChatRoom.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                findNavController().navigate(NavigationDirections.actionGlobalChatRoomFragment())
-                viewModel.onDoneNavigateToChatRoom()
-            }
-        })
+    //TODO
+//        viewModel.navigateToChatRoom.observe(viewLifecycleOwner, Observer {
+//            it?.let {
+//                findNavController().navigate(NavigationDirections.actionGlobalChatRoomFragment())
+//                viewModel.onDoneNavigateToChatRoom()
+//            }
+//        })
 
         binding.friendChatListSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?) = false

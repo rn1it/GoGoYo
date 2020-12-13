@@ -93,7 +93,11 @@
         android:id="@+id/chatRoomFragment"
         android:name="com.rn1.gogoyo.friend.chat.chatRoom.ChatRoomFragment"
         android:label="ChatRoomFragment"
-        tools:layout="@layout/fragment_chat_room"/>
+        tools:layout="@layout/fragment_chat_room">
+        <argument
+            android:name="chatRoomKey"
+            app:argType="com.rn1.gogoyo.model.Chatroom" />
+    </fragment>
     <fragment
         android:id="@+id/newPetFragment"
         android:name="com.rn1.gogoyo.mypets.newpets.NewPetFragment"

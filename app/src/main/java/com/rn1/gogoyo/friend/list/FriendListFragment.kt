@@ -10,6 +10,8 @@ import android.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentFriendListBinding
 import com.rn1.gogoyo.ext.getVmFactory
@@ -51,6 +53,14 @@ class FriendListFragment(val userId: String) : Fragment() {
                         }
                     })
                 }
+        })
+
+        viewModel.navigateToChatRoom.observe(viewLifecycleOwner, Observer {
+            it?.let {
+
+                findNavController().navigate(NavigationDirections.actionGlobalChatRoomFragment(it))
+                viewModel.toChatRoomDone()
+            }
         })
 
         setUpSpinner()

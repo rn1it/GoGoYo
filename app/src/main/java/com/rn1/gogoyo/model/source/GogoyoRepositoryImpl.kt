@@ -101,6 +101,22 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.getUserFriends(userId, status)
     }
 
+    override suspend fun getChatRoom(userId: String, friendId: String): Result<Chatroom> {
+        return remoteDataSource.getChatRoom(userId, friendId)
+    }
+
+    override suspend fun getChatRoomMessages(chatroomId: String): Result<List<Messages>> {
+        return remoteDataSource.getChatRoomMessages(chatroomId)
+    }
+
+    override fun getLiveChatRoomMessages(chatroomId: String): MutableLiveData<List<Messages>> {
+        return remoteDataSource.getLiveChatRoomMessages(chatroomId)
+    }
+
+    override suspend fun sendMessage(chatroomId: String, message: Messages): Result<Boolean> {
+        return remoteDataSource.sendMessage(chatroomId, message)
+    }
+
 //    override suspend fun getWalkingList(): Result<List<Walk>> {
 //        return remoteDataSource.getWalkingList()
 //    }

@@ -54,4 +54,11 @@ interface GogoyoDataSource {
 
     suspend fun getUserFriends(userId: String, status: Int?): Result<List<Friends>>
 
+    suspend fun getChatRoom(userId: String, friendId: String): Result<Chatroom>
+
+    suspend fun getChatRoomMessages(chatroomId: String): Result<List<Messages>>
+
+    fun getLiveChatRoomMessages(chatroomId: String): MutableLiveData<List<Messages>>
+
+    suspend fun sendMessage(chatroomId: String, message: Messages): Result<Boolean>
 }

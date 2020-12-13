@@ -98,6 +98,22 @@ class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
         TODO("Not yet implemented")
     }
 
+    override suspend fun getChatRoom(userId: String, friendId: String): Result<Chatroom> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getChatRoomMessages(chatroomId: String): Result<List<Messages>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getLiveChatRoomMessages(chatroomId: String): MutableLiveData<List<Messages>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun sendMessage(chatroomId: String, message: Messages): Result<Boolean> {
+        TODO("Not yet implemented")
+    }
+
 //    override suspend fun getWalkingList(): Result<List<Walk>> {
 //        TODO("Not yet implemented")
 //    }

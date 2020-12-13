@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.rn1.gogoyo.UserManager
 import com.rn1.gogoyo.databinding.ItemMsgFriendBinding
 import com.rn1.gogoyo.databinding.ItemMsgUserBinding
 import com.rn1.gogoyo.model.Messages
@@ -86,7 +87,7 @@ class ChatRoomAdapter: ListAdapter<DataItem, RecyclerView.ViewHolder>(MessageDif
             val itemList = mutableListOf<DataItem>()
             list.let {
                 for (msg in it) {
-                    if (msg.sender.name == "user") {
+                    if (msg.senderId == UserManager.userUID) {
                         itemList.add(DataItem.UserMsg(msg))
                     } else {
                         itemList.add(DataItem.FriendMsg(msg))

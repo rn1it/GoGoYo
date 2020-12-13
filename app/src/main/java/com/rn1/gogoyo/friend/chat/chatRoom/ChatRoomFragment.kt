@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentChatRoomBinding
 import com.rn1.gogoyo.databinding.FragmentFriendChatBinding
@@ -17,7 +18,7 @@ import com.rn1.gogoyo.model.Users
 class ChatRoomFragment : Fragment() {
 
     private lateinit var binding: FragmentChatRoomBinding
-    private val viewModel by viewModels<ChatRoomViewModel> { getVmFactory() }
+    private val viewModel by viewModels<ChatRoomViewModel> { getVmFactory( ChatRoomFragmentArgs.fromBundle(requireArguments()).chatRoomKey) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,21 +34,40 @@ class ChatRoomFragment : Fragment() {
 
         recyclerView.adapter = adapter
 
-        val user = Users("1", "user")
-        val friend = Users("1", "friend")
+//        val user = Users("1", "user")
+//        val friend = Users("1", "friend")
 
-        val msg1 = Messages("01", user, friend, "hi")
-        val msg2 = Messages("02", friend, user, "hihi")
-        val msg3 = Messages("01", user, friend, "hi")
-        val msg4 = Messages("02", friend, user, "hihi")
+//        val msg1 = Messages("01", user, friend, "hi")
+//        val msg2 = Messages("02", friend, user, "hihi")
+//        val msg3 = Messages("01", user, friend, "hi")
+//        val msg4 = Messages("02", friend, user, "hihi")
+//
+//        val list = mutableListOf<Messages>()
+//        list.add(msg1)
+//        list.add(msg2)
+//        list.add(msg3)
+//        list.add(msg4)
+//        adapter.separateMsgSubmitList(list)
 
-        val list = mutableListOf<Messages>()
-        list.add(msg1)
-        list.add(msg2)
-        list.add(msg3)
-        list.add(msg4)
-        adapter.separateMsgSubmitList(list)
 
+
+        viewModel.liveMessages.observe(viewLifecycleOwner, Observer {
+
+            it?.let {
+                adapter.separateMsgSubmitList(it)
+            }
+        })
+
+
+        viewModel.clearMsg.observe(viewLifecycleOwner, Observer {
+
+            it?.let {
+                if (it) {
+                    binding.msgEt.text = null
+                    viewModel.content.value = null
+                }
+            }
+        })
 
 
         return binding.root

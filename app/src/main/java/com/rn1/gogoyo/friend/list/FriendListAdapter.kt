@@ -23,7 +23,7 @@ class FriendListAdapter(val viewModel: FriendListViewModel) : ListAdapter<Users,
 
 
             binding.toChatRoomBt.setOnClickListener {
-
+                viewModel.toChatRoom(user)
             }
 
             binding.executePendingBindings()
