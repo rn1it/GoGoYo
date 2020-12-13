@@ -2,6 +2,8 @@ package com.rn1.gogoyo.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.rn1.gogoyo.friend.cards.FriendCardsViewModel
+import com.rn1.gogoyo.friend.list.FriendListViewModel
 import com.rn1.gogoyo.home.content.ArticleContentViewModel
 import com.rn1.gogoyo.model.Articles
 import com.rn1.gogoyo.model.source.GogoyoRepository
@@ -30,6 +32,12 @@ class IdStringViewModelFactory(
 
         } else if (modelClass.isAssignableFrom(EditUserViewModel::class.java)) {
             EditUserViewModel(gogoyoRepository, id) as T
+
+        } else if (modelClass.isAssignableFrom(FriendCardsViewModel::class.java)) {
+            FriendCardsViewModel(gogoyoRepository, id) as T
+
+        } else if (modelClass.isAssignableFrom(FriendListViewModel::class.java)) {
+            FriendListViewModel(gogoyoRepository, id) as T
 
         } else {
             throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

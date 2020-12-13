@@ -1,0 +1,122 @@
+package com.rn1.gogoyo.friend.list
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.rn1.gogoyo.GogoyoApplication
+import com.rn1.gogoyo.R
+import com.rn1.gogoyo.model.Friends
+import com.rn1.gogoyo.model.source.GogoyoRepository
+import com.rn1.gogoyo.util.LoadStatus
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import com.rn1.gogoyo.model.Result
+import com.rn1.gogoyo.model.Users
+
+class FriendListViewModel(val repository: GogoyoRepository, val userId: String): ViewModel() {
+
+    private val _friendList = MutableLiveData<List<Users>>()
+
+    val friendList: LiveData<List<Users>>
+        get() = _friendList
+
+    val friendStatus = MutableLiveData<String>()
+
+    private val _status = MutableLiveData<LoadStatus>()
+
+    val status: LiveData<LoadStatus>
+        get() = _status
+
+    private val _error = MutableLiveData<String>()
+
+    val error: LiveData<String>
+        get() = _error
+
+    private var viewModelJob = Job()
+
+    private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+
+    init {
+        getUserFriends("朋友")
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
+
+    fun getUserFriends(friendShip: String){
+
+        friendStatus.value = friendShip
+
+        val status = when (friendShip) {
+            "朋友" -> 2
+            "好友邀請" -> 1
+            "等待中" -> 0
+            else -> 2
+        }
+
+        coroutineScope.launch {
+
+            when (val result = repository.getUserFriends(userId, status)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    val friends = result.data
+                    getFriendListById(friends)
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                }
+            }
+        }
+    }
+
+    private fun getFriendListById(friends: List<Friends>) {
+
+        val idList = mutableListOf<String>()
+
+        for (friend in friends) {
+            idList.add(friend.friendId)
+        }
+
+        if (idList.isEmpty()) {
+            _friendList.value = null
+        } else {
+            coroutineScope.launch {
+
+                when (val result = repository.getUsersById(idList)) {
+
+                    is Result.Success -> {
+                        _error.value = null
+                        _status.value = LoadStatus.DONE
+                        _friendList.value = result.data
+                    }
+                    is Result.Fail -> {
+                        _error.value = result.error
+                        _status.value = LoadStatus.ERROR
+                    }
+                    is Result.Error -> {
+                        _error.value = result.exception.toString()
+                        _status.value = LoadStatus.ERROR
+                    }
+                    else -> {
+                        _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                        _status.value = LoadStatus.ERROR
+                    }
+                }
+            }
+        }
+    }
+}

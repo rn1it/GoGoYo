@@ -45,7 +45,7 @@ class ArticleContentFragment : Fragment() {
 
 
         val petRecyclerView = binding.articleContentPetRv
-        val petAdapter = ArticleContentPetImageAdapter(viewModel)
+        val petAdapter = ArticleContentPetImageAdapter()
         petRecyclerView.adapter = petAdapter
 
 

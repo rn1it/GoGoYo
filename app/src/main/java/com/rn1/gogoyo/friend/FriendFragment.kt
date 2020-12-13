@@ -22,11 +22,13 @@ class FriendFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        val userId = requireArguments().getString("userIdKey")!!
+
         val binding = DataBindingUtil.inflate<FragmentFriendBinding>(inflater, R.layout.fragment_friend, container, false)
 
         val fragmentList = mutableListOf<Fragment>()
-        fragmentList.add(FriendCardsFragment())
-        fragmentList.add(FriendListFragment())
+        fragmentList.add(FriendCardsFragment(userId))
+        fragmentList.add(FriendListFragment(userId))
         fragmentList.add(FriendChatFragment())
 
         val tabLayout = binding.friendTabLayout

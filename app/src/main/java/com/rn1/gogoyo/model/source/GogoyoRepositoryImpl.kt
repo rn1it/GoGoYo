@@ -17,6 +17,10 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.getUserById(id)
     }
 
+    override suspend fun getUsersById(idList: List<String>): Result<List<Users>> {
+        return remoteDataSource.getUsersById(idList)
+    }
+
     override suspend fun newPets(pet: Pets, userId: String): Result<Boolean> {
         return remoteDataSource.newPets(pet, userId)
     }
@@ -91,6 +95,10 @@ class GogoyoRepositoryImpl(
 
     override suspend fun getOthersWalkingList(userId: String): Result<List<Walk>> {
         return remoteDataSource.getOthersWalkingList(userId)
+    }
+
+    override suspend fun getUserFriends(userId: String, status: Int?): Result<List<Friends>> {
+        return remoteDataSource.getUserFriends(userId, status)
     }
 
 //    override suspend fun getWalkingList(): Result<List<Walk>> {

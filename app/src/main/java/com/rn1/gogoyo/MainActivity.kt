@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.nav_friend -> {
 //                navController.navigate(NavigationDirections.actionGlobalMakeFriendsFragment())
-                navController.navigate(NavigationDirections.actionGlobalFriendFragment())
+                navController.navigate(NavigationDirections.actionGlobalFriendFragment(UserManager.userUID!!))
                 return@OnNavigationItemSelectedListener true
             }
             R.id.nav_mypets -> {
