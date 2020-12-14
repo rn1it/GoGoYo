@@ -61,7 +61,11 @@
         android:id="@+id/postFragment"
         android:name="com.rn1.gogoyo.home.post.PostFragment"
         android:label="PostFragment"
-        tools:layout="@layout/fragment_post"/>
+        tools:layout="@layout/fragment_post">
+        <argument
+            android:name="walkKey"
+            app:argType="com.rn1.gogoyo.model.Walk" />
+    </fragment>
     <fragment
         android:id="@+id/articleContentFragment"
         android:name="com.rn1.gogoyo.home.content.ArticleContentFragment"
@@ -122,7 +126,11 @@
             android:name="userIdKey"
             app:argType="string" />
     </fragment>
-    <action android:id="@+id/action_global_homeFragment" app:destination="@id/homeFragment" />
+    <action
+        android:id="@+id/action_global_homeFragment"
+        app:destination="@id/homeFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
     <action android:id="@+id/action_global_makeFriendsFragment" app:destination="@id/friendCardsFragment" />
     <action android:id="@+id/action_global_myPetsFragment" app:destination="@id/myPetsFragment" />
     <action

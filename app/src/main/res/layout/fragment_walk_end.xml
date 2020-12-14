@@ -143,6 +143,7 @@
             android:layout_marginBottom="56dp"
             android:backgroundTint="#FF9800"
             android:text="分享動態"
+            android:onClick="@{() -> viewModel.navigateToPost()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/button7"
             app:layout_constraintHorizontal_bias="0.5"

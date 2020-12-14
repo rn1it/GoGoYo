@@ -12,6 +12,7 @@ import com.rn1.gogoyo.UserManager
 import com.rn1.gogoyo.model.Articles
 import com.rn1.gogoyo.model.Pets
 import com.rn1.gogoyo.model.Result
+import com.rn1.gogoyo.model.Walk
 import com.rn1.gogoyo.model.source.GogoyoRepository
 import com.rn1.gogoyo.util.LoadStatus
 import com.rn1.gogoyo.util.Logger
@@ -20,7 +21,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class PostViewModel(private val repository: GogoyoRepository): ViewModel() {
+class PostViewModel(
+    private val repository: GogoyoRepository,
+    private val argument: Walk
+): ViewModel() {
+
+    private val _walk = MutableLiveData<Walk>().apply {
+        value = argument
+    }
+
+    val walk: LiveData<Walk>
+        get() = _walk
+
+
 
     val post = MutableLiveData<Boolean>()
     /**
@@ -72,9 +85,30 @@ class PostViewModel(private val repository: GogoyoRepository): ViewModel() {
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
-        getUserPets()
-        selectedPetPositionList.value = mutableListOf()
-        selectedPetIdList.value = mutableListOf()
+
+        // check if post article from walk end
+        if (argument.id != "") {
+            title.value = "今天散步好開心^^"
+            content.value = "這次散步時間 ${argument.period}，走了 ${argument.distance} 公里， 下次還要挑戰走更久更遠!!"
+            getWalkPets()
+
+            val positionList = mutableListOf<Int>()
+            val idList = mutableListOf<String>()
+
+            for ((index, petId) in argument.petsIdList.withIndex()) {
+                positionList.add(index)
+                idList.add(petId)
+            }
+
+            selectedPetPositionList.value = positionList
+            selectedPetIdList.value = idList
+
+        } else {
+            getUserPets()
+            selectedPetPositionList.value = mutableListOf()
+            selectedPetIdList.value = mutableListOf()
+        }
+
     }
 
     override fun onCleared() {
@@ -140,6 +174,34 @@ class PostViewModel(private val repository: GogoyoRepository): ViewModel() {
         }
     }
 
+    fun getWalkPets(){
+        coroutineScope.launch {
+
+            _userPetList.value = when (val result = repository.getPetsByIdList(argument.petsIdList)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    result.data
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+            }
+
+        }
+    }
 
     fun checkArticleContent(){
         when {

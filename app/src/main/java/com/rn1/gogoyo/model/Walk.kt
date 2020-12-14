@@ -8,7 +8,7 @@ import java.util.*
 data class Walk(
     var id: String = "",
     var userId: String = "",
-    var petsIdList: List<String>? = null,
+    var petsIdList: List<String> = mutableListOf(),
     var newFriend: List<Friends>? = null,
     var points : List<Points>? = null,
     var period : Long? = null,

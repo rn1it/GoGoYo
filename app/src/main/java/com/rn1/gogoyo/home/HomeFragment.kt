@@ -17,6 +17,7 @@ import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentHomeBinding
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.model.Articles
+import com.rn1.gogoyo.model.Walk
 import java.util.*
 
 
@@ -53,7 +54,7 @@ class HomeFragment : Fragment(){
 
         viewModel.navigateToPost.observe(viewLifecycleOwner, Observer {
             it?.let {
-                findNavController().navigate(NavigationDirections.actionGlobalPostFragment())
+                findNavController().navigate(NavigationDirections.actionGlobalPostFragment(Walk()))
                 viewModel.onDoneNavigate()
             }
         })

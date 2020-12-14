@@ -35,6 +35,10 @@ class WalkEndViewModel(
     val petList: LiveData<List<Pets>>
         get() = _petList
 
+    private val _navigateToPost = MutableLiveData<Walk>()
+
+    val navigateToPost: LiveData<Walk>
+        get() = _navigateToPost
 
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadStatus>()
@@ -58,6 +62,11 @@ class WalkEndViewModel(
         if (arguments.petsIdList != null) {
             getPets()
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
     }
 
     private fun getPets(){
@@ -90,9 +99,12 @@ class WalkEndViewModel(
 
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
+    fun navigateToPost(){
+        _navigateToPost.value = walk.value
+    }
+
+    fun navigateToPostDone(){
+        _navigateToPost.value = null
     }
 
     val decoration = object : RecyclerView.ItemDecoration(){
