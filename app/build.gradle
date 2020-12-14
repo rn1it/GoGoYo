@@ -99,4 +99,7 @@ dependencies {
 
     implementation "com.yuyakaido.android:card-stack-view:$version_card_stack_view"
 
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+
+    implementation 'com.github.dhaval2404:imagepicker:1.7.5'
 }

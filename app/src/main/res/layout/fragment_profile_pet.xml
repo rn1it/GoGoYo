@@ -93,35 +93,16 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:maxImageSize="50dp" />
 
-<!--                <Button-->
-<!--                    android:id="@+id/sureEditBt"-->
-<!--                    android:layout_width="59dp"-->
+                <!--                <TextView-->
+<!--                    android:id="@+id/birthTitleTv"-->
+<!--                    style="@style/TextStyleTitle1"-->
+<!--                    android:layout_width="wrap_content"-->
 <!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="16dp"-->
-<!--                    android:layout_marginEnd="8dp"-->
-<!--                    android:backgroundTint="#DCD9D9"-->
-<!--                    android:onClick="@{()->viewModel.onSureEdit()}"-->
-<!--                    android:text="確定"-->
-<!--                    android:visibility="gone"-->
-<!--                    android:textSize="12sp"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:maxImageSize="50dp" />-->
-
-<!--                <Button-->
-<!--                    android:id="@+id/cancelEditBt"-->
-<!--                    android:layout_width="59dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="8dp"-->
-<!--                    android:layout_marginEnd="8dp"-->
-<!--                    android:backgroundTint="#F95555"-->
-<!--                    android:onClick="@{()->viewModel.onCancelEdit()}"-->
-<!--                    android:text="取消"-->
-<!--                    android:textSize="12sp"-->
-<!--                    android:visibility="gone"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/sureEditBt"-->
-<!--                    app:maxImageSize="50dp" />-->
+<!--                    android:layout_marginStart="16dp"-->
+<!--                    android:layout_marginTop="24dp"-->
+<!--                    android:text="@string/age"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/sexTitleTv" />-->
 
                 <TextView
                     android:id="@+id/breedTitleTv"
@@ -129,10 +110,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="24dp"
                     android:text="@string/text_breed"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/sexTitleTv" />
 
                 <TextView
                     android:id="@+id/sexTitleTv"
@@ -140,21 +121,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="32dp"
                     android:text="@string/text_sex"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/breedTitleTv" />
-
-                <TextView
-                    android:id="@+id/birthTitleTv"
-                    style="@style/TextStyleTitle1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
-                    android:text="@string/age"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/sexTitleTv" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/introductionTitleTv"
@@ -165,7 +135,7 @@
                     android:layout_marginTop="24dp"
                     android:text="@string/text_introduction"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/birthTitleTv" />
+                    app:layout_constraintTop_toBottomOf="@+id/breedTitleTv" />
 
                 <TextView
                     android:id="@+id/voiceTitleTv"
@@ -191,8 +161,38 @@
                     app:layout_constraintStart_toEndOf="@+id/button3"
                     app:layout_constraintTop_toBottomOf="@+id/introductionTitleEt" />
 
+                <!--                <EditText-->
+<!--                    android:id="@+id/birthTitleEt"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="16dp"-->
+<!--                    android:layout_marginTop="24dp"-->
+<!--                    android:background="@android:color/transparent"-->
+<!--                    android:ems="10"-->
+<!--                    android:focusable="false"-->
+<!--                    android:focusableInTouchMode="false"-->
+<!--                    android:inputType="textPersonName"-->
+<!--                    android:text="@{String.valueOf(viewModel.pet.age)}"-->
+<!--                    app:layout_constraintStart_toEndOf="@+id/birthTitleTv"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/sexTitleEt" />-->
+
                 <EditText
                     android:id="@+id/breedTitleEt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:background="@android:color/transparent"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:inputType="textPersonName"
+                    android:text="@{viewModel.pet.breed}"
+                    app:layout_constraintStart_toEndOf="@+id/breedTitleTv"
+                    app:layout_constraintTop_toBottomOf="@+id/sexTitleEt" />
+
+                <EditText
+                    android:id="@+id/sexTitleEt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -202,39 +202,9 @@
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     android:inputType="textPersonName"
-                    android:text="@{viewModel.pet.breed}"
-                    app:layout_constraintStart_toEndOf="@+id/breedTitleTv"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <EditText
-                    android:id="@+id/sexTitleEt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
-                    android:background="@android:color/transparent"
-                    android:ems="10"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:inputType="textPersonName"
                     android:text="@{viewModel.pet.sex}"
                     app:layout_constraintStart_toEndOf="@+id/sexTitleTv"
-                    app:layout_constraintTop_toBottomOf="@+id/breedTitleEt" />
-
-                <EditText
-                    android:id="@+id/birthTitleEt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
-                    android:background="@android:color/transparent"
-                    android:ems="10"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:inputType="textPersonName"
-                    android:text="@{String.valueOf(viewModel.pet.age)}"
-                    app:layout_constraintStart_toEndOf="@+id/birthTitleTv"
-                    app:layout_constraintTop_toBottomOf="@+id/sexTitleEt" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
                     android:id="@+id/introductionTitleEt"
@@ -249,7 +219,7 @@
                     android:inputType="textPersonName"
                     android:text="@{viewModel.pet.introduction}"
                     app:layout_constraintStart_toEndOf="@+id/introductionTitleTv"
-                    app:layout_constraintTop_toBottomOf="@+id/birthTitleEt" />
+                    app:layout_constraintTop_toBottomOf="@+id/breedTitleEt" />
 
                 <Button
                     android:id="@+id/button3"

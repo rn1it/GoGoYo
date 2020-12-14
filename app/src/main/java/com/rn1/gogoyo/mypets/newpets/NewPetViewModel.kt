@@ -6,10 +6,12 @@ import androidx.lifecycle.ViewModel
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
+import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.model.Pets
 import com.rn1.gogoyo.model.Result
 import com.rn1.gogoyo.model.source.GogoyoRepository
 import com.rn1.gogoyo.util.LoadStatus
+import com.rn1.gogoyo.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -17,7 +19,13 @@ import kotlinx.coroutines.launch
 
 class NewPetViewModel(val repository: GogoyoRepository): ViewModel() {
 
+    val outlineProvider =  MapOutlineProvider()
+
+    var filePath: String = ""
+
     val name = MutableLiveData<String>()
+
+    val breed = MutableLiveData<String>()
 
     val introduction = MutableLiveData<String>()
 
@@ -71,10 +79,41 @@ class NewPetViewModel(val repository: GogoyoRepository): ViewModel() {
         canAddPet.value = !name.value.isNullOrEmpty()
                 && !introduction.value.isNullOrBlank()
                 && petSex.isNotEmpty()
+                && filePath.isNotBlank()
         when {
+            filePath.isBlank() -> _invalidInfo.value = INVALID_IMAGE_PATH_EMPTY
             name.value.isNullOrEmpty() -> _invalidInfo.value = INVALID_FORMAT_NAME_EMPTY
             petSex.isEmpty() -> _invalidInfo.value = INVALID_FORMAT_SEX_EMPTY
             introduction.value.isNullOrBlank() -> _invalidInfo.value = INVALID_FORMAT_INTRODUCTION_EMPTY
+        }
+    }
+
+    fun uploadImage(path: String){
+        coroutineScope.launch {
+
+            filePath = when (val result = repository.getImageUri(path)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    Logger.d("uri = ${result.data}")
+                    result.data
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    ""
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    ""
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                    ""
+                }
+            }
         }
     }
 
@@ -83,6 +122,8 @@ class NewPetViewModel(val repository: GogoyoRepository): ViewModel() {
         pet.name = name.value!!
         pet.introduction = introduction.value
         pet.sex = petSex
+        pet.image = filePath
+        pet.breed = breed.value
 
         coroutineScope.launch {
             _status.value = LoadStatus.LOADING
@@ -120,6 +161,7 @@ class NewPetViewModel(val repository: GogoyoRepository): ViewModel() {
         const val INVALID_FORMAT_NAME_EMPTY = 0x11
         const val INVALID_FORMAT_INTRODUCTION_EMPTY = 0x12
         const val INVALID_FORMAT_SEX_EMPTY          = 0x13
+        const val INVALID_IMAGE_PATH_EMPTY          = 0x14
     }
 
 }

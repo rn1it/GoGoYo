@@ -9,6 +9,10 @@ class GogoyoRepositoryImpl(
     private val localDataSource: GogoyoDataSource
 ): GogoyoRepository{
 
+    override suspend fun getImageUri(filePath: String): Result<String> {
+        return remoteDataSource.getImageUri(filePath)
+    }
+
     override suspend fun login(id: String, name: String): Result<Boolean> {
         return remoteDataSource.login(id, name)
     }

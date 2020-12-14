@@ -6,6 +6,8 @@ import kotlin.coroutines.suspendCoroutine
 
 interface GogoyoDataSource {
 
+    suspend fun getImageUri(filePath: String): Result<String>
+
     suspend fun login(id: String, name: String): Result<Boolean>
 
     fun getLiveUserById(id: String): MutableLiveData<Users>

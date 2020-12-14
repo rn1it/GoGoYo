@@ -6,6 +6,10 @@ import com.rn1.gogoyo.model.*
 import com.rn1.gogoyo.model.source.GogoyoDataSource
 
 class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
+    override suspend fun getImageUri(filePath: String): Result<String> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun login(id: String, name: String): Result<Boolean> {
         TODO("Not yet implemented")
     }

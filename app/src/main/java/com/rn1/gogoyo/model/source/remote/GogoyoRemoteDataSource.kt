@@ -1,5 +1,6 @@
 package com.rn1.gogoyo.model.source.remote
 
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
@@ -8,12 +9,16 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageMetadata
+import com.google.firebase.storage.StorageReference
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
 import com.rn1.gogoyo.model.*
 import com.rn1.gogoyo.model.source.GogoyoDataSource
 import com.rn1.gogoyo.util.Logger
+import java.io.File
 import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -32,6 +37,39 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
     private val walkRef = db.collection("walks")
     private val chatRoomRef = db.collection("chatrooms")
 
+
+    private var storageRef = FirebaseStorage.getInstance().reference
+
+
+    override suspend fun getImageUri(filePath: String): Result<String> = suspendCoroutine { continuation ->
+
+
+        val file = Uri.fromFile(File(filePath))
+        val imagesRef= storageRef.child("images/${file.lastPathSegment}")
+        val uploadTask = imagesRef.putFile(file)
+
+        uploadTask
+            .addOnSuccessListener { taskSnapshot ->
+                // firebase path
+                val storagePath = taskSnapshot.metadata?.path as String
+
+                // get token
+                storageRef.child(storagePath).downloadUrl
+
+                    .addOnSuccessListener {
+                        val uri = it
+                        continuation.resume(Result.Success(uri.toString()))
+                    }
+
+                    .addOnFailureListener {
+                        continuation.resume(Result.Error(it))
+                    }
+            }
+
+            .addOnFailureListener{
+                continuation.resume(Result.Error(it))
+            }
+    }
 
     override suspend fun login(id: String, name: String): Result<Boolean> = suspendCoroutine { continuation ->
 

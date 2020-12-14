@@ -5,6 +5,8 @@ import com.rn1.gogoyo.model.*
 
 interface GogoyoRepository {
 
+    suspend fun getImageUri(filePath: String): Result<String>
+
     suspend fun login(id: String, name: String): Result<Boolean>
 
     fun getLiveUserById(id: String): MutableLiveData<Users>
