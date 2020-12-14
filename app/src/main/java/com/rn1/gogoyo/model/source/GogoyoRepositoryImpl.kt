@@ -9,8 +9,24 @@ class GogoyoRepositoryImpl(
     private val localDataSource: GogoyoDataSource
 ): GogoyoRepository{
 
+    override suspend fun getImageUri(filePath: String): Result<String> {
+        return remoteDataSource.getImageUri(filePath)
+    }
+
     override suspend fun login(id: String, name: String): Result<Boolean> {
         return remoteDataSource.login(id, name)
+    }
+
+    override fun getLiveUserById(id: String): MutableLiveData<Users> {
+        return remoteDataSource.getLiveUserById(id)
+    }
+
+    override fun getLiveUserFriendStatusById(id: String): MutableLiveData<List<Friends>> {
+        return remoteDataSource.getLiveUserFriendStatusById(id)
+    }
+
+    override suspend fun updateUser(user: Users): Result<Users> {
+        return remoteDataSource.updateUser(user)
     }
 
     override suspend fun getUserById(id: String): Result<Users> {
@@ -101,8 +117,24 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.getUserFriends(userId, status)
     }
 
+    override suspend fun setUserFriend(userId: String, friend: Friends): Result<Friends> {
+        return remoteDataSource.setUserFriend(userId, friend)
+    }
+
     override suspend fun getChatRoom(userId: String, friendId: String): Result<Chatroom> {
         return remoteDataSource.getChatRoom(userId, friendId)
+    }
+
+    override suspend fun updateChatRoom(chatroom: Chatroom): Result<Boolean> {
+        return remoteDataSource.updateChatRoom(chatroom)
+    }
+
+    override fun getUserChatList(userId: String): MutableLiveData<List<Chatroom>> {
+        return remoteDataSource.getUserChatList(userId)
+    }
+
+    override suspend fun getChatRoomListWithUserInfo(list: List<Chatroom>): Result<List<Chatroom>> {
+        return remoteDataSource.getChatRoomListWithUserInfo(list)
     }
 
     override suspend fun getChatRoomMessages(chatroomId: String): Result<List<Messages>> {

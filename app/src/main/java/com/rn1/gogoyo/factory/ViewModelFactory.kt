@@ -30,17 +30,11 @@ class ViewModelFactory constructor(
                 isAssignableFrom(HomeViewModel::class.java) ->
                     HomeViewModel(repository)
 
-                isAssignableFrom(PostViewModel::class.java) ->
-                    PostViewModel(repository)
-
                 isAssignableFrom(WalkViewModel::class.java) ->
                     WalkViewModel(repository)
 
                 isAssignableFrom(MyPetsViewModel::class.java) ->
                     MyPetsViewModel(repository)
-
-                isAssignableFrom(FriendChatViewModel::class.java) ->
-                    FriendChatViewModel(repository)
 
                 isAssignableFrom(NewPetViewModel::class.java) ->
                     NewPetViewModel(repository)

@@ -53,6 +53,18 @@ class ProfileUserFragment(val userId: String) : Fragment() {
             viewPager.currentItem = tab.position
         }.attach()
 
+//        viewModel.loginUser.observe(viewLifecycleOwner, Observer {
+//            it?.let {
+//                viewModel.getFriendStatus()
+//            }
+//        })
+
+        viewModel.loginUserFriends.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                viewModel.getFriendStatus()
+            }
+        })
+
         viewModel.userArticles.observe(viewLifecycleOwner, Observer {
             it?.let {
                 viewPagerList[0] = it

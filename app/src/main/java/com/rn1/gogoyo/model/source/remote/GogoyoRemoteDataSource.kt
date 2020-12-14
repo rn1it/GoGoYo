@@ -1,5 +1,6 @@
 package com.rn1.gogoyo.model.source.remote
 
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
@@ -8,12 +9,16 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageMetadata
+import com.google.firebase.storage.StorageReference
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
 import com.rn1.gogoyo.model.*
 import com.rn1.gogoyo.model.source.GogoyoDataSource
 import com.rn1.gogoyo.util.Logger
+import java.io.File
 import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -23,6 +28,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
 
     private const val KEY_CREATED_TIME = "createdTime"
     private const val KEY_COLLECTION_MESSAGE = "message"
+    private const val KEY_COLLECTION_FRIEND_LIST = "friendList"
 
     private val db = FirebaseFirestore.getInstance()
     private val usersRef =  db.collection("users")
@@ -31,6 +37,39 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
     private val walkRef = db.collection("walks")
     private val chatRoomRef = db.collection("chatrooms")
 
+
+    private var storageRef = FirebaseStorage.getInstance().reference
+
+
+    override suspend fun getImageUri(filePath: String): Result<String> = suspendCoroutine { continuation ->
+
+
+        val file = Uri.fromFile(File(filePath))
+        val imagesRef= storageRef.child("images/${file.lastPathSegment}")
+        val uploadTask = imagesRef.putFile(file)
+
+        uploadTask
+            .addOnSuccessListener { taskSnapshot ->
+                // firebase path
+                val storagePath = taskSnapshot.metadata?.path as String
+
+                // get token
+                storageRef.child(storagePath).downloadUrl
+
+                    .addOnSuccessListener {
+                        val uri = it
+                        continuation.resume(Result.Success(uri.toString()))
+                    }
+
+                    .addOnFailureListener {
+                        continuation.resume(Result.Error(it))
+                    }
+            }
+
+            .addOnFailureListener{
+                continuation.resume(Result.Error(it))
+            }
+    }
 
     override suspend fun login(id: String, name: String): Result<Boolean> = suspendCoroutine { continuation ->
 
@@ -69,6 +108,62 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
                 continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
             }
         }
+    }
+
+    override fun getLiveUserById(id: String): MutableLiveData<Users> {
+
+        val liveData = MutableLiveData<Users>()
+
+        usersRef.document(id).addSnapshotListener { snapshot, exception ->
+
+            Logger.i("addSnapshotListener detect")
+
+            exception?.let {
+                Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+            }
+
+            val user = snapshot!!.toObject(Users::class.java)
+
+            liveData.value = user
+        }
+
+        return liveData
+    }
+
+    override fun getLiveUserFriendStatusById(id: String): MutableLiveData<List<Friends>> {
+
+        val liveData = MutableLiveData<List<Friends>>()
+
+        usersRef.document(id).collection(KEY_COLLECTION_FRIEND_LIST).addSnapshotListener { snapshot, exception ->
+
+            Logger.i("addSnapshotListener detect")
+
+            exception?.let {
+                Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+            }
+
+            val friends = snapshot!!.toObjects(Friends::class.java)
+
+            liveData.value = friends
+        }
+
+        return liveData
+    }
+
+    override suspend fun updateUser(user: Users): Result<Users>  = suspendCoroutine { continuation ->
+
+       usersRef.document(user.id).set(user).addOnCompleteListener { task ->
+           if (task.isSuccessful) {
+               Logger.w("update user : $user")
+               continuation.resume(Result.Success(user))
+           } else {
+               task.exception?.let { e ->
+                   Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                   continuation.resume(Result.Error(e))
+               }
+               continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+           }
+       }
     }
 
     override suspend fun getUserById(id: String): Result<Users> = suspendCoroutine { continuation ->
@@ -174,7 +269,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
 
                 //add new pet to user
                 usersRef.document(userId)
-                    .update("petList", FieldValue.arrayUnion(pet.id))
+                    .update("petIdList", FieldValue.arrayUnion(pet.id))
                     .addOnCompleteListener { task2 ->
                         if (task2.isSuccessful) {
                             Logger.i("add pet to user: ${pet.id}")
@@ -750,6 +845,26 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
 
     }
 
+    override suspend fun setUserFriend(userId: String, friend: Friends): Result<Friends> = suspendCoroutine { continuation ->
+
+        usersRef.document(userId)
+            .collection(KEY_COLLECTION_FRIEND_LIST)
+            .document(friend.friendId)
+            .set(friend)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Logger.i("set user friend : $friend")
+                    continuation.resume(Result.Success(friend))
+                } else {
+                    task.exception?.let { e ->
+                        Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                        continuation.resume(Result.Error(e))
+                    }
+                    continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+                }
+            }
+    }
+
     override suspend fun getChatRoom(userId: String, friendId: String): Result<Chatroom> = suspendCoroutine { continuation ->
 
 //        chatRoomRef.whereArrayContainsAny("userList", listOf(userId, friendId)).get().addOnCompleteListener { task ->
@@ -819,6 +934,94 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
                     continuation.resume(Result.Error(e))
                 }
                 continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+        }
+
+    }
+
+    override suspend fun updateChatRoom(chatroom: Chatroom): Result<Boolean> = suspendCoroutine { continuation ->
+
+        chatRoomRef.document(chatroom.id).set(chatroom).addOnCompleteListener { task ->
+
+            if (task.isSuccessful){
+                Logger.i("update chat room : $chatroom")
+                continuation.resume(Result.Success(true))
+            } else {
+                task.exception?.let { e ->
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                    continuation.resume(Result.Error(e))
+                }
+                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+
+        }
+    }
+
+    override fun getUserChatList(userId: String): MutableLiveData<List<Chatroom>> {
+
+        val liveData = MutableLiveData<List<Chatroom>>()
+
+        chatRoomRef.whereArrayContains("userList", userId).orderBy("msgTime", Query.Direction.DESCENDING).addSnapshotListener { snapshot, exception ->
+
+            Logger.i("addSnapshotListener detect")
+
+            exception?.let {
+                Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+            }
+
+            val list = mutableListOf<Chatroom>()
+            for (document in snapshot!!) {
+                Logger.d(document.id + " => " + document.data)
+                val chatroom = document.toObject(Chatroom::class.java)
+
+                list.add(chatroom)
+            }
+
+            liveData.value = list
+        }
+
+        return liveData
+    }
+
+    override suspend fun getChatRoomListWithUserInfo(list: List<Chatroom>): Result<List<Chatroom>> = suspendCoroutine { continuation ->
+
+        val chatRooms = mutableListOf<Chatroom>()
+
+        if (list.isEmpty()) {
+            continuation.resume(Result.Success(chatRooms))
+        } else {
+
+            var count = 0
+            for (chatRoom in list) {
+
+                val anotherUserId = chatRoom.userList.filter { it != UserManager.userUID }[0]
+                usersRef.document(anotherUserId).get().addOnCompleteListener { task ->
+
+                    if (task.isSuccessful) {
+
+                        val user = task.result.toObject(Users::class.java)
+                        chatRoom.friend = user
+                        chatRooms.add(chatRoom)
+                        count += 1
+
+                        if (count == list.size) {
+                            continuation.resume(Result.Success(chatRooms))
+                        }
+
+                    } else {
+
+                        task.exception?.let { e ->
+                            Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                            continuation.resume(Result.Error(e))
+                        }
+                        continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+
+
+                    }
+
+
+                }
+
             }
         }
 

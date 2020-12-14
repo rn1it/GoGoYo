@@ -5,6 +5,7 @@ buildscript {
         version_navigation = "2.3.2"
         version_lifecycle_extensions = "2.2.0"
         version_glide = "4.11.0"
+        version_card_stack_view = "2.3.4"
     }
     repositories {
         google()
@@ -26,6 +27,7 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
+        maven { url "https://jitpack.io" }
     }
 }
 

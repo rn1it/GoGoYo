@@ -49,6 +49,10 @@ class ArticleContentViewModel(
 
     val response = MutableLiveData<String>()
 
+    private val _navigateToProfile = MediatorLiveData<String>()
+
+    val navigateToProfile: LiveData<String>
+        get() = _navigateToProfile
 
     private val _leaveArticle = MediatorLiveData<Boolean>()
 
@@ -193,6 +197,14 @@ class ArticleContentViewModel(
 
             }
         }
+    }
+
+    fun toProfile(){
+        _navigateToProfile.value = arguments.authorId
+    }
+
+    fun toProfileDone(){
+        _navigateToProfile.value = null
     }
 
     fun onLeaveArticle() {

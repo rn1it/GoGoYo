@@ -22,7 +22,7 @@ import com.rn1.gogoyo.home.post.PostViewModel.Companion.INVALID_FORMAT_TITLE_EMP
 class PostFragment : Fragment() {
 
     private lateinit var binding: FragmentPostBinding
-    private val viewModel by viewModels<PostViewModel> { getVmFactory() }
+    private val viewModel by viewModels<PostViewModel> { getVmFactory(PostFragmentArgs.fromBundle(requireArguments()).walkKey) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

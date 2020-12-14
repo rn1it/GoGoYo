@@ -13,7 +13,7 @@ class FriendCardsAdapter: ListAdapter<Users, RecyclerView.ViewHolder>(UserDiffCa
     class UserViewHolder(val binding: ItemFriendCardBinding): RecyclerView.ViewHolder(binding.root){
 
         fun bind(users: Users){
-            binding.users = users
+            binding.user = users
             binding.executePendingBindings()
         }
 

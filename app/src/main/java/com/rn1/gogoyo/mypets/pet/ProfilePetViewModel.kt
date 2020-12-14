@@ -30,21 +30,6 @@ class ProfilePetViewModel(
 
     val pet = MutableLiveData<Pets>()
 
-    private val _onEdit = MutableLiveData<Boolean>()
-
-    val onEdit: LiveData<Boolean>
-        get() = _onEdit
-
-    private val _onSureEdit = MutableLiveData<Boolean>()
-
-    val onSureEdit: LiveData<Boolean>
-        get() = _onSureEdit
-
-    private val _onCancelEdit = MutableLiveData<Boolean>()
-
-    val onCancelEdit: LiveData<Boolean>
-        get() = _onCancelEdit
-
     private val _navigateToNewPet = MutableLiveData<Boolean>()
 
     val navigateToNewPet: LiveData<Boolean>
@@ -132,28 +117,5 @@ class ProfilePetViewModel(
     fun toEditPetDone(){
         _editPet.value = null
     }
-//    fun edit(){
-//        _onEdit.value = true
-//    }
-//
-//    fun onDoneEdit(){
-//        _onEdit.value = null
-//    }
-
-//    fun onSureEdit(){
-//        _onSureEdit.value = true
-//    }
-//
-//    fun onDoneSureEdit(){
-//        _onSureEdit.value = null
-//    }
-
-//    fun onCancelEdit(){
-//        _onCancelEdit.value = true
-//    }
-//
-//    fun onDoneCancelEdit(){
-//        _onCancelEdit.value = null
-//    }
 
 }

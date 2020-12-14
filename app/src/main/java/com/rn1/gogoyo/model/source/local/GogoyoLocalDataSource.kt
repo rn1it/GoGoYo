@@ -6,7 +6,23 @@ import com.rn1.gogoyo.model.*
 import com.rn1.gogoyo.model.source.GogoyoDataSource
 
 class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
+    override suspend fun getImageUri(filePath: String): Result<String> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun login(id: String, name: String): Result<Boolean> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getLiveUserById(id: String): MutableLiveData<Users> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getLiveUserFriendStatusById(id: String): MutableLiveData<List<Friends>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateUser(user: Users): Result<Users> {
         TODO("Not yet implemented")
     }
 
@@ -98,7 +114,23 @@ class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
         TODO("Not yet implemented")
     }
 
+    override suspend fun setUserFriend(userId: String, friend: Friends): Result<Friends> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getChatRoom(userId: String, friendId: String): Result<Chatroom> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateChatRoom(chatroom: Chatroom): Result<Boolean> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getUserChatList(userId: String): MutableLiveData<List<Chatroom>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getChatRoomListWithUserInfo(list: List<Chatroom>): Result<List<Chatroom>> {
         TODO("Not yet implemented")
     }
 

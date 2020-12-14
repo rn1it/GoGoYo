@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentArticleContentBinding
 import com.rn1.gogoyo.ext.getVmFactory
@@ -79,6 +80,13 @@ class ArticleContentFragment : Fragment() {
         viewModel.petList.observe(viewLifecycleOwner, Observer {
             it?.let {
                 petAdapter.submitList(it)
+            }
+        })
+
+        viewModel.navigateToProfile.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                findNavController().navigate(NavigationDirections.actionGlobalMyPetsFragment(it))
+                viewModel.toProfileDone()
             }
         })
 

@@ -27,9 +27,9 @@ fun Fragment.getVmFactory(id: String): IdStringViewModelFactory{
     return IdStringViewModelFactory(repository, id)
 }
 
-fun Fragment.getVmFactory(walk: Walk): WalkEndViewModelFactory{
+fun Fragment.getVmFactory(walk: Walk): WalkDataViewModelFactory{
     val repository = (requireContext().applicationContext as GogoyoApplication).repository
-    return WalkEndViewModelFactory(repository, walk)
+    return WalkDataViewModelFactory(repository, walk)
 }
 
 fun Fragment.getVmFactory(chatRoom: Chatroom): ChatRoomViewModelFactory{

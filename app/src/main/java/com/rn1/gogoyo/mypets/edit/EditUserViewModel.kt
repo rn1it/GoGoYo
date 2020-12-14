@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
+import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.model.Pets
 import com.rn1.gogoyo.model.Result
 import com.rn1.gogoyo.model.Users
@@ -21,6 +22,8 @@ class EditUserViewModel(
     val repository: GogoyoRepository,
     private val argument: String
 ): ViewModel() {
+
+    val outlineProvider =  MapOutlineProvider()
 
     private val _user = MutableLiveData<Users>()
 

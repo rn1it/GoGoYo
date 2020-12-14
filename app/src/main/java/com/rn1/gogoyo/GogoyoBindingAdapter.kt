@@ -4,9 +4,13 @@ import android.content.res.ColorStateList
 import android.media.Image
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.rn1.gogoyo.ext.getColor
 import com.rn1.gogoyo.ext.toDisplayFormat
 
@@ -45,5 +49,20 @@ fun bindUserProfileButton(button: Button, isLoginUser: Boolean?){
                 }
             }
         }
+    }
+}
+
+@BindingAdapter("imageUrl")
+fun bindImage(imgView: ImageView, imgUrl: String?) {
+    imgUrl?.let {
+
+        val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
+        Glide.with(imgView.context)
+            .load(imgUri)
+            .apply(
+                RequestOptions()
+                    .placeholder(R.drawable.dog_profile)
+                    .error(R.drawable.my_pet))
+            .into(imgView)
     }
 }

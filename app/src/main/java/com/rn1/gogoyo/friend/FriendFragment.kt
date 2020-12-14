@@ -29,7 +29,7 @@ class FriendFragment : Fragment() {
         val fragmentList = mutableListOf<Fragment>()
         fragmentList.add(FriendCardsFragment(userId))
         fragmentList.add(FriendListFragment(userId))
-        fragmentList.add(FriendChatFragment())
+        fragmentList.add(FriendChatFragment(userId))
 
         val tabLayout = binding.friendTabLayout
 

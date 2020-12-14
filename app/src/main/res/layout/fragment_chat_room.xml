@@ -42,7 +42,7 @@
                 android:layout_marginEnd="8dp"
                 android:ems="10"
                 android:text="@={viewModel.content}"
-                android:hint="我想說..."
+                android:hint="發送訊息..."
                 android:inputType="textPersonName"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/sendMsgBt"

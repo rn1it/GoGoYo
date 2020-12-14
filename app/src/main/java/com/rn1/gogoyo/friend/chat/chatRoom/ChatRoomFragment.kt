@@ -34,23 +34,6 @@ class ChatRoomFragment : Fragment() {
 
         recyclerView.adapter = adapter
 
-//        val user = Users("1", "user")
-//        val friend = Users("1", "friend")
-
-//        val msg1 = Messages("01", user, friend, "hi")
-//        val msg2 = Messages("02", friend, user, "hihi")
-//        val msg3 = Messages("01", user, friend, "hi")
-//        val msg4 = Messages("02", friend, user, "hihi")
-//
-//        val list = mutableListOf<Messages>()
-//        list.add(msg1)
-//        list.add(msg2)
-//        list.add(msg3)
-//        list.add(msg4)
-//        adapter.separateMsgSubmitList(list)
-
-
-
         viewModel.liveMessages.observe(viewLifecycleOwner, Observer {
 
             it?.let {
@@ -68,6 +51,7 @@ class ChatRoomFragment : Fragment() {
                 }
             }
         })
+
 
 
         return binding.root

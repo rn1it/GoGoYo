@@ -6,7 +6,15 @@ import kotlin.coroutines.suspendCoroutine
 
 interface GogoyoDataSource {
 
+    suspend fun getImageUri(filePath: String): Result<String>
+
     suspend fun login(id: String, name: String): Result<Boolean>
+
+    fun getLiveUserById(id: String): MutableLiveData<Users>
+
+    fun getLiveUserFriendStatusById(id: String): MutableLiveData<List<Friends>>
+
+    suspend fun updateUser(user: Users): Result<Users>
 
     suspend fun getUserById(id: String): Result<Users>
 
@@ -54,11 +62,21 @@ interface GogoyoDataSource {
 
     suspend fun getUserFriends(userId: String, status: Int?): Result<List<Friends>>
 
+    suspend fun setUserFriend(userId: String, friend: Friends): Result<Friends>
+
     suspend fun getChatRoom(userId: String, friendId: String): Result<Chatroom>
+
+    suspend fun updateChatRoom(chatroom: Chatroom): Result<Boolean>
+
+    fun getUserChatList(userId: String): MutableLiveData<List<Chatroom>>
+
+    suspend fun getChatRoomListWithUserInfo(list: List<Chatroom>): Result<List<Chatroom>>
 
     suspend fun getChatRoomMessages(chatroomId: String): Result<List<Messages>>
 
     fun getLiveChatRoomMessages(chatroomId: String): MutableLiveData<List<Messages>>
 
     suspend fun sendMessage(chatroomId: String, message: Messages): Result<Boolean>
+
+
 }

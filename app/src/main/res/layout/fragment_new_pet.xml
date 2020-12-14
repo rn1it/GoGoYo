@@ -22,6 +22,8 @@
             android:layout_marginTop="24dp"
             android:layout_marginEnd="8dp"
             android:src="@drawable/add_pet3"
+            android:scaleType="centerCrop"
+            android:outlineProvider="@{viewModel.outlineProvider}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -59,29 +61,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/newPetNameTv" />
 
-        <TextView
-            android:id="@+id/textView29"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="32dp"
-            android:text="自我介紹"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView28" />
-
-        <EditText
-            android:id="@+id/addPetIntroEt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="我是一隻乖狗狗.."
-            android:text="@={viewModel.introduction}"
-            app:layout_constraintBottom_toBottomOf="@+id/textView29"
-            app:layout_constraintStart_toEndOf="@+id/textView29"
-            app:layout_constraintTop_toTopOf="@+id/textView29" />
-
         <RadioGroup
             android:id="@+id/radioGroupPetSex"
             android:layout_width="wrap_content"
@@ -109,6 +88,52 @@
 
         </RadioGroup>
 
+        <TextView
+            android:id="@+id/breedTitleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="32dp"
+            android:text="品種"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView28" />
+
+        <EditText
+            android:id="@+id/breedEt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:ems="10"
+            android:hint=""
+            android:inputType="textPersonName"
+            android:text="@={viewModel.breed}"
+            app:layout_constraintBottom_toBottomOf="@+id/breedTitleTv"
+            app:layout_constraintStart_toEndOf="@+id/breedTitleTv"
+            app:layout_constraintTop_toTopOf="@+id/breedTitleTv" />
+
+        <TextView
+            android:id="@+id/textView29"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="32dp"
+            android:text="自我介紹"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/breedTitleTv" />
+
+        <EditText
+            android:id="@+id/addPetIntroEt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="我是一隻乖狗狗.."
+            android:text="@={viewModel.introduction}"
+            app:layout_constraintBottom_toBottomOf="@+id/textView29"
+            app:layout_constraintStart_toEndOf="@+id/textView29"
+            app:layout_constraintTop_toTopOf="@+id/textView29" />
+
         <Button
             android:id="@+id/button"
             android:layout_width="wrap_content"
@@ -120,5 +145,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/addPetIntroEt" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -8,12 +8,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rn1.gogoyo.databinding.ItemChatRoomBinding
 import com.rn1.gogoyo.model.Chatroom
 
-class FriendChatAdapter(private val onClickListener: OnClickListener): ListAdapter<Chatroom, RecyclerView.ViewHolder>(ChatRoomDiffCallback) {
+class FriendChatAdapter(
+    val viewModel: FriendChatViewModel,
+    private val onClickListener: OnClickListener
+): ListAdapter<Chatroom, RecyclerView.ViewHolder>(ChatRoomDiffCallback) {
 
     class ChatRoomViewHolder(val binding: ItemChatRoomBinding): RecyclerView.ViewHolder(binding.root){
 
-        fun bind(chatRoom: Chatroom){
+        fun bind(viewModel: FriendChatViewModel, chatRoom: Chatroom){
             binding.chatRoom = chatRoom
+//            val friendId = chatRoom.userList.filter { it != UserManager.userUID }[0]
+
+//            viewModel.getUserById()
+
             binding.executePendingBindings()
         }
 
@@ -33,10 +40,10 @@ class FriendChatAdapter(private val onClickListener: OnClickListener): ListAdapt
         val chatRoomViewHolder = holder as ChatRoomViewHolder
         val chatRoom = getItem(position)
         chatRoomViewHolder.itemView.setOnClickListener {
-            onClickListener.onClick()
+            onClickListener.onClick(chatRoom)
         }
 
-        chatRoomViewHolder.bind(chatRoom)
+        chatRoomViewHolder.bind(viewModel, chatRoom)
     }
 
     companion object ChatRoomDiffCallback: DiffUtil.ItemCallback<Chatroom>(){
@@ -50,8 +57,8 @@ class FriendChatAdapter(private val onClickListener: OnClickListener): ListAdapt
 
     }
 
-    class OnClickListener(val clickListener: () -> Unit) {
-        fun onClick() = clickListener()
+    class OnClickListener(val clickListener: (chatRoom: Chatroom) -> Unit) {
+        fun onClick(chatRoom: Chatroom) = clickListener(chatRoom)
     }
 
 }
