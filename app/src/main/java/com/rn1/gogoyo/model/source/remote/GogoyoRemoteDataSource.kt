@@ -23,6 +23,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
 
     private const val KEY_CREATED_TIME = "createdTime"
     private const val KEY_COLLECTION_MESSAGE = "message"
+    private const val KEY_COLLECTION_FRIEND_LIST = "friendList"
 
     private val db = FirebaseFirestore.getInstance()
     private val usersRef =  db.collection("users")
@@ -69,6 +70,62 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
                 continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
             }
         }
+    }
+
+    override fun getLiveUserById(id: String): MutableLiveData<Users> {
+
+        val liveData = MutableLiveData<Users>()
+
+        usersRef.document(id).addSnapshotListener { snapshot, exception ->
+
+            Logger.i("addSnapshotListener detect")
+
+            exception?.let {
+                Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+            }
+
+            val user = snapshot!!.toObject(Users::class.java)
+
+            liveData.value = user
+        }
+
+        return liveData
+    }
+
+    override fun getLiveUserFriendStatusById(id: String): MutableLiveData<List<Friends>> {
+
+        val liveData = MutableLiveData<List<Friends>>()
+
+        usersRef.document(id).collection(KEY_COLLECTION_FRIEND_LIST).addSnapshotListener { snapshot, exception ->
+
+            Logger.i("addSnapshotListener detect")
+
+            exception?.let {
+                Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+            }
+
+            val friends = snapshot!!.toObjects(Friends::class.java)
+
+            liveData.value = friends
+        }
+
+        return liveData
+    }
+
+    override suspend fun updateUser(user: Users): Result<Users>  = suspendCoroutine { continuation ->
+
+       usersRef.document(user.id).set(user).addOnCompleteListener { task ->
+           if (task.isSuccessful) {
+               Logger.w("update user : $user")
+               continuation.resume(Result.Success(user))
+           } else {
+               task.exception?.let { e ->
+                   Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                   continuation.resume(Result.Error(e))
+               }
+               continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+           }
+       }
     }
 
     override suspend fun getUserById(id: String): Result<Users> = suspendCoroutine { continuation ->
@@ -174,7 +231,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
 
                 //add new pet to user
                 usersRef.document(userId)
-                    .update("petList", FieldValue.arrayUnion(pet.id))
+                    .update("petIdList", FieldValue.arrayUnion(pet.id))
                     .addOnCompleteListener { task2 ->
                         if (task2.isSuccessful) {
                             Logger.i("add pet to user: ${pet.id}")
@@ -748,6 +805,26 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
             }
         }
 
+    }
+
+    override suspend fun setUserFriend(userId: String, friend: Friends): Result<Friends> = suspendCoroutine { continuation ->
+
+        usersRef.document(userId)
+            .collection(KEY_COLLECTION_FRIEND_LIST)
+            .document(friend.friendId)
+            .set(friend)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Logger.i("set user friend : $friend")
+                    continuation.resume(Result.Success(friend))
+                } else {
+                    task.exception?.let { e ->
+                        Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                        continuation.resume(Result.Error(e))
+                    }
+                    continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+                }
+            }
     }
 
     override suspend fun getChatRoom(userId: String, friendId: String): Result<Chatroom> = suspendCoroutine { continuation ->

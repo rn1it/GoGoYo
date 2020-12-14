@@ -13,6 +13,18 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.login(id, name)
     }
 
+    override fun getLiveUserById(id: String): MutableLiveData<Users> {
+        return remoteDataSource.getLiveUserById(id)
+    }
+
+    override fun getLiveUserFriendStatusById(id: String): MutableLiveData<List<Friends>> {
+        return remoteDataSource.getLiveUserFriendStatusById(id)
+    }
+
+    override suspend fun updateUser(user: Users): Result<Users> {
+        return remoteDataSource.updateUser(user)
+    }
+
     override suspend fun getUserById(id: String): Result<Users> {
         return remoteDataSource.getUserById(id)
     }
@@ -99,6 +111,10 @@ class GogoyoRepositoryImpl(
 
     override suspend fun getUserFriends(userId: String, status: Int?): Result<List<Friends>> {
         return remoteDataSource.getUserFriends(userId, status)
+    }
+
+    override suspend fun setUserFriend(userId: String, friend: Friends): Result<Friends> {
+        return remoteDataSource.setUserFriend(userId, friend)
     }
 
     override suspend fun getChatRoom(userId: String, friendId: String): Result<Chatroom> {

@@ -8,6 +8,7 @@ import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
 import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.model.Articles
+import com.rn1.gogoyo.model.Friends
 import com.rn1.gogoyo.model.Result
 import com.rn1.gogoyo.model.Users
 import com.rn1.gogoyo.model.source.GogoyoRepository
@@ -16,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.util.*
 
 class ProfileUserViewModel(
     val repository: GogoyoRepository,
@@ -27,10 +29,21 @@ class ProfileUserViewModel(
     // check profile is login user or not
     val isLoginUser = userId == UserManager.userUID
 
+    var loginUser = MutableLiveData<Users>()
+
+    var loginUserFriends = MutableLiveData<List<Friends>>()
+
     private val _user = MutableLiveData<Users>()
 
     val user: LiveData<Users>
         get() = _user
+
+    private val _friendStatus = MutableLiveData<Int>()
+
+    val friendStatus: LiveData<Int>
+        get() = _friendStatus
+
+    val profileBtText = MutableLiveData<String>()
 
     private val _userArticles = MutableLiveData<List<Articles>>()
 
@@ -71,6 +84,14 @@ class ProfileUserViewModel(
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
+        // real time data
+        getLoginUser()
+        if (!isLoginUser) {
+            getLoginUserFriendStatus()
+            getFriendStatus()
+        } else {
+            profileBtText.value = "修改資料"
+        }
         getUser()
         getUserArticle()
         getUserFavArticle()
@@ -79,6 +100,14 @@ class ProfileUserViewModel(
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
+    }
+
+    private fun getLoginUser(){
+        loginUser = repository.getLiveUserById(UserManager.userUID!!)
+    }
+
+    private fun getLoginUserFriendStatus(){
+        loginUserFriends = repository.getLiveUserFriendStatusById(UserManager.userUID!!)
     }
 
     private fun getUser() {
@@ -186,8 +215,145 @@ class ProfileUserViewModel(
             _navigateToEdit.value = userId
         } else {
 
+            when (_friendStatus.value) {
+                -1 -> { // send friend invite
+                    coroutineScope.launch {
+
+                        val friend = Friends().apply {
+                            createdTime = Calendar.getInstance().timeInMillis
+                            friendId = userId
+                            status = 0
+                        }
+                        when (val result = repository.setUserFriend(UserManager.userUID!!, friend)) {
+                            is Result.Success -> {
+                                _error.value = null
+                                _status.value = LoadStatus.DONE
+                                friend.apply {
+                                    friendId = UserManager.userUID!!
+                                    status = 1
+                                }
+                                updateFriendStatus(friend)
+                                //  同步更新好友的好友狀態
+                            }
+                            is Result.Fail -> {
+                                _error.value = result.error
+                                _status.value = LoadStatus.ERROR
+                            }
+                            is Result.Error -> {
+                                _error.value = result.exception.toString()
+                                _status.value = LoadStatus.ERROR
+                            }
+                            else -> {
+                                _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                                _status.value = LoadStatus.ERROR
+                            }
+                        }
+                    }
+                }
+                1 -> {
+                    coroutineScope.launch {
+                        val friend = Friends().apply {
+                            createdTime = Calendar.getInstance().timeInMillis
+                            friendId = userId
+                            status = 2
+                        }
+                        when (val result = repository.setUserFriend(UserManager.userUID!!, friend)) {
+                            is Result.Success -> {
+                                _error.value = null
+                                _status.value = LoadStatus.DONE
+                                friend.apply {
+                                    friendId = UserManager.userUID!!
+                                    status = 2
+                                }
+                                updateFriendStatus(friend)
+                                //  同步更新好友的好友狀態
+                            }
+                            is Result.Fail -> {
+                                _error.value = result.error
+                                _status.value = LoadStatus.ERROR
+                            }
+                            is Result.Error -> {
+                                _error.value = result.exception.toString()
+                                _status.value = LoadStatus.ERROR
+                            }
+                            else -> {
+                                _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                                _status.value = LoadStatus.ERROR
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
+
+    // 送出好友邀請後同步更新好友的好友狀態
+    private fun updateFriendStatus(friend: Friends) {
+        coroutineScope.launch {
+            when (val result = repository.setUserFriend(userId, friend)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                }
+            }
+        }
+    }
+
+    fun getFriendStatus(){
+
+        if (!isLoginUser) {
+            coroutineScope.launch {
+
+                when (val result = repository.getUserFriends(UserManager.userUID!!, null)){
+
+                    is Result.Success -> {
+                        _error.value = null
+                        _status.value = LoadStatus.DONE
+
+                        val friends = result.data.filter { it.friendId == userId }
+                        if (friends.isEmpty()) {
+                            _friendStatus.value = -1
+                            profileBtText.value = "送出好友邀請"
+                        } else {
+                            _friendStatus.value = friends[0].status
+
+                            profileBtText.value = when (friends[0].status) {
+                                0 -> "已發送邀請"
+                                1 -> "接受好友邀請"
+                                else -> "朋友"
+                            }
+                        }
+
+                    }
+                    is Result.Fail -> {
+                        _error.value = result.error
+                        _status.value = LoadStatus.ERROR
+                    }
+                    is Result.Error -> {
+                        _error.value = result.exception.toString()
+                        _status.value = LoadStatus.ERROR
+                    }
+                    else -> {
+                        _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                        _status.value = LoadStatus.ERROR
+                    }
+                }
+            }
+        }
+    }
+
 
     fun onDoneNavigateToEdit(){
         _navigateToEdit.value = null

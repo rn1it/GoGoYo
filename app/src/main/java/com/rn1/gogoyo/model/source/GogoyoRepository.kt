@@ -7,6 +7,12 @@ interface GogoyoRepository {
 
     suspend fun login(id: String, name: String): Result<Boolean>
 
+    fun getLiveUserById(id: String): MutableLiveData<Users>
+
+    fun getLiveUserFriendStatusById(id: String): MutableLiveData<List<Friends>>
+
+    suspend fun updateUser(user: Users): Result<Users>
+
     suspend fun getUserById(id: String): Result<Users>
 
     suspend fun getUsersById(idList: List<String>): Result<List<Users>>
@@ -52,6 +58,8 @@ interface GogoyoRepository {
     suspend fun getOthersWalkingList(userId: String): Result<List<Walk>>
 
     suspend fun getUserFriends(userId: String, status: Int?): Result<List<Friends>>
+
+    suspend fun setUserFriend(userId: String, friend: Friends): Result<Friends>
 
     suspend fun getChatRoom(userId: String, friendId: String): Result<Chatroom>
 

@@ -89,12 +89,13 @@
             android:insetTop="10dp"
             android:insetBottom="10dp"
             tools:text="修改資料"
+            android:text="@{viewModel.profileBtText}"
             android:onClick="@{() -> viewModel.onClickProfileBt()}"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout7"
             app:layout_constraintEnd_toEndOf="@+id/friendCountTitleTv"
             app:layout_constraintStart_toStartOf="@+id/postTitleTv"
-            app:setProfileButton="@{viewModel.isLoginUser}" />
-
+             />
+<!--        app:setProfileButton="@{viewModel.isLoginUser}"-->
         <ScrollView
             android:id="@+id/constraintLayout7"
             android:layout_width="match_parent"

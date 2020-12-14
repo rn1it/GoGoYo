@@ -15,6 +15,7 @@ import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentFriendCardsBinding
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.model.Users
+import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 
 class FriendCardsFragment(userId: String) : Fragment() {
 
@@ -29,24 +30,28 @@ class FriendCardsFragment(userId: String) : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_friend_cards, container, false)
         binding.lifecycleOwner = this
 
-        val viewPager = binding.friendCardsViewPager
-        viewPager.clipToPadding = false
-        viewPager.clipChildren = false
-        viewPager.offscreenPageLimit = 3
+        val cardStackView = binding.cardStackView
+        cardStackView.layoutManager = CardStackLayoutManager(requireContext())
+//        cardStackView.adapter = CardStaA
 
-        viewPager.beginFakeDrag()
-        viewPager.fakeDragBy(-10f)
+//        val viewPager = binding.friendCardsViewPager
+//        viewPager.clipToPadding = false
+//        viewPager.clipChildren = false
+//        viewPager.offscreenPageLimit = 3
+
+//        viewPager.beginFakeDrag()
+//        viewPager.fakeDragBy(-10f)
 //        viewPager.endFakeDrag()
 
         //disable slide
 //        viewPager.isUserInputEnabled = false
 
         // not to show slide to end effect
-        viewPager.getChildAt(0).overScrollMode = View.OVER_SCROLL_NEVER
+//        viewPager.getChildAt(0).overScrollMode = View.OVER_SCROLL_NEVER
 
         val transformer = CompositePageTransformer()
         transformer.addTransformer(MarginPageTransformer(4))
-        viewPager.setPageTransformer(transformer)
+//        viewPager.setPageTransformer(transformer)
 
         val user1 = Users("001", "001")
         val user2 = Users("002", "002")
@@ -59,7 +64,7 @@ class FriendCardsFragment(userId: String) : Fragment() {
 
         val adapter = FriendCardsAdapter()
 
-        viewPager.adapter = adapter
+//        viewPager.adapter = adapter
         adapter.submitList(list)
 
         return binding.root

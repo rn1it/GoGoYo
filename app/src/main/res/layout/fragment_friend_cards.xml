@@ -12,17 +12,34 @@
         android:layout_height="match_parent"
         tools:context=".friend.cards.FriendCardsFragment">
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/friendCardsViewPager"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:orientation="horizontal"
-            android:paddingStart="32dp"
-            android:paddingEnd="32dp"
-            app:layout_constraintBottom_toTopOf="@+id/textView2"
+<!--        <androidx.viewpager2.widget.ViewPager2-->
+<!--            android:id="@+id/friendCardsViewPager"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:paddingStart="32dp"-->
+<!--            android:paddingEnd="32dp"-->
+<!--            app:layout_constraintBottom_toTopOf="@+id/textView2"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+
+        <com.yuyakaido.android.cardstackview.CardStackView
+            android:id="@+id/cardStackView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toTopOf="@+id/textView2"/>
+
+
+
+
+
+
+
+
 
         <TextView
             android:id="@+id/textView2"
