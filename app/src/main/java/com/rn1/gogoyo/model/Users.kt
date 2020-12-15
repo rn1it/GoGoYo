@@ -8,6 +8,7 @@ data class Users(
     var id: String = "",
     var name: String = "",
     var introduction: String = "",
+    var image: String? = null,
     val petIdList: List<String> = mutableListOf(),
     val location: String? = null,
     val qrCode: String? = null,

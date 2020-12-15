@@ -89,11 +89,14 @@ class EditPetViewModel(
            when(val result = repository.getPetsById(argument)) {
 
                 is Result.Success -> {
+
+                    // set pet old data
                     _error.value = null
                     _status.value = LoadStatus.DONE
                     _pet.value = result.data
                     name.value = result.data.name
                     introduction.value = result.data.introduction
+                    breed.value = result.data.breed
 
                     selectedSexRadio.value = when (result.data.sex) {
                         "男生" -> R.id.radioBoy

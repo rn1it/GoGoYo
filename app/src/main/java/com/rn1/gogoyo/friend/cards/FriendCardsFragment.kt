@@ -101,7 +101,7 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
         manager.setCanScrollVertical(true)
         manager.setSwipeableMethod(SwipeableMethod.AutomaticAndManual)
         manager.setOverlayInterpolator(LinearInterpolator())
-        cardStackView.layoutManager = manager
+//        cardStackView.layoutManager = manager
         cardStackView.adapter = adapter
         cardStackView.itemAnimator.apply {
             if (this is DefaultItemAnimator) {

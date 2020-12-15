@@ -13,6 +13,7 @@ import com.rn1.gogoyo.model.Result
 import com.rn1.gogoyo.model.Users
 import com.rn1.gogoyo.model.source.GogoyoRepository
 import com.rn1.gogoyo.util.LoadStatus
+import com.rn1.gogoyo.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -23,6 +24,10 @@ class ProfileUserViewModel(
     val repository: GogoyoRepository,
     val userId: String
     ): ViewModel() {
+
+    private val DEFAULT_USER_PROFILE = "https://firebasestorage.googleapis.com/v0/b/turing-opus-296809.appspot.com/o/images%2Fprofile.png?alt=media&token=fe4da46c-cae1-4d82-8b76-7ec681cdd284"
+
+    var filePath: String = ""
 
     val outlineProvider =  MapOutlineProvider()
 
@@ -118,7 +123,11 @@ class ProfileUserViewModel(
                     is Result.Success -> {
                         _error.value = null
                         _status.value = LoadStatus.DONE
-                        result.data
+                        val user = result.data
+                        if (user.image.isNullOrBlank()) {
+                            user.image = DEFAULT_USER_PROFILE
+                        }
+                        user
                     }
                     is Result.Fail -> {
                         _error.value = result.error
@@ -349,6 +358,61 @@ class ProfileUserViewModel(
                         _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
                         _status.value = LoadStatus.ERROR
                     }
+                }
+            }
+        }
+    }
+
+    fun uploadImage(path: String){
+        coroutineScope.launch {
+
+            when (val result = repository.getImageUri(path)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    Logger.d("uri = ${result.data}")
+                    filePath = result.data
+                    updateUserImage()
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                }
+            }
+        }
+    }
+
+    fun updateUserImage(){
+
+        coroutineScope.launch {
+            _status.value = LoadStatus.LOADING
+            val user = user.value!!
+            user.image = filePath
+
+            when(val result = repository.editUsers(user)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
                 }
             }
         }

@@ -41,8 +41,8 @@ class ArticleContentFragment : Fragment() {
         binding.viewModel = viewModel
 
         val viewPager = binding.articleImageViewPager
-        val adapter = ArticleContentAdapter()
-        viewPager.adapter = adapter
+        val imageAdapter = ArticleContentAdapter()
+        viewPager.adapter = imageAdapter
 
 
         val petRecyclerView = binding.articleContentPetRv
@@ -60,6 +60,13 @@ class ArticleContentFragment : Fragment() {
                 LinearLayoutManager.VERTICAL
             )
         )
+
+
+        viewModel.article.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                imageAdapter.submitList(it.images)
+            }
+        })
 
         viewModel.leaveArticle.observe(viewLifecycleOwner, Observer {
             it?.let {

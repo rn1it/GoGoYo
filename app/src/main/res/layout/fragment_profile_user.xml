@@ -21,17 +21,17 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
-            android:id="@+id/imageView9"
+            android:id="@+id/userProfileIv"
             android:layout_width="160dp"
             android:layout_height="160dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/pp"
+            android:clickable="@{viewModel.isLoginUser ? true : false }"
+            app:imageUrl="@{viewModel.user.image}"
             android:outlineProvider="@{viewModel.outlineProvider}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
 
         <TextView
             android:id="@+id/postValueTv"
@@ -69,7 +69,7 @@
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout7"
             app:layout_constraintEnd_toStartOf="@+id/friendCountTitleTv"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/imageView9"
+            app:layout_constraintStart_toEndOf="@+id/userProfileIv"
             app:layout_constraintTop_toBottomOf="@+id/postValueTv" />
 
         <TextView
@@ -106,7 +106,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView9">
+            app:layout_constraintTop_toBottomOf="@+id/userProfileIv">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -145,6 +145,7 @@
         </ScrollView>
 
         <com.google.android.material.tabs.TabLayout
+            android:elevation="@dimen/elevation_all"
             android:id="@+id/profileArticleTabLayout"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -159,6 +160,8 @@
             android:id="@+id/profileArticleViewPager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

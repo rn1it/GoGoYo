@@ -13,7 +13,7 @@ data class Articles(
     var userName: String? = null,
     var userImg: String? = null,
     var createdTime: Long = -1,
-    val images: List<File>? = null,
+    var images: List<String> = mutableListOf(),
     val like: Int = 0,
     val favoriteUserIdList: List<String> = mutableListOf(),
     val responseList: List<ArticleResponse> = mutableListOf(),

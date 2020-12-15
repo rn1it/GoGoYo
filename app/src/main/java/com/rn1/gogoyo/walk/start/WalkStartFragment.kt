@@ -339,9 +339,10 @@ class WalkStartFragment : Fragment(){
             val tvTitle = view.findViewById<TextView>(R.id.title)
             val tvSnippet = view.findViewById<TextView>(R.id.snippet)
 
-            tvTitle.text = marker.title
-            tvSnippet.text = marker.snippet
-
+//            tvTitle.text = marker.title
+//            tvSnippet.text = marker.snippet
+            tvTitle.text = "ni hao"
+            tvSnippet.text = "散步中"
         }
 
         override fun getInfoContents(marker: Marker): View {
