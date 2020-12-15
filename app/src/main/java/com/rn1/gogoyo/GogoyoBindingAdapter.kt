@@ -54,15 +54,13 @@ fun bindUserProfileButton(button: Button, isLoginUser: Boolean?){
 
 @BindingAdapter("imageUrl")
 fun bindImage(imgView: ImageView, imgUrl: String?) {
-    imgUrl?.let {
+    val imgUri = imgUrl?.toUri()?.buildUpon()?.scheme("https")?.build()
+    Glide.with(imgView.context)
+        .load(imgUri)
+        .apply(
+            RequestOptions()
+                .placeholder(R.drawable.dog_profile)
+                .error(R.drawable.my_pet))
+        .into(imgView)
 
-        val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
-        Glide.with(imgView.context)
-            .load(imgUri)
-            .apply(
-                RequestOptions()
-                    .placeholder(R.drawable.dog_profile)
-                    .error(R.drawable.my_pet))
-            .into(imgView)
-    }
 }

@@ -150,6 +150,42 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
         return liveData
     }
 
+    /**
+     * get all users with or without login user
+     */
+    override suspend fun getAllUsers(id: String?): Result<List<Users>> = suspendCoroutine { continuation ->
+
+        if (id.isNullOrBlank()){
+            usersRef.get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val users = task.result.toObjects(Users::class.java)
+                    Logger.w("get all user")
+                    continuation.resume(Result.Success(users))
+                } else {
+                    task.exception?.let { e ->
+                        Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                        continuation.resume(Result.Error(e))
+                    }
+                    continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+                }
+            }
+        } else {
+            usersRef.whereNotEqualTo("id", "").get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val users = task.result.toObjects(Users::class.java)
+                    Logger.w("get all user")
+                    continuation.resume(Result.Success(users))
+                } else {
+                    task.exception?.let { e ->
+                        Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                        continuation.resume(Result.Error(e))
+                    }
+                    continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+                }
+            }
+        }
+    }
+
     override suspend fun updateUser(user: Users): Result<Users>  = suspendCoroutine { continuation ->
 
        usersRef.document(user.id).set(user).addOnCompleteListener { task ->
@@ -184,6 +220,9 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
         }
     }
 
+    /**
+     * get users with pet info by id list
+     */
     override suspend fun getUsersById(idList: List<String>): Result<List<Users>> = suspendCoroutine { continuation ->
 
 //        usersRef.whereIn("id", idList).get()
@@ -214,14 +253,18 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
                 val users = task.result.toObjects(Users::class.java)
                 var count = 0
                 for (user in users) {
+                    Logger.w("user  =  $user")
+
                     if (user.petIdList.isNotEmpty()) {
                         var countPet = 0
+                        val petList = mutableListOf<Pets>()
                         for (petId in user.petIdList) {
-                            val petList = mutableListOf<Pets>()
+                            Logger.w("petId  =  $petId")
                             petsRef.document(petId).get().addOnCompleteListener { task2 ->
                                 if (task2.isSuccessful) {
                                     val pet = task2.result.toObject(Pets::class.java)!!
                                     petList.add(pet)
+                                    Logger.w("petList  =  $petList")
                                     countPet += 1
                                     if (countPet == user.petIdList.size) {
                                         user.pets = petList
@@ -432,6 +475,9 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
             }
     }
 
+    /**
+     * get all article include user info
+     */
     override suspend fun getAllArticle(): Result<List<Articles>> = suspendCoroutine{ continuation ->
 
         articleRef.orderBy(KEY_CREATED_TIME, Query.Direction.DESCENDING).get().addOnCompleteListener { task ->
@@ -447,7 +493,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
                         usersRef.document(article.authorId!!).get().addOnCompleteListener { task1 ->
                             if (task1.isSuccessful) {
                                 val user = task1.result.toObject(Users::class.java)!!
-                                article.userName = user.name
+                                article.author = user
 
                                 list.add(article)
                                 count += 1
@@ -501,7 +547,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
                     usersRef.document(article.authorId!!).get().addOnCompleteListener { task1 ->
                         if (task1.isSuccessful) {
                             val user = task1.result.toObject(Users::class.java)!!
-                            article.userName = user.name
+                            article.author = user
 
                             list.add(article)
                             count += 1
@@ -549,7 +595,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
                     usersRef.document(article.authorId!!).get().addOnCompleteListener { task1 ->
                         if (task1.isSuccessful) {
                             val user = task1.result.toObject(Users::class.java)!!
-                            article.userName = user.name
+                            article.author = user
 
                             list.add(article)
                             count += 1
@@ -811,7 +857,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
                 .get().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val list = task.result.toObjects(Friends::class.java)
-                    Logger.w("online walk list = $list")
+                    Logger.w("getUserFriends = $list")
                     continuation.resume(Result.Success(list))
                 } else {
                     task.exception?.let { e ->
@@ -830,7 +876,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
                 .get().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val list = task.result.toObjects(Friends::class.java)
-                    Logger.w("online walk list = $list")
+                    Logger.w("getUserFriends = $list")
                     continuation.resume(Result.Success(list))
                 } else {
                     task.exception?.let { e ->

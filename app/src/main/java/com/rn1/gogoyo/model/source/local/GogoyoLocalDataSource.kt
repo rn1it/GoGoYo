@@ -22,6 +22,10 @@ class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
         TODO("Not yet implemented")
     }
 
+    override suspend fun getAllUsers(id: String?): Result<List<Users>> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun updateUser(user: Users): Result<Users> {
         TODO("Not yet implemented")
     }

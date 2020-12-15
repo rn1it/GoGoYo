@@ -83,7 +83,7 @@
                 android:src="@drawable/add_pet3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView3"
-                app:tint="#999999" />
+                 />
 
             <TextView
                 android:id="@+id/textView9"

@@ -13,6 +13,8 @@ interface GogoyoRepository {
 
     fun getLiveUserFriendStatusById(id: String): MutableLiveData<List<Friends>>
 
+    suspend fun getAllUsers(id: String?): Result<List<Users>>
+
     suspend fun updateUser(user: Users): Result<Users>
 
     suspend fun getUserById(id: String): Result<Users>

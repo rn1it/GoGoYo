@@ -25,6 +25,10 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.getLiveUserFriendStatusById(id)
     }
 
+    override suspend fun getAllUsers(id: String?): Result<List<Users>> {
+        return remoteDataSource.getAllUsers(id)
+    }
+
     override suspend fun updateUser(user: Users): Result<Users> {
         return remoteDataSource.updateUser(user)
     }
