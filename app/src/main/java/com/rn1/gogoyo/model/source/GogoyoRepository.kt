@@ -1,5 +1,6 @@
 package com.rn1.gogoyo.model.source
 
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.rn1.gogoyo.model.*
 
@@ -7,11 +8,17 @@ interface GogoyoRepository {
 
     suspend fun getImageUri(filePath: String): Result<String>
 
+    suspend fun getVideoUri(uri: Uri): Result<String>
+
+    suspend fun getAudioUri(uri: Uri): Result<String>
+
     suspend fun login(id: String, name: String): Result<Boolean>
 
     fun getLiveUserById(id: String): MutableLiveData<Users>
 
     fun getLiveUserFriendStatusById(id: String): MutableLiveData<List<Friends>>
+
+    suspend fun getAllUsers(id: String?): Result<List<Users>>
 
     suspend fun updateUser(user: Users): Result<Users>
 

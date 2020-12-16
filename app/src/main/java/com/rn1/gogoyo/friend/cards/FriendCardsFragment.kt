@@ -12,6 +12,7 @@ import android.view.animation.LinearInterpolator
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentFriendCardsBinding
@@ -39,44 +40,23 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
         binding.lifecycleOwner = this
 
         cardStackView = binding.cardStackView
-        cardStackView.layoutManager = CardStackLayoutManager(requireContext())
+
         cardStackView.adapter = adapter
 
-//        cardStackView.adapter = CardStaA
+        viewModel.usersNotFriend.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                Logger.d("it = $it")
+                adapter.submitList(it)
+            }
+        })
 
-//        val viewPager = binding.friendCardsViewPager
-//        viewPager.clipToPadding = false
-//        viewPager.clipChildren = false
-//        viewPager.offscreenPageLimit = 3
-
-//        viewPager.beginFakeDrag()
-//        viewPager.fakeDragBy(-10f)
-//        viewPager.endFakeDrag()
-
-        //disable slide
-//        viewPager.isUserInputEnabled = false
-
-        // not to show slide to end effect
-//        viewPager.getChildAt(0).overScrollMode = View.OVER_SCROLL_NEVER
-
-//        val transformer = CompositePageTransformer()
-//        transformer.addTransformer(MarginPageTransformer(4))
-//        viewPager.setPageTransformer(transformer)
-
-        val user1 = Users("001", "001")
-        val user2 = Users("002", "002")
-        val user3 = Users("003", "003")
-
-
-        list.add(user1)
-        list.add(user2)
-        list.add(user3)
-
-        adapter.submitList(list)
-//        val adapter = FriendCardsAdapter()
-
-//        viewPager.adapter = adapter
-//        adapter.submitList(list)
+        viewModel.dataChange.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                //test
+                Logger.d("notifyItemChanged = $it")
+                adapter.notifyItemChanged(it[0], it[1])
+            }
+        })
 
         setupCardStackView()
         setupButton()
@@ -116,9 +96,6 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
 
     override fun onCardSwiped(direction: Direction?) {
         Log.d("CardStackView", "onCardSwiped: p = ${manager.topPosition}, d = $direction")
-//        if (manager.topPosition == adapter.itemCount - 5) {
-//            paginate()
-//        }
     }
 
     override fun onCardRewound() {
@@ -130,27 +107,17 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
     }
 
     override fun onCardAppeared(view: View, position: Int) {
-        val textView = view.findViewById<TextView>(R.id.item_user_name)
+        val textView = view.findViewById<TextView>(R.id.item_pet_name)
         Log.d("CardStackView", "onCardAppeared: ($position) ${textView.text}")
     }
 
     override fun onCardDisappeared(view: View, position: Int) {
-        val textView = view.findViewById<TextView>(R.id.item_user_name)
-        Log.d("CardStackView", "onCardAppeared: ($position) ${textView.text}")
+        val textView = view.findViewById<TextView>(R.id.item_pet_name)
+        Log.d("CardStackView", "onCardDisappeared: ($position) ${textView.text}")
     }
 
-
-
-//    private fun paginate() {
-//        val old = adapter.getSpots()
-//        val new = old.plus(createSpots())
-//        val callback = SpotDiffCallback(old, new)
-//        val result = DiffUtil.calculateDiff(callback)
-//        adapter.setSpots(new)
-//        result.dispatchUpdatesTo(adapter)
-//    }
-
     private fun setupButton(){
+
         val skip = binding.skipButton
         skip.setOnClickListener {
             val setting = SwipeAnimationSetting.Builder()
@@ -160,6 +127,8 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
                 .build()
             manager.setSwipeAnimationSetting(setting)
             cardStackView.swipe()
+            Log.d("CardStackView", "skip: p = ${manager.topPosition}")
+            list.removeAt(manager.topPosition)
         }
 
         val rewind = binding.rewindButton
@@ -171,6 +140,7 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
                 .build()
             manager.setRewindAnimationSetting(setting)
             cardStackView.rewind()
+            Log.d("CardStackView", "rewind: p = ${manager.topPosition}")
         }
 
         val like = binding.likeButton
@@ -183,8 +153,9 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
             manager.setSwipeAnimationSetting(setting)
             cardStackView.swipe()
 
+            list.remove(list[manager.topPosition])
 
-
+            Log.d("CardStackView", "like: p = ${manager.topPosition}")
         }
     }
 }

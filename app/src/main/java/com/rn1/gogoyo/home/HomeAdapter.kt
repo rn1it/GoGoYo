@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.databinding.ItemArticleBinding
 import com.rn1.gogoyo.model.Articles
 
@@ -13,6 +14,7 @@ class HomeAdapter(private val onClickListener: OnClickListener): ListAdapter<Art
     class ArticleViewHolder(val binding: ItemArticleBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(articles: Articles){
             binding.article = articles
+            binding.itemAuthorIv.outlineProvider = MapOutlineProvider()
             binding.executePendingBindings()
         }
 

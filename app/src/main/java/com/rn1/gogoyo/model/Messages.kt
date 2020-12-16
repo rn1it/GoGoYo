@@ -7,6 +7,7 @@ data class Messages(
     val receiverId: String = "",
     val content: String? = "",
     val id: String = "",
+    @field:JvmField // use this annotation if your Boolean field is prefixed with 'is'
     val isRead: Boolean = false,
     val msgTime: Long = Calendar.getInstance().timeInMillis
 )

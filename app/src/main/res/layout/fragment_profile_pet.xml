@@ -19,7 +19,7 @@
             android:id="@+id/constraintLayout3"
             android:layout_width="match_parent"
             android:layout_height="260dp"
-            android:background="#FBE7AA"
+            android:background="@drawable/windows"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -44,9 +44,9 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:clickable="true"
-                android:visibility="@{viewModel.isLoginUser ? View.VISIBLE : View.GONE}"
                 android:onClick="@{() -> viewModel.onNavigateToNewPet()}"
                 android:src="@drawable/add_pet3"
+                android:visibility="@{viewModel.isLoginUser ? View.VISIBLE : View.GONE}"
                 app:backgroundTint="@color/white"
                 app:fabSize="mini"
                 app:layout_constraintStart_toStartOf="parent"
@@ -69,47 +69,56 @@
             android:layout_height="0dp"
             android:overScrollMode="never"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view"
-            app:layout_constraintVertical_bias="0.0"
-            tools:layout_editor_absoluteX="-48dp">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constPetInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageButton
+                <Button
                     android:id="@+id/editPetInfoBt"
-                    android:layout_width="59dp"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:elevation="@dimen/elevation_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
                     android:onClick="@{()->viewModel.editPet()}"
+                    android:paddingLeft="0dp"
+                    android:paddingTop="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="0dp"
+                    android:text="編輯"
+                    android:textAlignment="center"
                     android:visibility="@{viewModel.isLoginUser ? viewModel.pet != null ? View.VISIBLE : View.GONE : View.GONE }"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/edit_pet"
+                    app:backgroundTint="#FFFFFF"
+                    app:fabSize="mini"
+                    app:icon="@drawable/edit_pet"
+                    app:iconPadding="0dp"
+                    app:iconSize="40dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/breedTitleEt"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:maxImageSize="50dp" />
+                    app:layout_constraintTop_toTopOf="@+id/breedTitleEt" />
 
                 <!--                <TextView-->
-<!--                    android:id="@+id/birthTitleTv"-->
-<!--                    style="@style/TextStyleTitle1"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginStart="16dp"-->
-<!--                    android:layout_marginTop="24dp"-->
-<!--                    android:text="@string/age"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/sexTitleTv" />-->
+                <!--                    android:id="@+id/birthTitleTv"-->
+                <!--                    style="@style/TextStyleTitle1"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_marginStart="16dp"-->
+                <!--                    android:layout_marginTop="24dp"-->
+                <!--                    android:text="@string/age"-->
+                <!--                    app:layout_constraintStart_toStartOf="parent"-->
+                <!--                    app:layout_constraintTop_toBottomOf="@+id/sexTitleTv" />-->
 
                 <TextView
                     android:id="@+id/breedTitleTv"
                     style="@style/TextStyleTitle1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="24dp"
                     android:layout_marginTop="24dp"
                     android:text="@string/text_breed"
                     app:layout_constraintStart_toStartOf="parent"
@@ -120,9 +129,10 @@
                     style="@style/TextStyleTitle1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="32dp"
                     android:text="@string/text_sex"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -131,8 +141,8 @@
                     style="@style/TextStyleTitle1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="32dp"
                     android:text="@string/text_introduction"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/breedTitleTv" />
@@ -142,112 +152,113 @@
                     style="@style/TextStyleTitle1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginBottom="32dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="32dp"
                     android:text="@string/text_voice"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/introductionTitleEt" />
+
+                <!--                <EditText-->
+                <!--                    android:id="@+id/birthTitleEt"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_marginStart="16dp"-->
+                <!--                    android:layout_marginTop="24dp"-->
+                <!--                    android:background="@android:color/transparent"-->
+                <!--                    android:ems="10"-->
+                <!--                    android:focusable="false"-->
+                <!--                    android:focusableInTouchMode="false"-->
+                <!--                    android:inputType="textPersonName"-->
+                <!--                    android:text="@{String.valueOf(viewModel.pet.age)}"-->
+                <!--                    app:layout_constraintStart_toEndOf="@+id/birthTitleTv"-->
+                <!--                    app:layout_constraintTop_toBottomOf="@+id/sexTitleEt" />-->
 
                 <TextView
                     android:id="@+id/videoTitleTv"
                     style="@style/TextStyleTitle1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginBottom="32dp"
                     android:text="@string/text_video"
-                    app:layout_constraintStart_toEndOf="@+id/button3"
-                    app:layout_constraintTop_toBottomOf="@+id/introductionTitleEt" />
-
-                <!--                <EditText-->
-<!--                    android:id="@+id/birthTitleEt"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginStart="16dp"-->
-<!--                    android:layout_marginTop="24dp"-->
-<!--                    android:background="@android:color/transparent"-->
-<!--                    android:ems="10"-->
-<!--                    android:focusable="false"-->
-<!--                    android:focusableInTouchMode="false"-->
-<!--                    android:inputType="textPersonName"-->
-<!--                    android:text="@{String.valueOf(viewModel.pet.age)}"-->
-<!--                    app:layout_constraintStart_toEndOf="@+id/birthTitleTv"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/sexTitleEt" />-->
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/voiceTitleTv" />
 
                 <EditText
                     android:id="@+id/breedTitleEt"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
                     android:background="@android:color/transparent"
                     android:ems="10"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     android:inputType="textPersonName"
                     android:text="@{viewModel.pet.breed}"
+                    app:layout_constraintBottom_toBottomOf="@+id/breedTitleTv"
+                    app:layout_constraintEnd_toStartOf="@+id/editPetInfoBt"
                     app:layout_constraintStart_toEndOf="@+id/breedTitleTv"
-                    app:layout_constraintTop_toBottomOf="@+id/sexTitleEt" />
+                    app:layout_constraintStart_toStartOf="@+id/introductionTitleEt"
+                    app:layout_constraintTop_toTopOf="@+id/breedTitleTv" />
 
                 <EditText
                     android:id="@+id/sexTitleEt"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="32dp"
                     android:background="@android:color/transparent"
                     android:ems="10"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     android:inputType="textPersonName"
                     android:text="@{viewModel.pet.sex}"
-                    app:layout_constraintStart_toEndOf="@+id/sexTitleTv"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/sexTitleTv"
+                    app:layout_constraintEnd_toStartOf="@+id/editPetInfoBt"
+                    app:layout_constraintStart_toStartOf="@+id/breedTitleEt"
+                    app:layout_constraintTop_toTopOf="@+id/sexTitleTv" />
 
                 <EditText
                     android:id="@+id/introductionTitleEt"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
                     android:background="@android:color/transparent"
                     android:ems="10"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     android:inputType="textPersonName"
                     android:text="@{viewModel.pet.introduction}"
+                    app:layout_constraintBottom_toBottomOf="@+id/introductionTitleTv"
                     app:layout_constraintStart_toEndOf="@+id/introductionTitleTv"
-                    app:layout_constraintTop_toBottomOf="@+id/breedTitleEt" />
+                    app:layout_constraintTop_toTopOf="@+id/introductionTitleTv" />
 
-                <Button
-                    android:id="@+id/button3"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:backgroundTint="#EEEBEB"
-                    android:elevation="10dp"
-                    android:gravity="center"
-                    android:text=""
-                    app:icon="@drawable/play_music"
-                    app:iconPadding="0dp"
-                    app:layout_constraintStart_toEndOf="@+id/voiceTitleTv"
-                    app:layout_constraintTop_toBottomOf="@+id/introductionTitleEt" />
-
-                <Button
-                    android:id="@+id/button4"
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/audioPlayBt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:backgroundTint="#EEEBEB"
-                    android:elevation="10dp"
+                    android:src="@drawable/play_music"
+                    app:backgroundTint="#FFFFFF"
+                    app:fabSize="mini"
+                    app:layout_constraintBottom_toBottomOf="@+id/voiceTitleTv"
+                    app:layout_constraintStart_toEndOf="@+id/voiceTitleTv"
+                    app:layout_constraintTop_toTopOf="@+id/voiceTitleTv" />
+
+                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                    android:id="@+id/videoPlayBt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:text="PLAY"
+                    android:textAlignment="center"
+                    app:backgroundTint="#FFFFFF"
+                    app:fabSize="mini"
                     app:icon="@drawable/play_video"
+                    app:iconGravity="textStart"
+                    app:layout_constraintBottom_toBottomOf="@+id/videoTitleTv"
                     app:layout_constraintStart_toEndOf="@+id/videoTitleTv"
-                    app:layout_constraintTop_toBottomOf="@+id/introductionTitleEt" />
+                    app:layout_constraintTop_toTopOf="@+id/videoTitleTv" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>

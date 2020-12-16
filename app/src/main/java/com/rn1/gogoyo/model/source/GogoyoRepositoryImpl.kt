@@ -1,5 +1,6 @@
 package com.rn1.gogoyo.model.source
 
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.rn1.gogoyo.model.*
 
@@ -13,6 +14,14 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.getImageUri(filePath)
     }
 
+    override suspend fun getVideoUri(uri: Uri): Result<String> {
+        return remoteDataSource.getVideoUri(uri)
+    }
+
+    override suspend fun getAudioUri(uri: Uri): Result<String> {
+        return remoteDataSource.getAudioUri(uri)
+    }
+
     override suspend fun login(id: String, name: String): Result<Boolean> {
         return remoteDataSource.login(id, name)
     }
@@ -23,6 +32,10 @@ class GogoyoRepositoryImpl(
 
     override fun getLiveUserFriendStatusById(id: String): MutableLiveData<List<Friends>> {
         return remoteDataSource.getLiveUserFriendStatusById(id)
+    }
+
+    override suspend fun getAllUsers(id: String?): Result<List<Users>> {
+        return remoteDataSource.getAllUsers(id)
     }
 
     override suspend fun updateUser(user: Users): Result<Users> {

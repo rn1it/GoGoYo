@@ -26,6 +26,8 @@ class PostViewModel(
     private val argument: Walk
 ): ViewModel() {
 
+    private val DEFAULT_IMAGE = "https://firebasestorage.googleapis.com/v0/b/turing-opus-296809.appspot.com/o/images%2Fdog_1.png?alt=media&token=0d165c4e-a3fe-47e3-b82e-a4c11d167419"
+
     private val _walk = MutableLiveData<Walk>().apply {
         value = argument
     }
@@ -33,7 +35,7 @@ class PostViewModel(
     val walk: LiveData<Walk>
         get() = _walk
 
-
+    var filePath: String = ""
 
     val post = MutableLiveData<Boolean>()
     /**
@@ -89,7 +91,7 @@ class PostViewModel(
         // check if post article from walk end
         if (argument.id != "") {
             title.value = "今天散步好開心^^"
-            content.value = "這次散步時間 ${argument.period}，走了 ${argument.distance} 公里， 下次還要挑戰走更久更遠!!"
+            content.value = "這次散步時間 ${argument.period} 秒，走了 ${argument.distance ?: "0.12"} 公里， 下次還要挑戰走更久更遠!!"
             getWalkPets()
 
             val positionList = mutableListOf<Int>()
@@ -174,6 +176,35 @@ class PostViewModel(
         }
     }
 
+    fun uploadImage(path: String){
+        coroutineScope.launch {
+
+            filePath = when (val result = repository.getImageUri(path)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    Logger.d("uri = ${result.data}")
+                    result.data
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    ""
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    ""
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                    ""
+                }
+            }
+        }
+    }
+
     fun getWalkPets(){
         coroutineScope.launch {
 
@@ -221,6 +252,16 @@ class PostViewModel(
             article.content = content.value
             article.authorId = UserManager.userUID
             article.petIdList = selectedPetIdList.value!!
+
+            if (filePath == "") {
+                filePath = DEFAULT_IMAGE
+            }
+
+            val images = mutableListOf<String>()
+            images.add(filePath)
+
+            article.images = images
+
 
             when(val result = repository.postArticle(article)) {
                 is Result.Success -> {

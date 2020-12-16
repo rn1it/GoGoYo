@@ -9,6 +9,10 @@
             type="com.rn1.gogoyo.friend.cards.FriendCardsViewModel" />
 
         <variable
+            name="pet"
+            type="com.rn1.gogoyo.model.Pets" />
+
+        <variable
             name="user"
             type="com.rn1.gogoyo.model.Users" />
     </data>
@@ -27,7 +31,6 @@
         app:cardBackgroundColor="@android:color/white">
 
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -38,46 +41,93 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:src="@drawable/pp"
+                imageUrl="@{pet.image}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:riv_corner_radius="8dp" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:onClick="@{() -> viewModel.onClick()}"
-                app:backgroundTint="#CC999999"
-                app:fabSize="auto"
-                android:src="@drawable/arrow_forward_24"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
+            <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:onClick="@{() -> viewModel.onClick()}"
-                android:src="@drawable/arrow_back_24"
-                app:backgroundTint="#CC999999"
-                app:fabSize="auto"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="#80FFFFFF"
+                app:cardCornerRadius="30dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        app:imageUrl="@{user.image}"
+                        android:scaleType="centerCrop"
+                        android:outlineProvider="@{viewModel.outlineProvider}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="@{user.name}"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageView2"
+                        app:layout_constraintTop_toTopOf="@+id/imageView2" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+            <!--            <androidx.constraintlayout.widget.ConstraintLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="200dp"-->
+            <!--                app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toStartOf="parent">-->
+
+
+            <!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
+            <!--            -->
+
+
+            <ImageView
+                android:id="@+id/backBt"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="8dp"
+                android:alpha="0.8"
+                android:src="@drawable/back_to_90"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/item_image"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.499" />
-            <!--            <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="200dp"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent">-->
+                app:layout_constraintTop_toTopOf="parent" />
 
+            <ImageView
+                android:id="@+id/nextBt"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginEnd="8dp"
+                android:alpha="0.8"
+                android:src="@drawable/icons8_next"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/item_image" />
 
-<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
-<!--            -->
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -90,18 +140,19 @@
             android:background="@drawable/gradation_black">
 
             <TextView
-                android:id="@+id/item_user_name"
+                android:id="@+id/item_pet_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{user.name}"
+                android:text="@{pet.name}"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"
                 android:textSize="26sp"/>
 
             <TextView
-                android:id="@+id/item_city"
+                android:id="@+id/item_pet_intro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{pet.introduction}"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"/>
