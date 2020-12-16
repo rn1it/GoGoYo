@@ -2,16 +2,10 @@ package com.rn1.gogoyo.model.source.remote
 
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
-import com.google.android.gms.tasks.Continuation
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageMetadata
-import com.google.firebase.storage.StorageReference
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
@@ -67,6 +61,70 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
             }
 
             .addOnFailureListener{
+                continuation.resume(Result.Error(it))
+            }
+    }
+
+    override suspend fun getVideoUri(uri: Uri): Result<String> = suspendCoroutine { continuation ->
+
+        val videoRef= storageRef.child("videos/${System.currentTimeMillis()}")
+        val uploadTask = videoRef.putFile(uri)
+
+        uploadTask
+            .addOnSuccessListener { taskSnapshot ->
+                Logger.d("addOnSuccessListener1")
+                // firebase path
+                val storagePath = taskSnapshot.metadata?.path as String
+
+                // get token
+                storageRef.child(storagePath).downloadUrl
+
+                    .addOnSuccessListener {
+                        Logger.d("addOnSuccessListener2")
+                        val remoteUri = it
+                        continuation.resume(Result.Success(remoteUri.toString()))
+                    }
+
+                    .addOnFailureListener {
+                        Logger.d("addOnFailureListener2")
+                        continuation.resume(Result.Error(it))
+                    }
+            }
+
+            .addOnFailureListener{
+                Logger.d("addOnFailureListener1")
+                continuation.resume(Result.Error(it))
+            }
+
+    }
+
+    override suspend fun getAudioUri(uri: Uri): Result<String> = suspendCoroutine { continuation ->
+        val audioRef= storageRef.child("audios/${System.currentTimeMillis()}")
+        val uploadTask = audioRef.putFile(uri)
+
+        uploadTask
+            .addOnSuccessListener { taskSnapshot ->
+                Logger.d("addOnSuccessListener1")
+                // firebase path
+                val storagePath = taskSnapshot.metadata?.path as String
+
+                // get token
+                storageRef.child(storagePath).downloadUrl
+
+                    .addOnSuccessListener {
+                        Logger.d("addOnSuccessListener2")
+                        val remoteUri = it
+                        continuation.resume(Result.Success(remoteUri.toString()))
+                    }
+
+                    .addOnFailureListener {
+                        Logger.d("addOnFailureListener2")
+                        continuation.resume(Result.Error(it))
+                    }
+            }
+
+            .addOnFailureListener{
+                Logger.d("addOnFailureListener1")
                 continuation.resume(Result.Error(it))
             }
     }

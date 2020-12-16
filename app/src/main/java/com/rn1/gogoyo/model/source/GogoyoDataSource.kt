@@ -1,5 +1,6 @@
 package com.rn1.gogoyo.model.source
 
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.rn1.gogoyo.model.*
 import kotlin.coroutines.suspendCoroutine
@@ -7,6 +8,10 @@ import kotlin.coroutines.suspendCoroutine
 interface GogoyoDataSource {
 
     suspend fun getImageUri(filePath: String): Result<String>
+
+    suspend fun getVideoUri(uri: Uri): Result<String>
+
+    suspend fun getAudioUri(uri: Uri): Result<String>
 
     suspend fun login(id: String, name: String): Result<Boolean>
 

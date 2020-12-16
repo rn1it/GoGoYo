@@ -2,16 +2,20 @@ package com.rn1.gogoyo.mypets.edit
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.MediaController
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -23,12 +27,20 @@ import com.rn1.gogoyo.UserManager
 import com.rn1.gogoyo.databinding.FragmentEditPetBinding
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.mypets.newpets.NewPetViewModel
+import com.rn1.gogoyo.util.Logger
+import java.lang.Exception
+
 
 class EditPetFragment : Fragment() {
 
-    private lateinit var binding: FragmentEditPetBinding
-    private val viewModel by viewModels<EditPetViewModel> { getVmFactory(EditPetFragmentArgs.fromBundle(requireArguments()).petIdKey) }
     private var filePath: String = ""
+    private lateinit var binding: FragmentEditPetBinding
+    private val viewModel by viewModels<EditPetViewModel> { getVmFactory(
+        EditPetFragmentArgs.fromBundle(
+            requireArguments()
+        ).petIdKey
+    ) }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +51,8 @@ class EditPetFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+
+
         viewModel.canEditPet.observe(viewLifecycleOwner, Observer {
             it?.let {
                 if (it) viewModel.editPet()
@@ -47,11 +61,27 @@ class EditPetFragment : Fragment() {
 
         viewModel.invalidInfo.observe(viewLifecycleOwner, Observer {
             it?.let {
-                when(it){
-                    NewPetViewModel.INVALID_FORMAT_NAME_EMPTY -> Toast.makeText(context, "寵物姓名不可以空白!", Toast.LENGTH_SHORT).show()
-                    NewPetViewModel.INVALID_FORMAT_INTRODUCTION_EMPTY -> Toast.makeText(context, "來段簡短的介紹讓大家更認識你!", Toast.LENGTH_SHORT).show()
-                    NewPetViewModel.INVALID_FORMAT_SEX_EMPTY ->  Toast.makeText(context, "記得選擇寵物性別喔!", Toast.LENGTH_SHORT).show()
-                    NewPetViewModel.INVALID_IMAGE_PATH_EMPTY -> Toast.makeText(context, "別忘記上傳一張寵物的萌照啊!", Toast.LENGTH_SHORT).show()
+                when (it) {
+                    NewPetViewModel.INVALID_FORMAT_NAME_EMPTY -> Toast.makeText(
+                        context,
+                        "寵物姓名不可以空白!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    NewPetViewModel.INVALID_FORMAT_INTRODUCTION_EMPTY -> Toast.makeText(
+                        context,
+                        "來段簡短的介紹讓大家更認識你!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    NewPetViewModel.INVALID_FORMAT_SEX_EMPTY -> Toast.makeText(
+                        context,
+                        "記得選擇寵物性別喔!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    NewPetViewModel.INVALID_IMAGE_PATH_EMPTY -> Toast.makeText(
+                        context,
+                        "別忘記上傳一張寵物的萌照啊!",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         })
@@ -60,9 +90,25 @@ class EditPetFragment : Fragment() {
             it?.let {
                 if (it) {
                     Toast.makeText(context, "成員新增成功!", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(NavigationDirections.actionGlobalMyPetsFragment(UserManager.userUID!!))
+                    findNavController().navigate(
+                        NavigationDirections.actionGlobalMyPetsFragment(
+                            UserManager.userUID!!
+                        )
+                    )
                 }
                 viewModel.onDoneNavigateToPet()
+            }
+        })
+
+        viewModel.showProgressBar.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                if (it) {
+                    binding.progressBarMain.visibility = View.VISIBLE
+                    Toast.makeText(context, "上傳中，請耐心等候", Toast.LENGTH_LONG).show()
+                } else {
+                    binding.progressBarMain.visibility = View.INVISIBLE
+                    Toast.makeText(context, "影片上傳結束", Toast.LENGTH_LONG).show()
+                }
             }
         })
 
@@ -70,7 +116,47 @@ class EditPetFragment : Fragment() {
             checkPermission()
         }
 
+        // video upload
+        binding.uploadVideoBt.setOnClickListener {
+            chooseVideoFromGallery()
+        }
+
+        binding.uploadAudioBt.setOnClickListener {
+
+            chooseAudioUpload()
+
+        }
+
+        binding.button12.setOnClickListener {
+            play( "https://firebasestorage.googleapis.com/v0/b/turing-opus-296809.appspot.com/o/videos%2F1608108810806?alt=media&token=2bc69b66-4795-47d8-a00c-92ac62dce2ad")
+        }
+
+        setUpVideoView()
+
+//        setExoplayer("https://firebasestorage.googleapis.com/v0/b/turing-opus-296809.appspot.com/o/videos%2F1608100705343?alt=media&token=4db6e616-b8a7-481d-9852-9ca42377f612")
+
         return binding.root
+    }
+
+    private fun setUpVideoView(){
+        val videoView = binding.videoView
+        val mediaController = MediaController(requireContext())
+        videoView.setMediaController(mediaController)
+        videoView.start()
+    }
+
+    private fun chooseVideoFromGallery() {
+        val intent = Intent()
+        intent.type = "video/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(intent, PICK_VIDEO)
+    }
+
+    private fun chooseAudioUpload(){
+        val intent = Intent()
+        intent.type = "audio/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(intent, PICK_AUDIO)
     }
 
     private fun checkPermission() {
@@ -90,6 +176,7 @@ class EditPetFragment : Fragment() {
         }
         getLocalImg()
     }
+
     private fun getLocalImg() {
         ImagePicker.with(this)
             .crop()                    //Crop image(Optional), Check Customization for more option
@@ -100,12 +187,8 @@ class EditPetFragment : Fragment() {
             )    //Final image resolution will be less than 1080 x 1080(Optional)
             .start()
     }
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
             REQUEST_EXTERNAL_STORAGE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -117,34 +200,95 @@ class EditPetFragment : Fragment() {
             }
         }
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when (resultCode) {
-            Activity.RESULT_OK -> {
-                filePath = ImagePicker.getFilePath(data) ?: ""
-                if (filePath.isNotEmpty()) {
-                    val imgPath = filePath
-                    Toast.makeText(this.requireContext(), imgPath, Toast.LENGTH_SHORT).show()
-                    Glide.with(this.requireContext()).load(filePath).into(binding.uploadPetIv)
+        Toast.makeText(this.requireContext(), "resultCode = $resultCode , requestCode = $requestCode", Toast.LENGTH_SHORT).show()
 
-                    viewModel.uploadImage(imgPath)
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
 
-                } else {
-                    Toast.makeText(this.requireContext(), "Upload failed", Toast.LENGTH_SHORT)
-                        .show()
+                PICK_IMAGE -> {
+                    filePath = ImagePicker.getFilePath(data) ?: ""
+                    if (filePath.isNotEmpty()) {
+                        val imgPath = filePath
+                        Logger.d(" = $imgPath")
+                        Toast.makeText(this.requireContext(), imgPath, Toast.LENGTH_SHORT).show()
+                        Glide.with(this.requireContext()).load(filePath).into(binding.uploadPetIv)
+
+                        viewModel.uploadImage(imgPath)
+
+                    } else {
+                        Toast.makeText(this.requireContext(), "Upload failed", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+
+                PICK_VIDEO -> {
+                    if (data?.data != null) {
+                        val uri = data.data!!
+                        Toast.makeText(this.requireContext(), uri.toString(), Toast.LENGTH_SHORT).show()
+
+                        binding.videoView.setVideoURI(uri)
+                        viewModel.uploadVideo(uri)
+                    }
+                }
+
+                PICK_AUDIO -> {
+                    if (data?.data != null) {
+                        val uri = data.data!!
+                        Toast.makeText(this.requireContext(), uri.toString(), Toast.LENGTH_SHORT).show()
+
+                        binding.videoView.setVideoURI(uri)
+                        viewModel.uploadVideo(uri)
+                    }
                 }
             }
-            ImagePicker.RESULT_ERROR -> Toast.makeText(
-                this.requireContext(),
-                ImagePicker.getError(data),
-                Toast.LENGTH_SHORT
-            ).show()
-            else -> Toast.makeText(this.requireContext(), "Task Cancelled", Toast.LENGTH_SHORT)
-                .show()
         }
     }
 
+    /**
+     * for audio play
+     */
+    private fun play(path: String) {
+        try {
+            Logger.d("play path = $path")
+            val mp = MediaPlayer()
+            mp.setDataSource(path)
+            mp.setOnPreparedListener {
+                it.start()
+            }
+            mp.prepare()
+        } catch (e: Exception) {
+            Logger.d("play fail")
+            e.printStackTrace()
+        }
+    }
+
+    /**
+     * for video play
+     */
+//    private fun setExoplayer(url: String?) {
+//        val playerView = binding.exoplayerItem
+//        try {
+//            val exoPlayer = ExoPlayerFactory.newSimpleInstance(requireContext())
+//            val video = Uri.parse(url)
+//            val dataSourceFactory = DefaultHttpDataSourceFactory("video")
+//            val extractorsFactory: ExtractorsFactory = DefaultExtractorsFactory()
+//            val mediaSource: MediaSource =
+//                ExtractorMediaSource(video, dataSourceFactory, extractorsFactory, null, null)
+//            playerView.player = exoPlayer
+//            exoPlayer.prepare(mediaSource)
+//            exoPlayer.playWhenReady = false
+//        } catch (e: Exception) {
+//            Log.e("ViewHolder", "exoplayer error$e")
+//        }
+//    }
+
     companion object {
         private const val REQUEST_EXTERNAL_STORAGE = 200
+        private const val PICK_IMAGE = 2404
+        private const val PICK_VIDEO = 300
+        private const val PICK_AUDIO = 400
     }
 }

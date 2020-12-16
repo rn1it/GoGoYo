@@ -1,5 +1,6 @@
 package com.rn1.gogoyo.model.source
 
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.rn1.gogoyo.model.*
 
@@ -11,6 +12,14 @@ class GogoyoRepositoryImpl(
 
     override suspend fun getImageUri(filePath: String): Result<String> {
         return remoteDataSource.getImageUri(filePath)
+    }
+
+    override suspend fun getVideoUri(uri: Uri): Result<String> {
+        return remoteDataSource.getVideoUri(uri)
+    }
+
+    override suspend fun getAudioUri(uri: Uri): Result<String> {
+        return remoteDataSource.getAudioUri(uri)
     }
 
     override suspend fun login(id: String, name: String): Result<Boolean> {

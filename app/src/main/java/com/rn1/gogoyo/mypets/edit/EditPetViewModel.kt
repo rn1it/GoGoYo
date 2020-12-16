@@ -1,5 +1,6 @@
 package com.rn1.gogoyo.mypets.edit
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,6 +27,11 @@ class EditPetViewModel(
     val outlineProvider =  MapOutlineProvider()
 
     var filePath: String = ""
+
+    private val _showProgressBar = MutableLiveData<Boolean>()
+
+    val showProgressBar: LiveData<Boolean>
+        get() = _showProgressBar
 
     private val _pet = MutableLiveData<Pets>()
 
@@ -194,6 +200,46 @@ class EditPetViewModel(
                 }
             }
         }
+    }
+
+    fun uploadVideo(uri: Uri){
+
+        _showProgressBar.value = true
+
+        coroutineScope.launch {
+
+            when (val result = repository.getVideoUri(uri)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    Logger.d("uri = ${result.data}")
+//                    result.data
+                    uploadFinished()
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+//                    ""
+                    uploadFinished()
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+//                    ""
+                    uploadFinished()
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+//                    ""
+                    uploadFinished()
+                }
+            }
+        }
+    }
+
+    private fun uploadFinished(){
+        _showProgressBar.value = false
     }
 
     fun onDoneNavigateToPet(){

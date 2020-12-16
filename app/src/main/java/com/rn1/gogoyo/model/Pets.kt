@@ -16,7 +16,7 @@ data class Pets(
     var introduction: String? = null,
     var age: Int? = null,
     var weight: Float? = null,
-    var video: File? = null,
+    var video: String? = null,
     var image: String? = null,
-    var voice: File? = null
+    var voice: String? = null
 ): Parcelable

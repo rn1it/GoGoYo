@@ -1,12 +1,21 @@
 package com.rn1.gogoyo.model.source.local
 
 import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.rn1.gogoyo.model.*
 import com.rn1.gogoyo.model.source.GogoyoDataSource
 
 class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
     override suspend fun getImageUri(filePath: String): Result<String> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getVideoUri(uri: Uri): Result<String> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getAudioUri(uri: Uri): Result<String> {
         TODO("Not yet implemented")
     }
 
