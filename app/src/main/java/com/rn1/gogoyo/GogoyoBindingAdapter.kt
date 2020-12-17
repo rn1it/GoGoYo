@@ -64,3 +64,14 @@ fun bindImage(imgView: ImageView, imgUrl: String?) {
         .into(imgView)
 
 }
+
+@BindingAdapter("petGender")
+fun bindGenderSymbol(imageView: ImageView, gender: String){
+    imageView.apply {
+        if (gender == "男生") {
+            setImageResource(R.drawable.mars)
+        } else {
+            setImageResource(R.drawable.femenine)
+        }
+    }
+}

@@ -209,7 +209,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
     }
 
     /**
-     * get all users with or without login user
+     * get all users with or without login user, if id != null : get user exclude self
      */
     override suspend fun getAllUsers(id: String?): Result<List<Users>> = suspendCoroutine { continuation ->
 
@@ -228,7 +228,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
                 }
             }
         } else {
-            usersRef.whereNotEqualTo("id", "").get().addOnCompleteListener { task ->
+            usersRef.whereNotEqualTo("id", id).get().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val users = task.result.toObjects(Users::class.java)
                     Logger.w("get all user")
