@@ -33,7 +33,8 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
 
     private lateinit var binding: FragmentFriendCardsBinding
     private val viewModel by viewModels<FriendCardsViewModel> { getVmFactory(userId) }
-    private val manager by lazy { CardStackLayoutManager(requireContext(), this) }
+//    private val manager by lazy { CardStackLayoutManager(requireContext(), this) }
+//    private lateinit var manager: CardStackLayoutManager
     private val adapter by lazy { CardStackAdapter(viewModel) }
     private lateinit var  cardStackView: CardStackView
     val list = mutableListOf<Users>()
@@ -43,7 +44,7 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
+        Logger.d("Cards onCreateView ")
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_friend_cards, container, false)
         binding.lifecycleOwner = this
 
@@ -51,11 +52,20 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
 
         cardStackView.adapter = adapter
 
+        cardStackView.layoutManager = CardStackLayoutManager(requireContext(), this)
+//        manager = CardStackLayoutManager(requireContext(), this)
+
         viewModel.usersNotFriend.observe(viewLifecycleOwner, Observer {
             it?.let {
                 Logger.d("usersNotFriend = $it")
 
                 list.addAll(it)
+
+                // because fire base callback bug
+                val resetList = it.toHashSet()
+                list.clear()
+                list.addAll(resetList.toList())
+
                 if (list.size == 0) {
                     binding.friendCardNotificationTv.visibility = View.VISIBLE
                     binding.buttonContainer.visibility = View.GONE
@@ -101,6 +111,7 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
     }
 
     private fun initialize() {
+        val manager = cardStackView.layoutManager as CardStackLayoutManager
         manager.setStackFrom(StackFrom.None)
         manager.setVisibleCount(3)
         manager.setTranslationInterval(8.0f)
@@ -129,6 +140,7 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
      * get card like or dislike, position = list[] + 1
      */
     override fun onCardSwiped(direction: Direction?) {
+        val manager = cardStackView.layoutManager as CardStackLayoutManager
         Log.d("CardStackView", "onCardSwiped: p = ${manager.topPosition}, d = $direction")
 
         val user = list[manager.topPosition - 1]
@@ -148,10 +160,12 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
     }
 
     override fun onCardRewound() {
+        val manager = cardStackView.layoutManager as CardStackLayoutManager
         Log.d("CardStackView", "onCardRewound: ${manager.topPosition}")
     }
 
     override fun onCardCanceled() {
+        val manager = cardStackView.layoutManager as CardStackLayoutManager
         Log.d("CardStackView", "onCardCanceled: ${manager.topPosition}")
     }
 
@@ -166,7 +180,7 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
     }
 
     private fun setupButton(){
-
+        val manager = cardStackView.layoutManager as CardStackLayoutManager
         val skip = binding.skipButton
         skip.setOnClickListener {
             val setting = SwipeAnimationSetting.Builder()
@@ -289,5 +303,9 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
             Toast.makeText(context, "還沒有上傳影片喔!", Toast.LENGTH_SHORT).show()
             Log.e("ViewHolder", "exoplayer error$e")
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Logger.d("Cards onViewCreated ")
     }
 }

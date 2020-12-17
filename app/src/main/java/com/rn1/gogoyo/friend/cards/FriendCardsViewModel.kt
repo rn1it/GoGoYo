@@ -88,8 +88,8 @@ class FriendCardsViewModel(
     private fun getAllUsers(){
 
         coroutineScope.launch {
-
-            when (val result = repository.getAllUsers(userId)) {
+                                                                    // TODO TEST
+            when (val result = repository.getAllUsers(null)) {
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadStatus.DONE
@@ -194,7 +194,11 @@ class FriendCardsViewModel(
 
         updateUsers(user)
 
-        getUserNotFriendInfo(showList)
+        if (notFriendsId.isEmpty()){
+            _usersNotFriend.value = mutableListOf()
+        } else {
+            getUserNotFriendInfo(showList)
+        }
     }
 
     fun dataChange(position: Int, itemListPosition: Int) {
@@ -238,7 +242,11 @@ class FriendCardsViewModel(
             if (diff != 0) {// 新的一天 抽新卡
                 getAllUsers()
             } else {//  還在當天，沿用舊卡
-                getUserNotFriendInfo(user.recommendList!!)
+                if (user.recommendList!!.isEmpty()) { // 當天已抽完
+                    _usersNotFriend.value = mutableListOf()
+                } else {
+                    getUserNotFriendInfo(user.recommendList!!)
+                }
                 user.enterFriendCardTime = now
                 updateUsers(user)
             }

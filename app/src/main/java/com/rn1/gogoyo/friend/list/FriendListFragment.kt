@@ -30,7 +30,7 @@ class FriendListFragment(val userId: String) : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        Logger.d("list onCreateView")
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_friend_list, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
@@ -93,5 +93,9 @@ class FriendListFragment(val userId: String) : Fragment() {
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {}
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Logger.d("list onViewCreated")
     }
 }
