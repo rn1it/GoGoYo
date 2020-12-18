@@ -89,7 +89,7 @@ class FriendCardsViewModel(
 
         coroutineScope.launch {
                                                                     // TODO TEST
-            when (val result = repository.getAllUsers(null)) {
+            when (val result = repository.getAllUsers(userId)) {
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadStatus.DONE
@@ -330,11 +330,12 @@ class FriendCardsViewModel(
                     is Result.Success -> {
                         _error.value = null
                         _status.value = LoadStatus.DONE
+                        val id = friend.friendId
                         friend.apply {
                             friendId = UserManager.userUID!!
                             status = 1
                         }
-                        updateFriendStatus(friend)
+                        updateFriendStatus(id, friend)
                         //  同步更新好友的好友狀態
                     }
                     is Result.Fail -> {
@@ -355,9 +356,9 @@ class FriendCardsViewModel(
     }
 
     // 送出好友邀請後同步更新好友的好友狀態
-    private fun updateFriendStatus(friend: Friends) {
+    private fun updateFriendStatus(id: String, friend: Friends) {
         coroutineScope.launch {
-            when (val result = repository.setUserFriend(userId, friend)) {
+            when (val result = repository.setUserFriend(id, friend)) {
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadStatus.DONE
