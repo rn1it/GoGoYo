@@ -126,6 +126,11 @@
             android:name="userIdKey"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/statisticFragment"
+        android:name="com.rn1.gogoyo.statistic.StatisticFragment"
+        android:label="StatisticFragment"
+        tools:layout="@layout/fragment_statistic"/>
     <action
         android:id="@+id/action_global_homeFragment"
         app:destination="@id/homeFragment"
@@ -149,5 +154,6 @@
     <action android:id="@+id/action_global_newPetFragment" app:destination="@id/newPetFragment"/>
     <action android:id="@+id/action_global_editPetFragment" app:destination="@id/editPetFragment" />
     <action android:id="@+id/action_global_editUserFragment" app:destination="@id/editUserFragment" />
+    <action android:id="@+id/action_global_statisticFragment" app:destination="@id/statisticFragment" />
 
 </navigation>

@@ -17,5 +17,7 @@ data class Users(
     @field:JvmField // use this annotation if your Boolean field is prefixed with 'is'
     var isWalking: Boolean = false,
     val friendList: List<Friends> = mutableListOf(),
-    var pets: List<Pets> = mutableListOf()
+    var pets: List<Pets> = mutableListOf(),
+    var enterFriendCardTime: Long? = null,
+    var recommendList: List<String>? = null
 ): Parcelable

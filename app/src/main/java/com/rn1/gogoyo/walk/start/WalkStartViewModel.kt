@@ -360,13 +360,13 @@ class WalkStartViewModel(
 //    }
 
     private fun getOnlineWalkList(){
-        Logger.d("getOnlineWalkList Second = $second")
         coroutineScope.launch {
 
             _onLineWalks.value = when (val result = repository.getOthersWalkingList(UserManager.userUID!!)) {
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadStatus.DONE
+                    Logger.d("getOnlineWalkList Second = $second, result.data = ${result.data}")
                     result.data
                 }
                 is Result.Fail -> {
@@ -389,6 +389,10 @@ class WalkStartViewModel(
 
         }
 
+    }
+
+    fun onclick(){
+        Logger.d("aaaaaaaaaassssss")
     }
 
     fun getDistance(start: LatLng, end: LatLng): Double {

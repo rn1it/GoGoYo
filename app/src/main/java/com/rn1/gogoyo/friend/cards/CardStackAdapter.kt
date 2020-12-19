@@ -11,7 +11,7 @@ import com.rn1.gogoyo.util.Logger
 
 
 class CardStackAdapter(
-    val viewModel: FriendCardsViewModel
+    val viewModel: FriendCardsViewModel,
 ) : ListAdapter<Users, RecyclerView.ViewHolder>(UserDiffCallback()) {
 
     class ViewHolder(val binding: ItemFriendCardBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -24,7 +24,13 @@ class CardStackAdapter(
             binding.pet = user.pets[position]
             binding.viewModel = viewModel
 
+            binding.dogCardCv.setOnClickListener {
+                viewModel.setShowBarkToast(user.pets[position])
+            }
 
+            binding.playVideoFab.setOnClickListener {
+                viewModel.setShowVideoDialog(user.pets[position])
+            }
 
             binding.backBt.setOnClickListener {
                 if (position > 0) {
@@ -34,8 +40,6 @@ class CardStackAdapter(
                 }
             }
 
-
-
             binding.nextBt.setOnClickListener {
                 if (position < user.pets.size - 1)
                     position += 1
@@ -43,8 +47,6 @@ class CardStackAdapter(
                     viewModel.dataChange(adapterPosition, position )
                 }
             }
-
-
 
         companion object{
             fun from(parent: ViewGroup): ViewHolder{
@@ -60,8 +62,10 @@ class CardStackAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+
         val viewHolder = holder as ViewHolder
         val user = getItem(position)
+
         viewHolder.bind(viewModel, user)
     }
 
@@ -93,6 +97,4 @@ class CardStackAdapter(
         }
 
     }
-
-
 }

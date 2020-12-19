@@ -1,9 +1,9 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.Fab_Bottom_app_bar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">#00205b</item>
-        <item name="colorPrimaryVariant">#00205b</item>
-        <item name="colorOnPrimary">#000</item>
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -13,11 +13,6 @@
     <style name="TextStyleTitle1">
         <item name="android:textSize">18sp</item>
         <item name="fontFamily">@font/jf_openhuninn</item>
-    </style>
-
-    <style name="Theme.Fab_Bottom_app_bar.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="Theme.Fab_Bottom_app_bar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

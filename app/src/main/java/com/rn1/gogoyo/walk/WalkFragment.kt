@@ -1,6 +1,7 @@
 package com.rn1.gogoyo.walk
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -25,6 +26,8 @@ import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentWalkBinding
 import com.rn1.gogoyo.ext.getVmFactory
+import com.rn1.gogoyo.service.WalkTimerService
+import com.rn1.gogoyo.util.Logger
 
 private const val PERMISSION_ID = 1
 class WalkFragment : Fragment() {
@@ -49,7 +52,7 @@ class WalkFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_walk, container, false)
         binding.lifecycleOwner = this
@@ -72,6 +75,20 @@ class WalkFragment : Fragment() {
                 viewModel.onDoneNavigateToStartWalk()
             }
         })
+
+        binding.button6.setOnClickListener {
+            val intent = Intent(context, WalkTimerService::class.java)
+            requireContext().startService(intent)
+        }
+
+        binding.button7.setOnClickListener {
+            val intent = Intent(context, WalkTimerService::class.java)
+            requireContext().stopService(intent)
+        }
+
+
+
+
 
         return binding.root
     }
@@ -129,11 +146,12 @@ class WalkFragment : Fragment() {
             PERMISSION_ID -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     locationPermission = true
+                    // set map UI isMyLocationButton Enabled
+                    updateLocationUI()
                 }
             }
         }
-        // set map UI isMyLocationButton Enabled
-        updateLocationUI()
+
     }
 
     private fun getDeviceLocation() {
@@ -160,5 +178,15 @@ class WalkFragment : Fragment() {
         } catch (e: SecurityException) {
             e.printStackTrace()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Logger.d("onDestroy")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Logger.d("onStop")
     }
 }

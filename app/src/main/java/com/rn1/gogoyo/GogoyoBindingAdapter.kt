@@ -64,3 +64,52 @@ fun bindImage(imgView: ImageView, imgUrl: String?) {
         .into(imgView)
 
 }
+
+@BindingAdapter("petGender")
+fun bindGenderSymbol(imageView: ImageView, gender: String){
+    imageView.apply {
+        if (gender == "男生") {
+            setImageResource(R.drawable.mars)
+        } else {
+            setImageResource(R.drawable.femenine)
+        }
+    }
+}
+
+@BindingAdapter("secondLong")
+fun bindFormatTime(textView: TextView, sec: Long){
+    textView.apply {
+        text = formatTime(sec.toInt())
+    }
+}
+
+@BindingAdapter("distance")
+fun bindFormatKm(textView: TextView, distance: Float){
+    textView.apply {
+        text = "$distance km"
+    }
+}
+
+private fun formatTime(second: Int): String{
+
+    val hour = second / 3600
+    var secondTime = second % 3600
+    val minute = secondTime / 60
+    secondTime %= 60
+
+    if (hour == 0) {
+        if (minute == 0) {
+            return "${addZero(secondTime)}秒"
+        }
+        return "時${addZero(minute)}分${addZero(secondTime)}秒"
+    }
+    return "${addZero(hour)}時${addZero(minute)}分${addZero(secondTime)}秒"
+}
+
+private fun addZero(number: Int): String{
+    return if(number.toString().length == 1){
+        "0$number"
+    } else {
+        "$number"
+    }
+}

@@ -20,9 +20,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="#FFC107"
+            android:background="@color/colorPrimaryDark"
             android:elevation="@dimen/elevation_all"
-            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.ARTICLE_CONTENT || viewModel.currentFragmentType == CurrentFragmentType.WALK_START ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.ARTICLE_CONTENT || viewModel.currentFragmentType == CurrentFragmentType.WALK_START || viewModel.currentFragmentType == CurrentFragmentType.WALK_END ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -79,6 +79,7 @@
                 android:backgroundTint="#ffffff"
                 android:elevation="@dimen/elevation_more"
                 android:text="@string/text_post"
+                android:textColor="@color/black"
                 android:onClick="@{() -> viewModel.postArticle() }"
                 android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.VISIBLE : View.GONE}" />
 
@@ -101,7 +102,7 @@
             android:id="@+id/coordinatorLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.ARTICLE_CONTENT || viewModel.currentFragmentType == CurrentFragmentType.CHAT_ROOM ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.ARTICLE_CONTENT || viewModel.currentFragmentType == CurrentFragmentType.CHAT_ROOM || viewModel.currentFragmentType == CurrentFragmentType.WALK_START ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -134,12 +135,12 @@
                 android:contentDescription="@string/app_name"
                 android:onClick="@{() -> viewModel.onNavigateToWalk()}"
                 android:src="@drawable/dog_walk_cool"
-                app:tint="#00205b"
-                app:backgroundTint="#ffffff"
+                app:backgroundTint="@color/colorPrimary"
                 app:fabCustomSize="70dp"
                 app:fabSize="auto"
                 app:layout_anchor="@id/bottomAppBar"
-                app:maxImageSize="40dp" />
+                app:maxImageSize="40dp"
+                app:tint="@color/white" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
@@ -150,6 +151,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.ARTICLE_CONTENT || viewModel.currentFragmentType == CurrentFragmentType.CHAT_ROOM ? View.GONE : View.VISIBLE}"/>
+            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.ARTICLE_CONTENT || viewModel.currentFragmentType == CurrentFragmentType.CHAT_ROOM || viewModel.currentFragmentType == CurrentFragmentType.WALK_START ? View.GONE : View.VISIBLE}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
