@@ -791,7 +791,64 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
         }
     }
 
-    override suspend fun insertWalk(walk: Walk): Result<Walk> = suspendCoroutine{ continuation ->
+    override suspend fun getWalkListByUserId(userId: String): Result<List<Walk>> = suspendCoroutine { continuation ->
+
+        walkRef.whereEqualTo("userId", userId).orderBy("endTime", Query.Direction.DESCENDING).get().addOnCompleteListener { task ->
+
+            if (task.isSuccessful) {
+                val walks = task.result.toObjects(Walk::class.java)
+                continuation.resume(Result.Success(walks))
+            } else {
+                task.exception?.let { e ->
+                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                    continuation.resume(Result.Error(e))
+                }
+                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+            }
+        }
+    }
+
+    override suspend fun getWalkListInfoByWalkList(walks: List<Walk>): Result<List<Walk>> = suspendCoroutine { continuation ->
+
+        val walkList = mutableListOf<Walk>()
+
+        var countWalk = 0
+        for (walk in walks) {
+
+            val petIdList = walk.petsIdList
+
+            if (petIdList.isNotEmpty()) {
+
+                petsRef.whereIn("id", petIdList).get().addOnCompleteListener { task2 ->
+
+                    if (task2.isSuccessful) {
+                        val pets = task2.result.toObjects(Pets::class.java)
+                        walk.pets = pets
+
+                        walkList.add(walk)
+                        countWalk += 1
+                        if (countWalk == walks.size) {
+                            continuation.resume(Result.Success(walkList))
+                        }
+                    } else {
+                        task2.exception?.let { e ->
+                            Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                            continuation.resume(Result.Error(e))
+                        }
+                        continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+                    }
+                }
+            } else {
+                walkList.add(walk)
+                countWalk += 1
+                if (countWalk == walks.size) {
+                    continuation.resume(Result.Success(walkList))
+                }
+            }
+        }
+    }
+
+    override suspend fun insertWalk(walk: Walk): Result<Walk> = suspendCoroutine { continuation ->
 
         val document = walkRef.document()
         walk.id = document.id

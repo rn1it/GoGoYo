@@ -14,34 +14,6 @@
         android:layout_height="match_parent"
         tools:context=".walk.WalkFragment">
 
-        <!--        <com.google.android.material.tabs.TabLayout-->
-        <!--            android:id="@+id/walkTabLayout"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:tabSelectedTextColor="@color/black_3f3a3a"-->
-        <!--            app:tabTextColor="@color/black_3f3a3a"-->
-        <!--            app:tabIndicatorColor="@color/white"-->
-        <!--            app:layout_constraintTop_toTopOf="parent"-->
-        <!--            android:elevation="@dimen/elevation_all">-->
-
-
-        <!--            <com.google.android.material.tabs.TabItem-->
-
-        <!--                android:text="散步紀錄"-->
-        <!--                android:layout_height="match_parent"-->
-        <!--                android:layout_width="100dp" />-->
-
-        <!--            <com.google.android.material.tabs.TabItem-->
-
-        <!--                android:text="數據統計"-->
-        <!--                android:layout_height="match_parent"-->
-        <!--                android:layout_width="100dp" />-->
-
-
-        <!--        </com.google.android.material.tabs.TabLayout>-->
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/btConst"
             android:layout_width="match_parent"
@@ -151,7 +123,7 @@
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/round_coner_rectangle_border"
                     android:orientation="horizontal"
-                    android:padding="4dp"
+                    android:padding="8dp"
                     app:addDecoration="@{viewModel.decoration}"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -159,15 +131,19 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/startWalkBt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="24dp"
-                    android:backgroundTint="#FF9800"
                     android:minWidth="0dp"
                     android:onClick="@{() -> viewModel.onNavigateToStartWalk()}"
-                    android:text="Go!"
+                    android:text="Go"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    app:backgroundTint="#FFFFFF"
+                    app:cornerRadius="30dp"
+                    app:iconPadding="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

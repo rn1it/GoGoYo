@@ -7,6 +7,7 @@ enum class CurrentFragmentType(val value: String){
     ARTICLE_CONTENT("動態"),
     WALK("散步去"),
     WALK_START(""),
+    WALK_END(""),
     FRIEND("好友"),
     FRIEND_CARD("好友"),
     FRIEND_LIST("好友"),

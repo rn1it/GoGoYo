@@ -106,6 +106,14 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.responseArticle(articleId, response)
     }
 
+    override suspend fun getWalkListByUserId(userId: String): Result<List<Walk>> {
+        return remoteDataSource.getWalkListByUserId(userId)
+    }
+
+    override suspend fun getWalkListInfoByWalkList(walks: List<Walk>): Result<List<Walk>> {
+        return remoteDataSource.getWalkListInfoByWalkList(walks)
+    }
+
     override suspend fun insertWalk(walk: Walk): Result<Walk> {
         return remoteDataSource.insertWalk(walk)
     }

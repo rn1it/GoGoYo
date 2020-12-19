@@ -8,7 +8,7 @@
     <item
         android:id="@+id/nav_event"
         android:icon="@drawable/dog_event"
-        android:title="Event" />
+        android:title="Statistic" />
     <item android:id="@+id/placeholder"
         android:title="" />
     <item

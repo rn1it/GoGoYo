@@ -1,8 +1,11 @@
 package com.rn1.gogoyo
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -31,11 +34,10 @@ class MainActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.nav_event -> {
-//                navController.navigate(NavigationDirections.actionGlobalChatRoomFragment())
-//                return@OnNavigationItemSelectedListener true
+                navController.navigate(NavigationDirections.actionGlobalStatisticFragment())
+                return@OnNavigationItemSelectedListener true
             }
             R.id.nav_friend -> {
-//                navController.navigate(NavigationDirections.actionGlobalMakeFriendsFragment())
                 navController.navigate(NavigationDirections.actionGlobalFriendFragment(UserManager.userUID!!))
                 return@OnNavigationItemSelectedListener true
             }
@@ -86,6 +88,11 @@ class MainActivity : AppCompatActivity() {
 
             setUpBottomNav()
             setupNavController()
+
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+//            window.statusBarColor = Color.TRANSPARENT
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
     }
 
@@ -116,7 +123,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.myPetsFragment -> CurrentFragmentType.PROFILE_PET
                 R.id.walkStartFragment -> CurrentFragmentType.WALK_START
                 R.id.chatRoomFragment -> CurrentFragmentType.CHAT_ROOM
-
+                R.id.walkEndFragment -> CurrentFragmentType.WALK_END
                 else -> viewModel.currentFragmentType.value
             }
         }

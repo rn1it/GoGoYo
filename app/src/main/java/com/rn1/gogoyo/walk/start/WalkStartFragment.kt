@@ -4,10 +4,8 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,10 +27,8 @@ import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentWalkStartBinding
 import com.rn1.gogoyo.ext.getVmFactory
-import com.rn1.gogoyo.model.Points
 import com.rn1.gogoyo.model.Walk
 import com.rn1.gogoyo.util.Logger
-import java.lang.Math.abs
 
 
 private const val PERMISSION_ID = 1
@@ -151,7 +147,7 @@ class WalkStartFragment : Fragment(){
 
         viewModel.petIdList.observe(viewLifecycleOwner, Observer {
             it?.let {
-                Logger.d("it = $it")
+                Logger.d("this time walking pets = $it")
             }
         })
 
@@ -171,7 +167,7 @@ class WalkStartFragment : Fragment(){
 
     }
 
-    // 1. check Permission and get user get permission
+    // 1. check Permission and get permission
     private fun getLocationPermission() {
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
@@ -334,7 +330,7 @@ class WalkStartFragment : Fragment(){
         var mContext = context
         var mWindow = (context as Activity).layoutInflater.inflate(R.layout.marker_info_layout, null)
 
-        private fun rendowWindowText(marker: Marker, view: View){
+        private fun resetWindowText(marker: Marker, view: View){
 
             val tvTitle = view.findViewById<TextView>(R.id.title)
             val tvSnippet = view.findViewById<TextView>(R.id.snippet)
@@ -346,12 +342,12 @@ class WalkStartFragment : Fragment(){
         }
 
         override fun getInfoContents(marker: Marker): View {
-            rendowWindowText(marker, mWindow)
+            resetWindowText(marker, mWindow)
             return mWindow
         }
 
         override fun getInfoWindow(marker: Marker): View? {
-            rendowWindowText(marker, mWindow)
+            resetWindowText(marker, mWindow)
             return mWindow
         }
     }

@@ -18,5 +18,8 @@ data class Pets(
     var weight: Float? = null,
     var video: String? = null,
     var image: String? = null,
-    var voice: String? = null
+    var voice: String? = null,
+    // div total
+    var divTotalTime: Float = 0f,
+    var divTotalDistance: Double = 0.0
 ): Parcelable
