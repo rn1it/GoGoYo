@@ -77,10 +77,15 @@ class ArticleContentFragment : Fragment() {
         // observe every change in article
         viewModel.liveArticle.observe(viewLifecycleOwner, Observer {
             it?.let {
-                responseAdapter.submitList(it.responseList)
-
+                viewModel.getResponseUserInfo(it)
                 //TODO 發文到最底
 //                binding.articleSv.post(Runnable { binding.articleSv.fullScroll(ScrollView.FOCUS_DOWN) })
+            }
+        })
+
+        viewModel.responseList.observe(viewLifecycleOwner, Observer {
+            it?.let{
+                responseAdapter.submitList(it)
             }
         })
 

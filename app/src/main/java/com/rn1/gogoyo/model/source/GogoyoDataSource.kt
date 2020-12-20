@@ -55,6 +55,8 @@ interface GogoyoDataSource {
 
     suspend fun responseArticle(articleId: String, response: ArticleResponse): Result<List<ArticleResponse>>
 
+    suspend fun setResponseUserImage(list: List<ArticleResponse>):Result<List<ArticleResponse>>
+
     suspend fun getWalkListByUserId(userId: String): Result<List<Walk>>
 
     suspend fun getWalkListInfoByWalkList(walks: List<Walk>): Result<List<Walk>>
@@ -70,6 +72,8 @@ interface GogoyoDataSource {
     fun getRealTimeOthersWalkingList(userId: String): MutableLiveData<List<Walk>>
 
     suspend fun getOthersWalkingList(userId: String): Result<List<Walk>>
+
+    fun getUserLiveFriend(userId: String, status: Int?): MutableLiveData<List<Friends>>
 
     suspend fun getUserFriends(userId: String, status: Int?): Result<List<Friends>>
 

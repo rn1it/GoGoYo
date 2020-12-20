@@ -106,6 +106,10 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.responseArticle(articleId, response)
     }
 
+    override suspend fun setResponseUserImage(list: List<ArticleResponse>): Result<List<ArticleResponse>> {
+        return remoteDataSource.setResponseUserImage(list)
+    }
+
     override suspend fun getWalkListByUserId(userId: String): Result<List<Walk>> {
         return remoteDataSource.getWalkListByUserId(userId)
     }
@@ -132,6 +136,10 @@ class GogoyoRepositoryImpl(
 
     override suspend fun getOthersWalkingList(userId: String): Result<List<Walk>> {
         return remoteDataSource.getOthersWalkingList(userId)
+    }
+
+    override fun getUserLiveFriend(userId: String, status: Int?): MutableLiveData<List<Friends>> {
+        return remoteDataSource.getUserLiveFriend(userId, status)
     }
 
     override suspend fun getUserFriends(userId: String, status: Int?): Result<List<Friends>> {

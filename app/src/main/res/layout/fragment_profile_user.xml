@@ -15,143 +15,155 @@
         tools:context=".mypets.user.ProfileUserFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout8"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
+            <ImageView
+                android:id="@+id/userProfileIv"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginTop="24dp"
+                android:clickable="@{viewModel.isLoginUser ? true : false }"
+                android:outlineProvider="@{viewModel.outlineProvider}"
+                android:scaleType="centerCrop"
+                app:imageUrl="@{viewModel.user.image}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@{viewModel.user.name}"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/userProfileIv"
+                app:layout_constraintStart_toStartOf="@+id/userProfileIv"
+                app:layout_constraintTop_toBottomOf="@+id/userProfileIv"
+                tools:text="Gary" />
+
+            <Button
+                android:id="@+id/button8"
+                android:layout_width="118dp"
+                android:layout_height="28dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:backgroundTint="#ffffff"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:onClick="@{() -> viewModel.onClickProfileBt()}"
+                android:text="@{viewModel.profileBtText}"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/userProfileIv"
+                app:layout_constraintStart_toStartOf="@+id/userProfileIv"
+                app:layout_constraintTop_toBottomOf="@+id/postValueTv"
+                tools:text="修改資料" />
+
+            <TextView
+                android:id="@+id/postValueTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="2"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@+id/postTitleTv"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView24"
+                tools:text="10" />
+
+            <TextView
+                android:id="@+id/postTitleTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="POSTS"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/postValueTv"
+                app:layout_constraintEnd_toStartOf="@+id/friendCountValueTv"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/postValueTv"
+                app:layout_constraintTop_toTopOf="@+id/postValueTv" />
+
+            <TextView
+                android:id="@+id/friendCountValueTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@{String.valueOf(viewModel.liveFriend.size())}"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/postValueTv"
+                app:layout_constraintEnd_toStartOf="@+id/friendCountTitleTv"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/postTitleTv"
+                app:layout_constraintTop_toTopOf="@+id/postValueTv"
+                tools:text="10" />
+
+            <TextView
+                android:id="@+id/friendCountTitleTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="FRIENDS"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/postValueTv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/friendCountValueTv"
+                app:layout_constraintTop_toTopOf="@+id/postValueTv" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageView
-            android:id="@+id/userProfileIv"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="24dp"
-            android:clickable="@{viewModel.isLoginUser ? true : false }"
-            android:outlineProvider="@{viewModel.outlineProvider}"
-            android:scaleType="centerCrop"
-            app:imageUrl="@{viewModel.user.image}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/postValueTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="2"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="@+id/postTitleTv"
-            app:layout_constraintStart_toStartOf="@+id/postTitleTv"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed"
-            tools:text="10" />
-
-        <TextView
-            android:id="@+id/friendCountValueTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/postValueTv"
-            app:layout_constraintEnd_toEndOf="@+id/friendCountTitleTv"
-            app:layout_constraintStart_toStartOf="@+id/friendCountTitleTv"
-            tools:text="10" />
-
-
-        <TextView
-            android:id="@+id/postTitleTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="POSTS"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toTopOf="@+id/button8"
-            app:layout_constraintEnd_toStartOf="@+id/friendCountTitleTv"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/userProfileIv"
-            app:layout_constraintTop_toBottomOf="@+id/postValueTv" />
-
-        <TextView
-            android:id="@+id/friendCountTitleTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="FRIENDS"
-            android:textSize="12sp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/postTitleTv"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/postTitleTv" />
-
-        <Button
-            android:id="@+id/button8"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:backgroundTint="#ffffff"
-            android:insetTop="4dp"
-            android:insetBottom="4dp"
-            android:onClick="@{() -> viewModel.onClickProfileBt()}"
-            android:text="@{viewModel.profileBtText}"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@+id/userProfileIv"
-            app:layout_constraintEnd_toEndOf="@+id/friendCountTitleTv"
-            app:layout_constraintStart_toStartOf="@+id/postTitleTv"
-            app:layout_constraintTop_toBottomOf="@+id/postTitleTv"
-            tools:text="修改資料" />
-<!--        app:setProfileButton="@{viewModel.isLoginUser}"-->
+        <!--        app:setProfileButton="@{viewModel.isLoginUser}"-->
         <ScrollView
             android:id="@+id/constraintLayout7"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginTop="8dp"
+            android:layout_height="50dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/userProfileIv">
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout8">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/textView24"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="16dp"
-                    android:text="@{viewModel.user.name}"
-                    tools:text="Gary"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
 
                 <TextView
                     android:id="@+id/textView34"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
                     android:text="@{viewModel.user.introduction}"
+                    android:textAlignment="center"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView24"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:text="你好，我愛狗" />
-
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
 
         <com.google.android.material.tabs.TabLayout
-            android:elevation="@dimen/elevation_all"
             android:id="@+id/profileArticleTabLayout"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:elevation="@dimen/elevation_all"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -169,7 +181,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profileArticleTabLayout" />
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

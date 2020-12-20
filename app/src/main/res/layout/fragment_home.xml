@@ -29,8 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:layout_margin="8dp"
-                android:background="@drawable/search_view_custom"
-                app:queryHint="Search" />
+                android:queryHint="搜尋動態..."/>
         </androidx.cardview.widget.CardView>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -59,6 +58,7 @@
             android:clickable="true"
             android:onClick="@{() -> viewModel.onNavigateToPost()}"
             android:src="@drawable/add_pet"
+            app:tint="@color/black_3f3a3a"
             app:backgroundTint="@color/colorPrimaryDark"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

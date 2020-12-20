@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#627D47</color>
-    <color name="colorPrimaryDark">#F5D52D</color>
+    <color name="colorPrimary">#EE6B78</color>
+    <color name="colorPrimaryDark">#61A5C2</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="white">#ffffff</color>
     <color name="black_3f3a3a">#3f3a3a</color>
@@ -11,4 +11,6 @@
     <color name="red_F44336">#F44336</color>
     <color name="comb">#EE6B78</color>
 <!--    <color name="blue">#61A5C2</color>-->
+<!--    61A5C2-->
+<!--    EE6B78-->
 </resources>

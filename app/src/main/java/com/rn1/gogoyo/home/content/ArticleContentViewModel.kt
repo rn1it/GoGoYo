@@ -1,12 +1,14 @@
 package com.rn1.gogoyo.home.content
 
 import android.graphics.Rect
+import android.os.CountDownTimer
 import android.view.View
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.RecyclerView
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
+import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.model.ArticleResponse
 import com.rn1.gogoyo.model.Articles
 import com.rn1.gogoyo.model.Pets
@@ -26,12 +28,10 @@ class ArticleContentViewModel(
     private val _article = MutableLiveData<Articles>().apply {
         value = arguments
     }
-
     val article : LiveData<Articles>
         get() = _article
 
     private val _petList = MutableLiveData<List<Pets>>()
-
     val petList: LiveData<List<Pets>>
         get() = _petList
 
@@ -41,33 +41,33 @@ class ArticleContentViewModel(
 
     var liveArticle = MutableLiveData<Articles>()
 
-    private val _isCollected = MutableLiveData<Boolean>()
+    private val _responseList = MediatorLiveData<List<ArticleResponse>>()
+    val responseList: LiveData<List<ArticleResponse>>
+        get() = _responseList
 
+    private val _isCollected = MutableLiveData<Boolean>()
     val isCollected: LiveData<Boolean>
         get() = _isCollected
-
 
     val response = MutableLiveData<String>()
 
     private val _navigateToProfile = MediatorLiveData<String>()
-
     val navigateToProfile: LiveData<String>
         get() = _navigateToProfile
 
     private val _leaveArticle = MediatorLiveData<Boolean>()
-
     val leaveArticle : LiveData<Boolean>
         get() = _leaveArticle
 
+    val outlineProvider = MapOutlineProvider()
+
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadStatus>()
-
     val status: LiveData<LoadStatus>
         get() = _status
 
     // error: The internal MutableLiveData that stores the error of the most recent request
     private val _error = MutableLiveData<String>()
-
     val error: LiveData<String>
         get() = _error
 
@@ -120,6 +120,8 @@ class ArticleContentViewModel(
     private fun getLiveArticle() {
         liveArticle = repository.getRealTimeArticle(arguments.id)
     }
+
+
 
     fun response(){
         coroutineScope.launch {
@@ -209,5 +211,34 @@ class ArticleContentViewModel(
 
     fun onLeaveArticle() {
         _leaveArticle.value = true
+    }
+
+    fun getResponseUserInfo(articles: Articles) {
+
+        coroutineScope.launch {
+            _responseList.value = when (val result = repository.setResponseUserImage(articles.responseList)) {
+
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    result.data
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+            }
+        }
     }
 }

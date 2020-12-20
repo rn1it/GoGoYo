@@ -1,6 +1,7 @@
 package com.rn1.gogoyo.friend.list
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -16,6 +17,11 @@ class FriendListAdapter(val viewModel: FriendListViewModel) : ListAdapter<Users,
         fun bind(viewModel: FriendListViewModel, user: Users){
             binding.user = user
             binding.viewModel = viewModel
+            if (user.status == 2){
+                binding.toChatRoomBt.visibility = View.VISIBLE
+            } else {
+                binding.toChatRoomBt.visibility = View.GONE
+            }
 
             val adapter = ArticleContentPetImageAdapter()
             binding.friendPetRecyclerView.adapter = adapter

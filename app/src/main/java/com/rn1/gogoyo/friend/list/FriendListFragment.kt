@@ -25,7 +25,7 @@ class FriendListFragment(val userId: String) : Fragment() {
 
     private lateinit var binding: FragmentFriendListBinding
     private val viewModel by viewModels<FriendListViewModel> { getVmFactory(userId) }
-
+    private var showChatBt = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -90,6 +90,14 @@ class FriendListFragment(val userId: String) : Fragment() {
         binding.relationshipSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val friendShip = parent?.getItemAtPosition(position) as String
+
+                when (friendShip) {
+                    "朋友" -> showChatBt = true
+                    "好友邀請" -> showChatBt = false
+                    "等待中" -> showChatBt = false
+
+                }
+
                 viewModel.getUserFriends(friendShip)
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {}

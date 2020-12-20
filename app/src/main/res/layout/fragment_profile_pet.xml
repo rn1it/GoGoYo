@@ -19,7 +19,7 @@
             android:id="@+id/constraintLayout3"
             android:layout_width="match_parent"
             android:layout_height="260dp"
-            android:background="@drawable/windows"
+            android:background="#FFC107"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -47,8 +47,9 @@
                 android:onClick="@{() -> viewModel.onNavigateToNewPet()}"
                 android:src="@drawable/add_pet3"
                 android:visibility="@{viewModel.isLoginUser ? View.VISIBLE : View.GONE}"
-                app:backgroundTint="@color/white"
+                app:backgroundTint="@color/colorPrimaryDark"
                 app:fabSize="mini"
+                app:tint="@color/black_3f3a3a"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:maxImageSize="30dp" />
@@ -78,29 +79,41 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <Button
+
+
+                <TextView
                     android:id="@+id/editPetInfoBt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/msg_bubble_custom"
                     android:layout_marginEnd="24dp"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
                     android:onClick="@{()->viewModel.editPet()}"
-                    android:paddingLeft="0dp"
-                    android:paddingTop="0dp"
-                    android:paddingRight="0dp"
-                    android:paddingBottom="0dp"
                     android:text="編輯"
-                    android:textAlignment="center"
+                    android:padding="4dp"
                     android:visibility="@{viewModel.isLoginUser ? viewModel.pet != null ? View.VISIBLE : View.GONE : View.GONE }"
-                    app:backgroundTint="#FFFFFF"
-                    app:fabSize="mini"
-                    app:icon="@drawable/edit_pet"
-                    app:iconPadding="0dp"
-                    app:iconSize="40dp"
                     app:layout_constraintBottom_toBottomOf="@+id/breedTitleEt"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/breedTitleEt" />
+<!--                <Button-->
+<!--                    android:id="@+id/editPetInfoBt"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginEnd="24dp"-->
+<!--                    android:insetTop="0dp"-->
+<!--                    android:insetBottom="0dp"-->
+<!--                    android:onClick="@{()->viewModel.editPet()}"-->
+<!--                    android:text="編輯"-->
+<!--                    android:padding="0dp"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:visibility="@{viewModel.isLoginUser ? viewModel.pet != null ? View.VISIBLE : View.GONE : View.GONE }"-->
+<!--                    app:backgroundTint="#FFFFFF"-->
+<!--                    app:fabSize="mini"-->
+<!--                    app:icon="@drawable/edit_pet"-->
+<!--                    app:iconPadding="0dp"-->
+<!--                    app:iconSize="40dp"-->
+<!--                    app:layout_constraintBottom_toBottomOf="@+id/breedTitleEt"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="@+id/breedTitleEt" />-->
 
                 <!--                <TextView-->
                 <!--                    android:id="@+id/birthTitleTv"-->
@@ -190,6 +203,7 @@
                     android:id="@+id/breedTitleEt"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:background="@android:color/transparent"
                     android:ems="10"
                     android:focusable="false"

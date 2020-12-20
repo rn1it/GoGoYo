@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
+import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.model.Chatroom
 import com.rn1.gogoyo.model.Friends
 import com.rn1.gogoyo.model.source.GogoyoRepository
@@ -47,6 +48,8 @@ class FriendListViewModel(
 
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
+    val outlineProvider = MapOutlineProvider()
+
     init {
 //        getUserFriends("朋友")
     }
@@ -74,7 +77,7 @@ class FriendListViewModel(
                     _error.value = null
                     _status.value = LoadStatus.DONE
                     val friends = result.data
-                    getFriendListById(friends)
+                    getFriendListById(status, friends)
                 }
                 is Result.Fail -> {
                     _error.value = result.error
@@ -92,7 +95,7 @@ class FriendListViewModel(
         }
     }
 
-    private fun getFriendListById(friends: List<Friends>) {
+    private fun getFriendListById(status: Int, friends: List<Friends>) {
 
         val idList = mutableListOf<String>()
 
@@ -110,7 +113,12 @@ class FriendListViewModel(
                     is Result.Success -> {
                         _error.value = null
                         _status.value = LoadStatus.DONE
-                        _friendList.value = result.data
+                        val list = mutableListOf<Users>()
+                        for (user in result.data){
+                            user.status = status
+                            list.add(user)
+                        }
+                        _friendList.value = list
                     }
                     is Result.Fail -> {
                         _error.value = result.error

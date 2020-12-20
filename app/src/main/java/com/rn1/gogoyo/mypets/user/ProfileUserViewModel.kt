@@ -39,46 +39,41 @@ class ProfileUserViewModel(
     var loginUserFriends = MutableLiveData<List<Friends>>()
 
     private val _user = MutableLiveData<Users>()
-
     val user: LiveData<Users>
         get() = _user
 
     private val _friendStatus = MutableLiveData<Int>()
-
     val friendStatus: LiveData<Int>
         get() = _friendStatus
+
+    var liveFriend = MutableLiveData<List<Friends>>()
+
 
     val profileBtText = MutableLiveData<String>()
 
     private val _userArticles = MutableLiveData<List<Articles>>()
-
     val userArticles: LiveData<List<Articles>>
         get() = _userArticles
 
     private val _userFavArticles = MutableLiveData<List<Articles>>()
-
     val userFavArticles: LiveData<List<Articles>>
         get() = _userFavArticles
 
     private val _navigateToContent = MutableLiveData<Articles>()
-
     val navigateToContent: LiveData<Articles>
         get() = _navigateToContent
 
     private val _navigateToEdit = MutableLiveData<String>()
-
     val navigateToEdit: LiveData<String>
         get() = _navigateToEdit
 
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadStatus>()
-
     val status: LiveData<LoadStatus>
         get() = _status
 
     // error: The internal MutableLiveData that stores the error of the most recent request
     private val _error = MutableLiveData<String>()
-
     val error: LiveData<String>
         get() = _error
 
@@ -100,6 +95,7 @@ class ProfileUserViewModel(
         getUser()
         getUserArticle()
         getUserFavArticle()
+        getUserLiveFriend()
     }
 
     override fun onCleared() {
@@ -147,6 +143,10 @@ class ProfileUserViewModel(
                     }
                 }
         }
+    }
+
+    private fun getUserLiveFriend(){
+        liveFriend = repository.getUserLiveFriend(UserManager.userUID!!, 2)
     }
 
     private fun getUserArticle() {

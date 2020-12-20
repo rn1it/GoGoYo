@@ -103,6 +103,10 @@ class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
         TODO("Not yet implemented")
     }
 
+    override suspend fun setResponseUserImage(list: List<ArticleResponse>): Result<List<ArticleResponse>> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getWalkListByUserId(userId: String): Result<List<Walk>> {
         TODO("Not yet implemented")
     }
@@ -128,6 +132,10 @@ class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
     }
 
     override suspend fun getOthersWalkingList(userId: String): Result<List<Walk>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getUserLiveFriend(userId: String, status: Int?): MutableLiveData<List<Friends>> {
         TODO("Not yet implemented")
     }
 

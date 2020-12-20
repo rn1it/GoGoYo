@@ -76,6 +76,7 @@ class ProfileUserFragment(val userId: String) : Fragment() {
         viewModel.userArticles.observe(viewLifecycleOwner, Observer {
             it?.let {
                 viewPagerList[0] = it
+                binding.postValueTv.text = it.size.toString()
                 pagerAdapter.submitList(viewPagerList)
             }
         })
@@ -86,6 +87,12 @@ class ProfileUserFragment(val userId: String) : Fragment() {
                 pagerAdapter.submitList(viewPagerList)
             }
         })
+
+//        viewModel.liveFriend.observe(viewLifecycleOwner, Observer {
+//            it?.let {
+//                binding.friendCountValueTv.text = it.size.toString()
+//            }
+//        })
 
         viewModel.navigateToContent.observe(viewLifecycleOwner, Observer {
             it?.let {
