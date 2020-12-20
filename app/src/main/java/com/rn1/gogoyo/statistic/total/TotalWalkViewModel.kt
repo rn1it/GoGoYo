@@ -176,17 +176,21 @@ class TotalWalkViewModel(val repository: GogoyoRepository): ViewModel() {
         val petsWithTotalInfo = mutableListOf<Pets>()
 
         for (pet in pets){
+
+
             for (walk in walks) {
                 if (walk.petsIdList.isNotEmpty()) {
                     for (petId in walk.petsIdList) {
                         if (pet.id == petId) {
                             pet.divTotalDistance += ((walk.distance ?: 0.0).toDouble() )
                             pet.divTotalTime += walk.period ?: 0
-                            petsWithTotalInfo.add(pet)
+
                         }
                     }
                 }
             }
+            petsWithTotalInfo.add(pet)
+
         }
 
         _pet.value = petsWithTotalInfo

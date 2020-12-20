@@ -43,7 +43,7 @@ class TotalWalkFragment : Fragment() {
 
                     val valueTime = PieEntry(pet.divTotalTime, pet.name)
                     val valueDistance = PieEntry(pet.divTotalDistance.toFloat(), pet.name)
-                    Logger.d("valueTime = $valueTime, valueDistance = $valueDistance")
+//                    Logger.d("valueTime = $valueTime, valueDistance = $valueDistance")
                     pieValueTime.add(valueTime)
                     pieValueDistance.add(valueDistance)
                 }
@@ -64,7 +64,7 @@ class TotalWalkFragment : Fragment() {
                                 val pieDataSet = PieDataSet(pieValueTime, "")
                                 pieDataSet.valueTextSize = 16f
                                 pieDataSet.valueTextColor = Color.YELLOW
-                                pieDataSet.colors = JOYFUL_COLORS2.toList()
+                                pieDataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
 
                                 val pieData = PieData(pieDataSet)
 
@@ -84,7 +84,7 @@ class TotalWalkFragment : Fragment() {
                                 val pieDataSet = PieDataSet(pieValueDistance, "")
                                 pieDataSet.valueTextSize = 16f
                                 pieDataSet.valueTextColor = Color.YELLOW
-                                pieDataSet.colors = JOYFUL_COLORS2.toList()
+                                pieDataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
 
                                 val pieData = PieData(pieDataSet)
 

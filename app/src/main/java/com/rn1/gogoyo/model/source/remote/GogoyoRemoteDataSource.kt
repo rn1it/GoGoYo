@@ -793,19 +793,24 @@ object GogoyoRemoteDataSource: GogoyoDataSource{
 
     override suspend fun getWalkListByUserId(userId: String): Result<List<Walk>> = suspendCoroutine { continuation ->
 
-        walkRef.whereEqualTo("userId", userId).orderBy("endTime", Query.Direction.DESCENDING).get().addOnCompleteListener { task ->
+        walkRef
+            .whereEqualTo("userId", userId)
+            .whereNotEqualTo("endTime", null)
+            .orderBy("endTime", Query.Direction.DESCENDING)
+            .get()
+            .addOnCompleteListener { task ->
 
-            if (task.isSuccessful) {
-                val walks = task.result.toObjects(Walk::class.java)
-                continuation.resume(Result.Success(walks))
-            } else {
-                task.exception?.let { e ->
-                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
-                    continuation.resume(Result.Error(e))
+                if (task.isSuccessful) {
+                    val walks = task.result.toObjects(Walk::class.java)
+                    continuation.resume(Result.Success(walks))
+                } else {
+                    task.exception?.let { e ->
+                        Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                        continuation.resume(Result.Error(e))
+                    }
+                    continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
                 }
-                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
             }
-        }
     }
 
     override suspend fun getWalkListInfoByWalkList(walks: List<Walk>): Result<List<Walk>> = suspendCoroutine { continuation ->
