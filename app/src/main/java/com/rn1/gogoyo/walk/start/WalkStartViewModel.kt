@@ -1,5 +1,6 @@
 package com.rn1.gogoyo.walk.start
 
+import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,6 +19,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.util.*
 import kotlin.concurrent.schedule
 import kotlin.math.acos
@@ -29,12 +33,14 @@ class WalkStartViewModel(
     private val arguments: List<String>
     ): ViewModel() {
 
+    private var mapImgPath = ""
+
     private val _walk =  MutableLiveData<Walk>()
 
     val walk: LiveData<Walk>
         get() = _walk
 
-//    var liveWalks = MutableLiveData<List<Walk>>()
+    private var totalDistance = 0.0
 
     private val _onLineWalks = MutableLiveData<List<Walk>>()
 
@@ -74,13 +80,13 @@ class WalkStartViewModel(
     val getCurrentLocation: LiveData<Boolean>
         get() = _getCurrentLocation
 
-//    var currentLat: Double = 0.0
-//    var currentLng: Double = 0.0
-
     private lateinit var timer : Timer
     private var second = 0
     private var stopCount = true
 
+    private val _imageStringList = MutableLiveData<List<String>>()
+    val imageStringList: LiveData<List<String>>
+        get() = _imageStringList
 
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadStatus>()
@@ -107,15 +113,9 @@ class WalkStartViewModel(
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
 
-//    private val _list = MutableLiveData<List<Points>>()
-//
-//    val list : LiveData<List<Points>>
-//        get() = _list
-
     init {
         startTimer()
-//        createMarker()
-
+        _imageStringList.value = mutableListOf()
         // set user isWalking = true
         setUserWalkingStatus(true)
         getOnlineWalkList()
@@ -154,7 +154,9 @@ class WalkStartViewModel(
         _getCurrentLocation.value = null
     }
 
-    fun savePoint(lat: Double, lng: Double) {
+    fun savePoint(lat: Double, lng: Double, dis: Double) {
+
+        totalDistance += dis
 
         val point = Points()
         point.latitude = lat
@@ -238,13 +240,9 @@ class WalkStartViewModel(
                     _status.value = LoadStatus.ERROR
                     null
                 }
-
             }
-
         }
-
     }
-
 
     fun stopOrContinueCounter(){
         if (stopCount) {
@@ -286,6 +284,9 @@ class WalkStartViewModel(
                 endTime = Calendar.getInstance().timeInMillis
                 points = pointsList
                 period = second.toLong()
+                mapImg = mapImgPath
+                distance = totalDistance.toFloat()
+                images = _imageStringList.value
             }
 
             _navigateToEndWalk.value = when (val result = repository.updateWalk(walk)) {
@@ -315,7 +316,7 @@ class WalkStartViewModel(
             }
 
         }
-        timer.cancel()
+
     }
 
     fun onDoneNavigateToEndWalk(){
@@ -353,61 +354,138 @@ class WalkStartViewModel(
         }
     }
 
-//    private fun getLiveWalkingList() {
-//        liveWalks = repository.getRealTimeOthersWalkingList(UserManager.userUID!!)
-//        _status.value = LoadStatus.DONE
-//        _refreshStatus.value = false
-//    }
-
     private fun getOnlineWalkList(){
         coroutineScope.launch {
 
-            _onLineWalks.value = when (val result = repository.getOthersWalkingList(UserManager.userUID!!)) {
+            when (val result = repository.getOthersWalkingList(UserManager.userUID!!)) {
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadStatus.DONE
-                    Logger.d("getOnlineWalkList Second = $second, result.data = ${result.data}")
-                    result.data
+                    val walks = result.data
+                    if (walks.isNotEmpty()){
+                        getOnlineWalkWithInfo(walks)
+                    } else {
+                        _onLineWalks.value = null
+                    }
                 }
                 is Result.Fail -> {
                     _error.value = result.error
                     _status.value = LoadStatus.ERROR
-                    null
                 }
                 is Result.Error -> {
                     _error.value = result.exception.toString()
                     _status.value = LoadStatus.ERROR
-                    null
                 }
                 else -> {
                     _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
                     _status.value = LoadStatus.ERROR
-                    null
                 }
             }
+        }
+    }
 
+    private fun getOnlineWalkWithInfo(walks: List<Walk>){
 
+        coroutineScope.launch {
+
+            when (val result = repository.getWalkListInfoByWalkList(walks)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    Logger.d("getOnlineWalkList Second = $second, result.data = ${result.data}")
+                    _onLineWalks.value = result.data
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                }
+            }
         }
 
+
     }
 
-    fun onclick(){
-        Logger.d("aaaaaaaaaassssss")
+    fun uploadImage(path: String){
+        coroutineScope.launch {
+
+            when (val result = repository.getImageUri(path)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    Logger.d("uri = ${result.data}")
+                    val list = mutableListOf<String>()
+                    list.addAll(_imageStringList.value!!)
+                    list.add(result.data)
+                    _imageStringList.value = list
+
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                }
+            }
+        }
     }
 
-    fun getDistance(start: LatLng, end: LatLng): Double {
+    fun saveMap(bitmap: Bitmap) {
 
-        val lat1 = Math.PI / 180 * start.latitude
-        val lat2 = Math.PI / 180 * end.latitude
-        val lon1 = Math.PI / 180 * start.longitude
-        val lon2 = Math.PI / 180 * end.longitude
+        val f = File(GogoyoApplication.instance.cacheDir, System.currentTimeMillis().toString());
+        f.createNewFile();
 
-        //radius of earth
-        val radius = 6371.0
+        val bos = ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+        val bitmapData = bos.toByteArray();
 
-        // distance between two points, return kilometer
-        val d = acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2 - lon1)) * radius
-        return d * 1000
+        val fos = FileOutputStream(f);
+        fos.write(bitmapData);
+        fos.flush();
+        fos.close();
+
+        uploadMapImage(f.path)
+
     }
 
+    private fun uploadMapImage(path: String){
+        timer.cancel()
+        coroutineScope.launch {
+
+            when (val result = repository.getImageUri(path)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    Logger.d("uri = ${result.data}")
+                    mapImgPath = result.data
+                    onNavigateToEndWalk()
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                }
+            }
+        }
+    }
 }

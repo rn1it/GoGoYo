@@ -3,19 +3,23 @@ package com.rn1.gogoyo.walk.start
 import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -29,12 +33,16 @@ import com.rn1.gogoyo.databinding.FragmentWalkStartBinding
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.model.Walk
 import com.rn1.gogoyo.util.Logger
+import kotlin.math.acos
+import kotlin.math.cos
+import kotlin.math.sin
 
 
 private const val PERMISSION_ID = 1
 
 class WalkStartFragment : Fragment(){
 
+    private var filePath: String = ""
     private lateinit var binding: FragmentWalkStartBinding
     private val viewModel by viewModels<WalkStartViewModel> { getVmFactory(
         WalkStartFragmentArgs.fromBundle(
@@ -53,57 +61,13 @@ class WalkStartFragment : Fragment(){
 
     private val markList: MutableList<Marker> = mutableListOf()
 
-
-
     private val callback = OnMapReadyCallback { googleMap ->
         myMap = googleMap
         googleMap.setInfoWindowAdapter(CustomInfoWindowForGoogleMap(requireContext()))
-//        googleMap.setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
-//            override fun getInfoWindow(marker: Marker?): View? {
-//                return null
-//            }
-//
-//            // custom info layout
-//            override fun getInfoContents(marker: Marker?): View {
-//                val view: View = layoutInflater.inflate(R.layout.marker_info_layout, null)
-//                val  latLng = marker?.position
-////                val icon = view.findViewById<ImageView>(R.id.icon)
-//                val title = view.findViewById<TextView>(R.id.title)
-//                val snippet = view.findViewById<TextView>(R.id.snippet)
-//                val lat = view.findViewById<TextView>(R.id.lat)
-//                val lng = view.findViewById<TextView>(R.id.lng)
-//                title.text = marker?.title
-//                snippet.text = marker?.snippet
-//                lat.text = "Latitude：" + latLng?.latitude
-//                lng.text = "Longitude：" + latLng?.longitude
-//                return view
-//            }
-//        })
 
         getLocationPermission()
-        // Turn on the My Location layer and the related control on the map.
         updateLocationUI()
-        // get current location
         getDeviceLocation()
-
-//        viewModel.list.observe(viewLifecycleOwner, Observer {
-//            it?.let {
-//                if (markList.isNotEmpty()) {
-//                    removeMarkers()
-//                }
-//                createMakers(it)
-//            }
-//        })
-
-
-//        viewModel.liveWalks.observe(viewLifecycleOwner, Observer {
-//            it?.let {
-//                if (it.isNotEmpty()) {
-//                    removeMarkers()
-//                }
-//                createMakers(it)
-//            }
-//        })
 
         viewModel.onLineWalks.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -120,18 +84,19 @@ class WalkStartFragment : Fragment(){
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-
-
+    ): View {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_walk_start, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
+        val recyclerView = binding.walkImgRv
+        val adapter = WalkImgAdapter()
+        recyclerView.adapter = adapter
 
         viewModel.getCurrentLocation.observe(viewLifecycleOwner, Observer {
             it?.let {
-                if(it){
+                if (it) {
                     getDeviceLocation()
                     viewModel.onDoneGetCurrentLocation()
                 }
@@ -152,6 +117,28 @@ class WalkStartFragment : Fragment(){
         })
 
 
+        viewModel.imageStringList.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                adapter.submitList(it)
+            }
+        })
+
+        binding.walkFinishBt.setOnClickListener {
+
+            val snapshotReadyCallback : GoogleMap.SnapshotReadyCallback = GoogleMap.SnapshotReadyCallback {
+                viewModel.saveMap(it)
+            }
+
+            val onMapLoadedCallback : GoogleMap.OnMapLoadedCallback = GoogleMap.OnMapLoadedCallback {
+                myMap!!.snapshot(snapshotReadyCallback)
+            }
+
+            myMap!!.setOnMapLoadedCallback(onMapLoadedCallback)
+        }
+
+        binding.cameraBt.setOnClickListener {
+            checkPermission()
+        }
 
         return binding.root
     }
@@ -159,11 +146,10 @@ class WalkStartFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mapFragment = childFragmentManager.findFragmentById(R.id.walkEndMap) as SupportMapFragment?
+        val mapFragment = childFragmentManager.findFragmentById(R.id.walkingMap) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
         // 2. init fusedLocationProviderClient and set LocationServices object
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
-
 
     }
 
@@ -215,6 +201,14 @@ class WalkStartFragment : Fragment(){
                     locationPermission = true
                 }
             }
+            REQUEST_EXTERNAL_STORAGE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //get image
+                } else {
+                    Toast.makeText(this.context, "Permission denied", Toast.LENGTH_SHORT).show()
+                }
+                return
+            }
         }
         // set map UI isMyLocationButton Enabled
         updateLocationUI()
@@ -241,25 +235,33 @@ class WalkStartFragment : Fragment(){
 
                                 Logger.d("start: lat = $lat, lon = $lon")
 
-//                                viewModel.currentLat = lat!!
-//                                viewModel.currentLng = lon!!
-
                                 viewModel.insertWalk(lat!!, lon!!)
 
                                 myMap?.apply {
-                                    moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude), 17f))
+                                    moveCamera(
+                                        CameraUpdateFactory.newLatLngZoom(
+                                            LatLng(
+                                                lastKnownLocation!!.latitude,
+                                                lastKnownLocation!!.longitude
+                                            ), 17f
+                                        )
+                                    )
                                 }
 
                             } else {
                                 // draw line
-                                drawLine(lat!!, lon!!, lastKnownLocation!!.latitude, lastKnownLocation!!.longitude)
+                                drawLine(
+                                    lat!!,
+                                    lon!!,
+                                    lastKnownLocation!!.latitude,
+                                    lastKnownLocation!!.longitude
+                                )
 
+                                val dis = getDistance(LatLng(lat!!, lon!!), LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude))
                                 // set currentLatLng
                                 lat = lastKnownLocation!!.latitude
                                 lon = lastKnownLocation!!.longitude
-
-                                viewModel.savePoint(lat!!, lon!!)
-                                Logger.d("current at : lat = $lat, lon = $lon")
+                                viewModel.savePoint(lat!!, lon!!, dis)
                             }
 
                         }
@@ -287,44 +289,9 @@ class WalkStartFragment : Fragment(){
         polyline.tag = "A"
     }
 
-    private fun stylePolyline(polyline: Polyline) {
-        var type = ""
-        // Get the data object stored with the polyline.
-        if (polyline.tag != null) {
-            type = polyline.tag.toString()
-        }
-//        when (type) {
-//            "A" ->             // Use a custom bitmap as the cap at the start of the line.
-//                polyline.setStartCap(
-//                    CustomCap(
-//                        BitmapDescriptorFactory.fromResource(R.drawable.check), 10F
-//                    )
-//                )
-//            "B" ->             // Use a round cap at the start of the line.
-//                polyline.setStartCap(RoundCap())
-//        }
-//        polyline.setEndCap(RoundCap())
-        polyline.setWidth(15f)
-        polyline.setColor(R.color.app_main_color)
-//        polyline.setJointType(JointType.ROUND)
-    }
-
-
-    private fun createMakers(list: List<Walk>){
-
-        for (walk in list) {
-            val marker = myMap?.addMarker(MarkerOptions().position(LatLng(walk.currentLat!!, walk.currentLng!!)).title("HI"))!!
-            markList.add(marker)
-        }
-    }
-
-    private fun removeMarkers(){
-        for (mark in markList) {
-            mark.remove()
-        }
-        markList.clear()
-    }
-
+    /**
+     * marker info custom
+     */
     class CustomInfoWindowForGoogleMap(context: Context) : GoogleMap.InfoWindowAdapter {
 
         var mContext = context
@@ -332,13 +299,12 @@ class WalkStartFragment : Fragment(){
 
         private fun resetWindowText(marker: Marker, view: View){
 
-            val tvTitle = view.findViewById<TextView>(R.id.title)
-            val tvSnippet = view.findViewById<TextView>(R.id.snippet)
+            val tvTitle = view.findViewById<TextView>(R.id.infoUserNameTv)
+//            val tvSnippet = view.findViewById<TextView>(R.id.snippet)
 
-//            tvTitle.text = marker.title
+            tvTitle.text = marker.title
 //            tvSnippet.text = marker.snippet
-            tvTitle.text = "ni hao"
-            tvSnippet.text = "散步中"
+
         }
 
         override fun getInfoContents(marker: Marker): View {
@@ -352,5 +318,120 @@ class WalkStartFragment : Fragment(){
         }
     }
 
+    private fun createMakers(list: List<Walk>){
 
+        for (walk in list) {
+            val marker = myMap?.addMarker(
+                MarkerOptions().position(
+                    LatLng(
+                        walk.currentLat!!,
+                        walk.currentLng!!
+                    )
+                ).title(walk.userId)
+            )!!
+            markList.add(marker)
+        }
+    }
+
+    private fun removeMarkers(){
+        for (mark in markList) {
+            mark.remove()
+        }
+        markList.clear()
+    }
+
+
+    private fun getDistance(start: LatLng, end: LatLng): Double {
+
+        val lat1 = Math.PI / 180 * start.latitude
+        val lat2 = Math.PI / 180 * end.latitude
+        val lon1 = Math.PI / 180 * start.longitude
+        val lon2 = Math.PI / 180 * end.longitude
+
+        //radius of earth
+        val radius = 6371.0
+
+        // distance between two points, return kilometer
+        val d = acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2 - lon1)) * radius
+
+        return d
+    }
+
+//    private fun stylePolyline(polyline: Polyline) {
+//        var type = ""
+//        // Get the data object stored with the polyline.
+//        if (polyline.tag != null) {
+//            type = polyline.tag.toString()
+//        }
+//        polyline.setWidth(15f)
+//        polyline.setColor(R.color.app_main_color)
+//    }`
+
+//    private fun saveView(view: View): Bitmap {
+//        view.isDrawingCacheEnabled = true
+//        view.buildDrawingCache()
+//        val bitmap = Bitmap.createBitmap(view.drawingCache, 0, 0, view.measuredWidth, view.measuredHeight)
+//        view.destroyDrawingCache()
+//        return bitmap
+//    }
+
+
+    private fun checkPermission() {
+        val permission = ActivityCompat.checkSelfPermission(
+            this.requireContext(),
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            //未取得權限，向使用者要求允許權限
+            ActivityCompat.requestPermissions(
+                this.requireActivity(), arrayOf(
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ),
+                REQUEST_EXTERNAL_STORAGE
+            )
+        }
+        getLocalImg()
+    }
+
+    private fun getLocalImg() {
+        ImagePicker.with(this)
+            .crop()                    //Crop image(Optional), Check Customization for more option
+            .compress(1024)            //Final image size will be less than 1 MB(Optional)
+            .maxResultSize(
+                1080,
+                1080
+            )    //Final image resolution will be less than 1080 x 1080(Optional)
+            .start()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Toast.makeText(this.requireContext(), "resultCode = $resultCode , requestCode = $requestCode", Toast.LENGTH_SHORT).show()
+
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+
+                PICK_IMAGE -> {
+                    filePath = ImagePicker.getFilePath(data) ?: ""
+                    if (filePath.isNotEmpty()) {
+                        val imgPath = filePath
+                        Logger.d(" = $imgPath")
+                        Toast.makeText(this.requireContext(), imgPath, Toast.LENGTH_SHORT).show()
+
+                        viewModel.uploadImage(imgPath)
+
+                    } else {
+                        Toast.makeText(this.requireContext(), "Upload failed", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
+        }
+    }
+
+    companion object {
+        private const val REQUEST_EXTERNAL_STORAGE = 200
+        private const val PICK_IMAGE = 2404
+    }
 }

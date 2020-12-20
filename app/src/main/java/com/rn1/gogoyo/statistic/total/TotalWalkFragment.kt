@@ -40,7 +40,6 @@ class TotalWalkFragment : Fragment() {
             it?.let {
                 for (pet in it) {
                     Logger.d("pet.divTotalTime = ${pet.divTotalTime}, pet.divTotalDistance = ${pet.divTotalDistance}")
-
                     val valueTime = PieEntry(pet.divTotalTime, pet.name)
                     val valueDistance = PieEntry(pet.divTotalDistance.toFloat(), pet.name)
 //                    Logger.d("valueTime = $valueTime, valueDistance = $valueDistance")
@@ -101,13 +100,6 @@ class TotalWalkFragment : Fragment() {
         return binding.root
     }
 
-    companion object{
-        val JOYFUL_COLORS2 = intArrayOf(
-            Color.rgb(217, 80, 138), Color.rgb(254, 149, 7), Color.rgb(128, 128, 255),
-            Color.rgb(106, 167, 134), Color.rgb(53, 194, 209), Color.rgb(254, 247, 120)
-        )
-    }
-
     private fun formatTime(second: Int): String{
 
         val hour = second / 3600
@@ -127,7 +119,7 @@ class TotalWalkFragment : Fragment() {
     }
 
     private fun formatFloat(float: Float): String{
-        val decimalFormat = DecimalFormat("#.00")
+        val decimalFormat = DecimalFormat("#,##0.000")
         return decimalFormat.format(float)
     }
 }

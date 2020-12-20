@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.rn1.gogoyo.ext.getColor
 import com.rn1.gogoyo.ext.toDisplayFormat
+import java.text.DecimalFormat
 
 @BindingAdapter("addDecoration")
 fun bindDecoration(recyclerView: RecyclerView, decoration: RecyclerView.ItemDecoration?) {
@@ -86,7 +87,8 @@ fun bindFormatTime(textView: TextView, sec: Long){
 @BindingAdapter("distance")
 fun bindFormatKm(textView: TextView, distance: Float){
     textView.apply {
-        text = "$distance km"
+        val decimalFormat = DecimalFormat("#,##0.000")
+        text = "${formatFloat(distance)} km"
     }
 }
 
@@ -101,7 +103,7 @@ private fun formatTime(second: Int): String{
         if (minute == 0) {
             return "${addZero(secondTime)}秒"
         }
-        return "時${addZero(minute)}分${addZero(secondTime)}秒"
+        return "${addZero(minute)}分${addZero(secondTime)}秒"
     }
     return "${addZero(hour)}時${addZero(minute)}分${addZero(secondTime)}秒"
 }
@@ -112,4 +114,9 @@ private fun addZero(number: Int): String{
     } else {
         "$number"
     }
+}
+
+private fun formatFloat(float: Float): String{
+    val decimalFormat = DecimalFormat("#,##0.000")
+    return decimalFormat.format(float)
 }

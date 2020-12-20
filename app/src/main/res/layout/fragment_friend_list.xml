@@ -42,13 +42,15 @@
         <Spinner
             android:id="@+id/relationshipSpinner"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:background="#F5EEB3"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/msg_bubble_custom"
             android:entries="@array/relation_array"
             android:textAlignment="center"
-            app:layout_constraintBottom_toTopOf="@+id/view6"
+            app:layout_constraintBottom_toTopOf="@+id/friendListRv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/view4"
             app:layout_constraintTop_toTopOf="parent" />
@@ -56,13 +58,12 @@
 
         <View
             android:id="@+id/view6"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             android:background="@color/black_3f3a3a"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/view4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/friendListSearchView" />
 

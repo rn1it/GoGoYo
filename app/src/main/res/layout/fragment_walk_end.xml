@@ -125,14 +125,14 @@
             android:layout_marginStart="16dp"
             app:layout_constraintStart_toEndOf="@+id/textView19"
             app:layout_constraintTop_toTopOf="@+id/textView19"
-            app:timeToDisplayFormat="@{viewModel.walk.period}" />
+            app:secondLong="@{viewModel.walk.period}" />
 
         <TextView
             android:id="@+id/textView23"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="0.12公里"
+            app:distance="@{viewModel.walk.distance}"
             app:layout_constraintStart_toEndOf="@+id/textView20"
             app:layout_constraintTop_toTopOf="@+id/textView20" />
 

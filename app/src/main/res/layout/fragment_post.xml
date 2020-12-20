@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="com.rn1.gogoyo.home.post.PostViewModel" />
@@ -46,8 +47,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@={viewModel.title}"
-                    android:clickable="false" />
+                    android:clickable="false"
+                    android:text="@={viewModel.title}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -67,10 +68,23 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@={viewModel.content}"
-                    android:clickable="false" />
+                    android:clickable="false"
+                    android:text="@={viewModel.content}" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/imgRecyclerView"
+                android:layout_width="0dp"
+                android:layout_height="126dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:visibility="@{viewModel.images.size() == 0 ? View.GONE : View.VISIBLE}"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
 
             <ImageView
                 android:id="@+id/articleUploadIv"
@@ -81,9 +95,8 @@
                 android:background="@drawable/rectangle_dash_border"
                 android:padding="10dp"
                 android:src="@drawable/add_pet3"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView3"
-                 />
+                app:layout_constraintStart_toEndOf="@+id/imgRecyclerView"
+                app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
             <TextView
                 android:id="@+id/textView9"

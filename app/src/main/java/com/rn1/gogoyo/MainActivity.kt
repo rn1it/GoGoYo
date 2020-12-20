@@ -124,6 +124,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.walkStartFragment -> CurrentFragmentType.WALK_START
                 R.id.chatRoomFragment -> CurrentFragmentType.CHAT_ROOM
                 R.id.walkEndFragment -> CurrentFragmentType.WALK_END
+                R.id.statisticFragment -> CurrentFragmentType.STATISTIC
                 else -> viewModel.currentFragmentType.value
             }
         }

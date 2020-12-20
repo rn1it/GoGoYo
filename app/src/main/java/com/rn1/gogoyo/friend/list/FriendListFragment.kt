@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.dev.materialspinner.MaterialSpinner
 import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentFriendListBinding
