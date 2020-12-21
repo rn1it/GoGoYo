@@ -24,7 +24,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/my_pet" />
+
+            app:imageUrl="@{chatRoom.friend.image}"
+            android:scaleType="centerCrop"/>
 
         <TextView
             android:id="@+id/chatRoomFriendNameTv"
@@ -53,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginBottom="8dp"
-            android:text="@{String.valueOf(chatRoom.msgTime)}"
+            app:timeToDisplayFormat="@{chatRoom.msgTime}"
             tools:text="12月1日 01:36"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/chatRoomLastMsgTv" />

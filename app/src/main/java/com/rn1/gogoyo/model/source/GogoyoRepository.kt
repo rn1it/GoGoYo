@@ -60,6 +60,8 @@ interface GogoyoRepository {
 
     suspend fun getWalkListInfoByWalkList(walks: List<Walk>): Result<List<Walk>>
 
+    suspend fun getWalkListUserInfoByWalkList(walks: List<Walk>): Result<List<Walk>>
+
     suspend fun insertWalk(walk: Walk): Result<Walk>
 
     suspend fun updateWalk(walk: Walk): Result<Walk>

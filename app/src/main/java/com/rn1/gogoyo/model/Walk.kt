@@ -20,5 +20,6 @@ data class Walk(
     var currentLat: Double? = null,
     var currentLng: Double? = null,
     var pets: List<Pets> = mutableListOf(),
-    var mapImg: String? = null
+    var mapImg: String? = null,
+    var user: Users? = null
 ): Parcelable

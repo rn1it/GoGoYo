@@ -76,15 +76,15 @@ class WalkFragment : Fragment() {
             }
         })
 
-        binding.button6.setOnClickListener {
-            val intent = Intent(context, WalkTimerService::class.java)
-            requireContext().startService(intent)
-        }
-
-        binding.button7.setOnClickListener {
-            val intent = Intent(context, WalkTimerService::class.java)
-            requireContext().stopService(intent)
-        }
+//        binding.button6.setOnClickListener {
+//            val intent = Intent(context, WalkTimerService::class.java)
+//            requireContext().startService(intent)
+//        }
+//
+//        binding.button7.setOnClickListener {
+//            val intent = Intent(context, WalkTimerService::class.java)
+//            requireContext().stopService(intent)
+//        }
 
 
 

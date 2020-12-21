@@ -5,9 +5,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.location.Location
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,11 +19,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
@@ -63,7 +65,7 @@ class WalkStartFragment : Fragment(){
 
     private val callback = OnMapReadyCallback { googleMap ->
         myMap = googleMap
-        googleMap.setInfoWindowAdapter(CustomInfoWindowForGoogleMap(requireContext()))
+        googleMap.setInfoWindowAdapter(CustomInfoWindowForGoogleMap(viewModel, requireContext()))
 
         getLocationPermission()
         updateLocationUI()
@@ -79,6 +81,24 @@ class WalkStartFragment : Fragment(){
                 createMakers(it)
             }
         })
+
+//        viewModel.showMarker.observe(viewLifecycleOwner, Observer {
+//            it?.let {
+//                Logger.d("aaaaaaaaaaaa")
+//                it.showInfoWindow()
+//            }
+//        })
+
+
+//        googleMap.setOnMarkerClickListener
+        googleMap.setOnMarkerClickListener(OnMarkerClickListener { mark ->
+            mark.showInfoWindow()
+            val handler = Handler()
+            handler.postDelayed(Runnable { mark.showInfoWindow() }, 200)
+            true
+        })
+
+
     }
 
     override fun onCreateView(
@@ -257,7 +277,12 @@ class WalkStartFragment : Fragment(){
                                     lastKnownLocation!!.longitude
                                 )
 
-                                val dis = getDistance(LatLng(lat!!, lon!!), LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude))
+                                val dis = getDistance(
+                                    LatLng(lat!!, lon!!), LatLng(
+                                        lastKnownLocation!!.latitude,
+                                        lastKnownLocation!!.longitude
+                                    )
+                                )
                                 // set currentLatLng
                                 lat = lastKnownLocation!!.latitude
                                 lon = lastKnownLocation!!.longitude
@@ -289,34 +314,7 @@ class WalkStartFragment : Fragment(){
         polyline.tag = "A"
     }
 
-    /**
-     * marker info custom
-     */
-    class CustomInfoWindowForGoogleMap(context: Context) : GoogleMap.InfoWindowAdapter {
 
-        var mContext = context
-        var mWindow = (context as Activity).layoutInflater.inflate(R.layout.marker_info_layout, null)
-
-        private fun resetWindowText(marker: Marker, view: View){
-
-            val tvTitle = view.findViewById<TextView>(R.id.infoUserNameTv)
-//            val tvSnippet = view.findViewById<TextView>(R.id.snippet)
-
-            tvTitle.text = marker.title
-//            tvSnippet.text = marker.snippet
-
-        }
-
-        override fun getInfoContents(marker: Marker): View {
-            resetWindowText(marker, mWindow)
-            return mWindow
-        }
-
-        override fun getInfoWindow(marker: Marker): View? {
-            resetWindowText(marker, mWindow)
-            return mWindow
-        }
-    }
 
     private fun createMakers(list: List<Walk>){
 
@@ -329,6 +327,8 @@ class WalkStartFragment : Fragment(){
                     )
                 ).title(walk.userId)
             )!!
+            marker.tag = walk
+
             markList.add(marker)
         }
     }
@@ -407,7 +407,11 @@ class WalkStartFragment : Fragment(){
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Toast.makeText(this.requireContext(), "resultCode = $resultCode , requestCode = $requestCode", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            this.requireContext(),
+            "resultCode = $resultCode , requestCode = $requestCode",
+            Toast.LENGTH_SHORT
+        ).show()
 
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
@@ -430,8 +434,54 @@ class WalkStartFragment : Fragment(){
         }
     }
 
+    /**
+     * marker info custom
+     */
+    class CustomInfoWindowForGoogleMap(val viewModel: WalkStartViewModel, context: Context) : GoogleMap.InfoWindowAdapter {
+
+        var mContext = context
+        var mWindow = (context as Activity).layoutInflater.inflate(
+            R.layout.marker_info_layout,
+            null
+        )
+
+        private fun resetWindowText(marker: Marker, view: View){
+
+            view.setBackgroundResource(R.drawable.msg_bubble_custom)
+
+            val walk = marker.tag as Walk
+            val recyclerView = view.findViewById<RecyclerView>(R.id.windowInfoPetsRv)
+            val adapter = WalkStartPetAdapter(viewModel)
+            adapter.submitList(walk.pets)
+
+            recyclerView.adapter = adapter
+
+
+            val tvTitle = view.findViewById<TextView>(R.id.infoUserNameTv)
+            tvTitle.text = walk.user!!.name
+
+
+        }
+
+        override fun getInfoContents(marker: Marker): View {
+            resetWindowText(marker, mWindow)
+            return mWindow
+        }
+
+        override fun getInfoWindow(marker: Marker): View? {
+            resetWindowText(marker, mWindow)
+            return mWindow
+        }
+    }
+
+//    class markerClickListener: GoogleMap.OnMapClickListener(){
+//
+//    }
+
     companion object {
         private const val REQUEST_EXTERNAL_STORAGE = 200
         private const val PICK_IMAGE = 2404
     }
+
+
 }

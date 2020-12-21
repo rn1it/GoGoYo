@@ -49,7 +49,7 @@
                 android:visibility="@{viewModel.isLoginUser ? View.VISIBLE : View.GONE}"
                 app:backgroundTint="@color/colorPrimaryDark"
                 app:fabSize="mini"
-                app:tint="@color/black_3f3a3a"
+                app:tint="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:maxImageSize="30dp" />

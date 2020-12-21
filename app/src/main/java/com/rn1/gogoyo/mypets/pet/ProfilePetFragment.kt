@@ -65,8 +65,12 @@ class ProfilePetFragment(val userId: String) : Fragment() {
 
         viewModel.navigateToNewPet.observe(viewLifecycleOwner, Observer {
             it?.let {
-                if (it) findNavController().navigate(NavigationDirections.actionGlobalNewPetFragment())
-                viewModel.onDoneNavigateToNewPet()
+                if (viewModel.petList.value!!.size == 5) {
+                    Toast.makeText(context, "很抱歉，目前最多只能註冊五隻寵物", Toast.LENGTH_SHORT).show()
+                } else {
+                    if (it) findNavController().navigate(NavigationDirections.actionGlobalNewPetFragment())
+                    viewModel.onDoneNavigateToNewPet()
+                }
             }
         })
 

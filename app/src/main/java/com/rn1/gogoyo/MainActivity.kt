@@ -125,6 +125,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.chatRoomFragment -> CurrentFragmentType.CHAT_ROOM
                 R.id.walkEndFragment -> CurrentFragmentType.WALK_END
                 R.id.statisticFragment -> CurrentFragmentType.STATISTIC
+                R.id.editPetFragment -> CurrentFragmentType.EDIT_PET
                 else -> viewModel.currentFragmentType.value
             }
         }

@@ -58,7 +58,7 @@
             android:clickable="true"
             android:onClick="@{() -> viewModel.onNavigateToPost()}"
             android:src="@drawable/add_pet"
-            app:tint="@color/black_3f3a3a"
+            app:tint="@color/white"
             app:backgroundTint="@color/colorPrimaryDark"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

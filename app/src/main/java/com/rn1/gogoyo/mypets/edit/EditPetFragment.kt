@@ -104,9 +104,11 @@ class EditPetFragment : Fragment() {
             it?.let {
                 if (it) {
                     binding.progressBarMain.visibility = View.VISIBLE
+                    binding.loadingTv.visibility = View.VISIBLE
                     Toast.makeText(context, "上傳中，請耐心等候...", Toast.LENGTH_LONG).show()
                 } else {
                     binding.progressBarMain.visibility = View.INVISIBLE
+                    binding.loadingTv.visibility = View.VISIBLE
                     Toast.makeText(context, "影片上傳結束!", Toast.LENGTH_LONG).show()
                 }
             }

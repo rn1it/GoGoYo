@@ -6,9 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
+import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.model.Points
 import com.rn1.gogoyo.model.Result
 import com.rn1.gogoyo.model.Walk
@@ -35,6 +37,8 @@ class WalkStartViewModel(
 
     private var mapImgPath = ""
 
+    val outlineProvider = MapOutlineProvider()
+
     private val _walk =  MutableLiveData<Walk>()
 
     val walk: LiveData<Walk>
@@ -55,6 +59,10 @@ class WalkStartViewModel(
 
     val petIdList: LiveData<List<String>>
         get() = _petIdList
+
+    private val _showMarker = MutableLiveData<Marker>()
+    val showMarker: LiveData<Marker>
+        get() = _showMarker
 
     private val _navigateToEndWalk = MutableLiveData<Walk>()
 
@@ -393,24 +401,57 @@ class WalkStartViewModel(
                     _error.value = null
                     _status.value = LoadStatus.DONE
                     Logger.d("getOnlineWalkList Second = $second, result.data = ${result.data}")
-                    _onLineWalks.value = result.data
+                    getOnlineWalkWithUserInfo(result.data)
                 }
                 is Result.Fail -> {
                     _error.value = result.error
                     _status.value = LoadStatus.ERROR
+                    _onLineWalks.value = null
                 }
                 is Result.Error -> {
                     _error.value = result.exception.toString()
                     _status.value = LoadStatus.ERROR
+                    _onLineWalks.value = null
                 }
                 else -> {
                     _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
                     _status.value = LoadStatus.ERROR
+                    _onLineWalks.value = null
                 }
             }
         }
 
 
+    }
+
+    private fun getOnlineWalkWithUserInfo(walks: List<Walk>){
+
+        coroutineScope.launch {
+
+            when (val result = repository.getWalkListUserInfoByWalkList(walks)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    Logger.d("getOnlineWalkList Second = $second, result.data = ${result.data}")
+                    _onLineWalks.value = result.data
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    _onLineWalks.value = null
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    _onLineWalks.value = null
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                    _onLineWalks.value = null
+                }
+            }
+        }
     }
 
     fun uploadImage(path: String){
@@ -487,5 +528,9 @@ class WalkStartViewModel(
                 }
             }
         }
+    }
+
+    fun showMarker(marker: Marker){
+//        _showMarker.value = marker
     }
 }

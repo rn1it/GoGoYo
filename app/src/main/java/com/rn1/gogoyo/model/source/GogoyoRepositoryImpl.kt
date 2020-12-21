@@ -118,6 +118,10 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.getWalkListInfoByWalkList(walks)
     }
 
+    override suspend fun getWalkListUserInfoByWalkList(walks: List<Walk>): Result<List<Walk>> {
+        return remoteDataSource.getWalkListUserInfoByWalkList(walks)
+    }
+
     override suspend fun insertWalk(walk: Walk): Result<Walk> {
         return remoteDataSource.insertWalk(walk)
     }

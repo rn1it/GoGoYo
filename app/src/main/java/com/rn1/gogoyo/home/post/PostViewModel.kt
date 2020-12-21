@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
+import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.model.Articles
 import com.rn1.gogoyo.model.Pets
 import com.rn1.gogoyo.model.Result
@@ -27,6 +28,8 @@ class PostViewModel(
 ): ViewModel() {
 
     private val DEFAULT_IMAGE = "https://firebasestorage.googleapis.com/v0/b/turing-opus-296809.appspot.com/o/images%2Fdog_1.png?alt=media&token=0d165c4e-a3fe-47e3-b82e-a4c11d167419"
+
+    val outline = MapOutlineProvider()
 
     private val _walk = MutableLiveData<Walk>().apply {
         value = argument

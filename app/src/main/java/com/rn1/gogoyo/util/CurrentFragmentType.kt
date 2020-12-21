@@ -15,7 +15,8 @@ enum class CurrentFragmentType(val value: String){
     PROFILE_USER(""),
     PROFILE_PET("個人"),
     CHAT_ROOM("聊聊"),
-    STATISTIC("數據")
+    STATISTIC("數據"),
+    EDIT_PET("編輯")
 
 
 }

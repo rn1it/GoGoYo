@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.databinding.ItemChatRoomBinding
 import com.rn1.gogoyo.model.Chatroom
 
@@ -17,6 +18,7 @@ class FriendChatAdapter(
 
         fun bind(viewModel: FriendChatViewModel, chatRoom: Chatroom){
             binding.chatRoom = chatRoom
+            binding.chatRoomFriendIv.outlineProvider = MapOutlineProvider()
 //            val friendId = chatRoom.userList.filter { it != UserManager.userUID }[0]
 
 //            viewModel.getUserById()

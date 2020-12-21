@@ -907,6 +907,36 @@ object GogoyoRemoteDataSource: GogoyoDataSource {
         }
     }
 
+    override suspend fun getWalkListUserInfoByWalkList(walks: List<Walk>): Result<List<Walk>> = suspendCoroutine { continuation ->
+
+        val walkList = mutableListOf<Walk>()
+
+        var countWalk = 0
+        for (walk in walks) {
+
+            usersRef.whereEqualTo("id", walk.userId).get().addOnCompleteListener { task ->
+
+                if (task.isSuccessful) {
+
+                    val user = task.result.toObjects(Users::class.java)[0]
+                    walk.user = user
+
+                    walkList.add(walk)
+                    countWalk += 1
+                    if (countWalk == walks.size) {
+                        continuation.resume(Result.Success(walkList))
+                    }
+                }else {
+                    task.exception?.let { e ->
+                        Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                        continuation.resume(Result.Error(e))
+                    }
+                    continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+                }
+            }
+        }
+    }
+
     override suspend fun insertWalk(walk: Walk): Result<Walk> = suspendCoroutine { continuation ->
 
         val document = walkRef.document()
