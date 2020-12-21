@@ -64,6 +64,13 @@ class FriendListFragment(val userId: String) : Fragment() {
             }
         })
 
+        viewModel.navigateToProfile.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                findNavController().navigate(NavigationDirections.actionGlobalMyPetsFragment(it))
+                viewModel.toProfileDone()
+            }
+        })
+
         setUpSpinner()
 
         return binding.root

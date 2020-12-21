@@ -28,6 +28,10 @@ class FriendListAdapter(val viewModel: FriendListViewModel) : ListAdapter<Users,
             adapter.submitList(user.pets)
 
 
+            binding.userImgIv.setOnClickListener {
+                viewModel.toProfile(user.id)
+            }
+
             binding.toChatRoomBt.setOnClickListener {
                 viewModel.toChatRoom(user)
             }

@@ -24,7 +24,7 @@
 
 
             <ImageView
-                android:id="@+id/imageView5"
+                android:id="@+id/userImgIv"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginStart="8dp"
@@ -45,9 +45,9 @@
                 tools:text="莫罕默德"
                 android:textAlignment="center"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/imageView5"
-                app:layout_constraintStart_toStartOf="@+id/imageView5"
-                app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+                app:layout_constraintEnd_toEndOf="@+id/userImgIv"
+                app:layout_constraintStart_toStartOf="@+id/userImgIv"
+                app:layout_constraintTop_toBottomOf="@+id/userImgIv" />
 
             <View
                 android:id="@+id/view2"
@@ -55,8 +55,8 @@
                 android:layout_height="90dp"
                 android:layout_marginStart="16dp"
                 app:layout_constraintBottom_toBottomOf="@+id/textView6"
-                app:layout_constraintStart_toEndOf="@+id/imageView5"
-                app:layout_constraintTop_toTopOf="@+id/imageView5" />
+                app:layout_constraintStart_toEndOf="@+id/userImgIv"
+                app:layout_constraintTop_toTopOf="@+id/userImgIv" />
 
             <Button
                 android:id="@+id/button2"

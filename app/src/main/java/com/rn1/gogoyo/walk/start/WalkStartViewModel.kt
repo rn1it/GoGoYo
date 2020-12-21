@@ -1,19 +1,19 @@
 package com.rn1.gogoyo.walk.start
 
 import android.graphics.Bitmap
+import android.hardware.usb.UsbRequest
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+import com.google.firebase.firestore.auth.User
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
 import com.rn1.gogoyo.component.MapOutlineProvider
-import com.rn1.gogoyo.model.Points
-import com.rn1.gogoyo.model.Result
-import com.rn1.gogoyo.model.Walk
+import com.rn1.gogoyo.model.*
 import com.rn1.gogoyo.model.source.GogoyoRepository
 import com.rn1.gogoyo.util.LoadStatus
 import com.rn1.gogoyo.util.Logger
@@ -39,8 +39,13 @@ class WalkStartViewModel(
 
     val outlineProvider = MapOutlineProvider()
 
-    private val _walk =  MutableLiveData<Walk>()
+    private val _user = MutableLiveData<Users>()
+    val user: LiveData<Users>
+        get() = _user
 
+    var liveFriend = MutableLiveData<List<Friends>>()
+
+    private val _walk =  MutableLiveData<Walk>()
     val walk: LiveData<Walk>
         get() = _walk
 
@@ -96,6 +101,10 @@ class WalkStartViewModel(
     val imageStringList: LiveData<List<String>>
         get() = _imageStringList
 
+    private val _qrCodeUser = MutableLiveData<Users>()
+    val qrCodeUser: LiveData<Users>
+        get() = _qrCodeUser
+
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadStatus>()
 
@@ -122,6 +131,9 @@ class WalkStartViewModel(
 
 
     init {
+
+        getUser()
+        getUserLiveFriend()
         startTimer()
         _imageStringList.value = mutableListOf()
         // set user isWalking = true
@@ -135,6 +147,40 @@ class WalkStartViewModel(
         timer.cancel()
         viewModelJob.cancel()
     }
+
+    private fun getUser() {
+        coroutineScope.launch {
+
+            _user.value =  when (val result = repository.getUserById(UserManager.userUID!!)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    result.data
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+            }
+        }
+    }
+
+    private fun getUserLiveFriend(){
+        liveFriend = repository.getUserLiveFriend(UserManager.userUID!!, 2)
+    }
+
+
 
     private fun startTimer(){
         timer = Timer()
@@ -530,7 +576,33 @@ class WalkStartViewModel(
         }
     }
 
-    fun showMarker(marker: Marker){
-//        _showMarker.value = marker
+    fun getQrCodeUser(id: String){
+        coroutineScope.launch {
+
+            _qrCodeUser.value = when(val result = repository.getUsersById(listOf(id))) {
+
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    result.data[0]
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+            }
+        }
     }
+
 }

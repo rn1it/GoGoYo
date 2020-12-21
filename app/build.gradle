@@ -110,7 +110,20 @@ dependencies {
     //spinner
     implementation'com.github.devdhar04:MaterialSpinner:v0.1.2'
 
+    //lottie
     implementation 'com.airbnb.android:lottie:3.5.0'
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
+
+    //qr code
+    implementation('com.journeyapps:zxing-android-embedded:3.6.0') { transitive = false }
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'com.google.zxing:core:3.3.0'
+    implementation 'com.budiyev.android:code-scanner:2.1.0'
+
+
+    implementation 'com.google.android.gms:play-services-vision:16.2.0'
+    implementation 'com.github.blikoon:QRCodeScanner:0.1.2'
+
+
 }

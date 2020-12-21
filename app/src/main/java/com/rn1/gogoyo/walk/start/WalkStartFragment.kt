@@ -2,24 +2,34 @@ package com.rn1.gogoyo.walk.start
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.os.Handler
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.budiyev.android.codescanner.AutoFocusMode
+import com.budiyev.android.codescanner.CodeScanner
+import com.budiyev.android.codescanner.DecodeCallback
+import com.budiyev.android.codescanner.ErrorCallback
+import com.budiyev.android.codescanner.ScanMode
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -29,12 +39,21 @@ import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.google.zxing.BarcodeFormat
+import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
+import com.rn1.gogoyo.UserManager
+import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.databinding.FragmentWalkStartBinding
 import com.rn1.gogoyo.ext.getVmFactory
+import com.rn1.gogoyo.model.Friends
+import com.rn1.gogoyo.model.Users
 import com.rn1.gogoyo.model.Walk
 import com.rn1.gogoyo.util.Logger
+import kotlinx.android.synthetic.main.qr_code_user_layout.*
+import kotlinx.android.synthetic.main.qrcode_dialog.*
+import kotlinx.android.synthetic.main.scan_code_layout.*
 import kotlin.math.acos
 import kotlin.math.cos
 import kotlin.math.sin
@@ -44,7 +63,11 @@ private const val PERMISSION_ID = 1
 
 class WalkStartFragment : Fragment(){
 
+    private lateinit var users: Users
+    private lateinit var friends: List<Friends>
     private var filePath: String = ""
+    private lateinit var codeScanner: CodeScanner
+
     private lateinit var binding: FragmentWalkStartBinding
     private val viewModel by viewModels<WalkStartViewModel> { getVmFactory(
         WalkStartFragmentArgs.fromBundle(
@@ -82,14 +105,6 @@ class WalkStartFragment : Fragment(){
             }
         })
 
-//        viewModel.showMarker.observe(viewLifecycleOwner, Observer {
-//            it?.let {
-//                Logger.d("aaaaaaaaaaaa")
-//                it.showInfoWindow()
-//            }
-//        })
-
-
 //        googleMap.setOnMarkerClickListener
         googleMap.setOnMarkerClickListener(OnMarkerClickListener { mark ->
             mark.showInfoWindow()
@@ -113,6 +128,18 @@ class WalkStartFragment : Fragment(){
         val recyclerView = binding.walkImgRv
         val adapter = WalkImgAdapter()
         recyclerView.adapter = adapter
+
+        viewModel.user.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                users = it
+            }
+        })
+
+        viewModel.liveFriend.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                friends = it
+            }
+        })
 
         viewModel.getCurrentLocation.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -143,6 +170,52 @@ class WalkStartFragment : Fragment(){
             }
         })
 
+        viewModel.qrCodeUser.observe(viewLifecycleOwner, Observer {
+            it?.let {
+
+                val dialog = Dialog(requireContext())
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                dialog.setContentView(R.layout.qr_code_user_layout)
+                dialog.show()
+
+                val lp = WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT
+                )
+                lp.copyFrom(dialog.window!!.attributes)
+                dialog.window!!.attributes = lp
+
+                val qrCodeUserImageIv = dialog.qrCodeUserImageIv
+                val qrCodeUserNameIv = dialog.qrCodeUserNameIv
+                val checkQrCodeFriendBt = dialog.checkQrCodeFriendBt
+
+                qrCodeUserNameIv.text = it.name
+                qrCodeUserImageIv.outlineProvider = MapOutlineProvider()
+
+                val imgUri = it.image?.toUri()?.buildUpon()?.scheme("https")?.build()
+                Glide.with(qrCodeUserImageIv.context)
+                    .load(imgUri)
+                    .apply(
+                        RequestOptions()
+                            .placeholder(R.drawable.dog_profile)
+                            .error(R.drawable.my_pet))
+                    .into(qrCodeUserImageIv)
+
+
+                val friends = friends.filter { friend -> friend.friendId == it.id }
+                if (friends.isEmpty()) {
+                    checkQrCodeFriendBt.text = "加好友"
+                } else {
+                    val friend = friends[0]
+                    when (friend.status) {
+                        0 -> "已送出好友邀請"
+                        1 -> "接受"
+                        2 -> "朋友"
+                    }
+                }
+            }
+        })
+
         binding.walkFinishBt.setOnClickListener {
 
             val snapshotReadyCallback : GoogleMap.SnapshotReadyCallback = GoogleMap.SnapshotReadyCallback {
@@ -158,6 +231,11 @@ class WalkStartFragment : Fragment(){
 
         binding.cameraBt.setOnClickListener {
             checkPermission()
+        }
+
+        binding.addFriendBt.setOnClickListener {
+            setUpPermission()
+            scan()
         }
 
         return binding.root
@@ -228,6 +306,11 @@ class WalkStartFragment : Fragment(){
                     Toast.makeText(this.context, "Permission denied", Toast.LENGTH_SHORT).show()
                 }
                 return
+            }
+            CAMERA_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(context, "permission request fail", Toast.LENGTH_SHORT).show()
+                }
             }
         }
         // set map UI isMyLocationButton Enabled
@@ -357,25 +440,6 @@ class WalkStartFragment : Fragment(){
         return d
     }
 
-//    private fun stylePolyline(polyline: Polyline) {
-//        var type = ""
-//        // Get the data object stored with the polyline.
-//        if (polyline.tag != null) {
-//            type = polyline.tag.toString()
-//        }
-//        polyline.setWidth(15f)
-//        polyline.setColor(R.color.app_main_color)
-//    }`
-
-//    private fun saveView(view: View): Bitmap {
-//        view.isDrawingCacheEnabled = true
-//        view.buildDrawingCache()
-//        val bitmap = Bitmap.createBitmap(view.drawingCache, 0, 0, view.measuredWidth, view.measuredHeight)
-//        view.destroyDrawingCache()
-//        return bitmap
-//    }
-
-
     private fun checkPermission() {
         val permission = ActivityCompat.checkSelfPermission(
             this.requireContext(),
@@ -460,7 +524,6 @@ class WalkStartFragment : Fragment(){
             val tvTitle = view.findViewById<TextView>(R.id.infoUserNameTv)
             tvTitle.text = walk.user!!.name
 
-
         }
 
         override fun getInfoContents(marker: Marker): View {
@@ -474,13 +537,90 @@ class WalkStartFragment : Fragment(){
         }
     }
 
-//    class markerClickListener: GoogleMap.OnMapClickListener(){
-//
-//    }
+    fun getBarCode(){
+        val encoder = BarcodeEncoder()
+
+        try {
+            val bitmap = encoder
+                .encodeBitmap(UserManager.userUID!!, BarcodeFormat.QR_CODE, 500, 500)
+
+            val dialog = Dialog(requireContext())
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.qrcode_dialog)
+            dialog.show()
+
+            val lp = WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT
+            )
+            lp.copyFrom(dialog.window!!.attributes)
+            dialog.window!!.attributes = lp
+
+            val qrCodeImg = dialog.findViewById(R.id.qrCodeImg) as ImageView
+            qrCodeImg.setImageBitmap(bitmap)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(context, "something wrong", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun scan(){
+
+        val alertDialog = AlertDialog.Builder(requireActivity())
+        val v = layoutInflater.inflate(R.layout.scan_code_layout, null)
+        alertDialog.setView(v)
+
+        val dialog = alertDialog.create()
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.show()
+
+        val showQrCode = dialog.showQrCodeTv
+        showQrCode.setOnClickListener {
+            getBarCode()
+        }
+
+        val scannerView = dialog.scanner_view
+
+        codeScanner = CodeScanner(requireContext(), scannerView)
+
+        codeScanner.apply {
+            camera = CodeScanner.CAMERA_BACK
+            formats = CodeScanner.ALL_FORMATS
+
+            autoFocusMode = AutoFocusMode.SAFE
+            scanMode = ScanMode.SINGLE
+            isAutoFocusEnabled = true
+            isFlashEnabled = false
+
+            decodeCallback = DecodeCallback {
+                Logger.d(it.text)
+                viewModel.getQrCodeUser(it.text)
+                dialog.dismiss()
+            }
+
+            errorCallback = ErrorCallback {
+            }
+        }.startPreview()
+
+    }
+
+    fun setUpPermission(){
+        val permission = ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.CAMERA)
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            makeRequest()
+        }
+    }
+
+    fun makeRequest(){
+        ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.CAMERA), CAMERA_REQUEST_CODE)
+    }
 
     companion object {
         private const val REQUEST_EXTERNAL_STORAGE = 200
         private const val PICK_IMAGE = 2404
+        private const val CAMERA_REQUEST_CODE = 500
     }
 
 

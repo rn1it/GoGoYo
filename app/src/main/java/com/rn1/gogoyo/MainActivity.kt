@@ -126,6 +126,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.walkEndFragment -> CurrentFragmentType.WALK_END
                 R.id.statisticFragment -> CurrentFragmentType.STATISTIC
                 R.id.editPetFragment -> CurrentFragmentType.EDIT_PET
+                R.id.editUserFragment -> CurrentFragmentType.EDIT_USER
                 else -> viewModel.currentFragmentType.value
             }
         }

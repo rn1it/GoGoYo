@@ -53,6 +53,9 @@ class ProfileUserFragment(val userId: String) : Fragment() {
         viewPagerList.add(0, mutableListOf() )
         viewPagerList.add(1, mutableListOf() )
 
+        pagerAdapter.submitList(viewPagerList)
+
+
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
                 0 -> tab.text = "我的動態"

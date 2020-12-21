@@ -1,6 +1,7 @@
 package com.rn1.gogoyo.friend.list
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.rn1.gogoyo.GogoyoApplication
@@ -33,6 +34,10 @@ class FriendListViewModel(
 
     val navigateToChatRoom: LiveData<Chatroom>
         get() = _navigateToChatRoom
+
+    private val _navigateToProfile = MediatorLiveData<String>()
+    val navigateToProfile: LiveData<String>
+        get() = _navigateToProfile
 
     private val _status = MutableLiveData<LoadStatus>()
 
@@ -168,7 +173,15 @@ class FriendListViewModel(
 
     }
 
+    fun toProfile(id: String) {
+        _navigateToProfile.value = id
+    }
+
     fun toChatRoomDone(){
         _navigateToChatRoom.value = null
+    }
+
+    fun toProfileDone(){
+        _navigateToProfile.value = null
     }
 }

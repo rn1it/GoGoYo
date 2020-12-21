@@ -13,6 +13,7 @@ import com.rn1.gogoyo.model.Users
 import com.rn1.gogoyo.model.source.GogoyoRepository
 import com.rn1.gogoyo.mypets.newpets.NewPetViewModel
 import com.rn1.gogoyo.util.LoadStatus
+import com.rn1.gogoyo.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -22,6 +23,8 @@ class EditUserViewModel(
     val repository: GogoyoRepository,
     private val argument: String
 ): ViewModel() {
+
+    private var imageFilePath: String? = null
 
     val outlineProvider =  MapOutlineProvider()
 
@@ -101,7 +104,9 @@ class EditUserViewModel(
     fun checkUserInfo(){
         canEditUser.value = !name.value.isNullOrEmpty()
                 && !introduction.value.isNullOrBlank()
+                && !imageFilePath.isNullOrBlank()
         when {
+            imageFilePath.isNullOrBlank() -> _invalidInfo.value = NewPetViewModel.INVALID_IMAGE_PATH_EMPTY
             name.value.isNullOrEmpty() -> _invalidInfo.value = NewPetViewModel.INVALID_FORMAT_NAME_EMPTY
             introduction.value.isNullOrBlank() -> _invalidInfo.value = NewPetViewModel.INVALID_FORMAT_INTRODUCTION_EMPTY
         }
@@ -111,6 +116,7 @@ class EditUserViewModel(
         val user = user.value!!
         user.name = name.value!!
         user.introduction = introduction.value!!
+        user.image = imageFilePath
 
         coroutineScope.launch {
             _status.value = LoadStatus.LOADING
@@ -139,5 +145,34 @@ class EditUserViewModel(
 
     fun onDoneNavigateToUser(){
         _navigateToProfileUser.value = null
+    }
+
+    fun uploadImage(path: String){
+        coroutineScope.launch {
+
+            imageFilePath = when (val result = repository.getImageUri(path)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    Logger.d("uri = ${result.data}")
+                    result.data
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    ""
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    ""
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                    ""
+                }
+            }
+        }
     }
 }

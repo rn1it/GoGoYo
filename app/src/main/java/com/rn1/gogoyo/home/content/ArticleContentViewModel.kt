@@ -80,6 +80,7 @@ class ArticleContentViewModel(
     init {
         getPets()
         getLiveArticle()
+        checkUserIsCollected()
     }
 
     override fun onCleared() {
@@ -121,7 +122,9 @@ class ArticleContentViewModel(
         liveArticle = repository.getRealTimeArticle(arguments.id)
     }
 
-
+    fun checkUserIsCollected(){
+        _isCollected.value = arguments.favoriteUserIdList.contains(UserManager.userUID)
+    }
 
     fun response(){
         coroutineScope.launch {
@@ -241,4 +244,6 @@ class ArticleContentViewModel(
             }
         }
     }
+
+
 }
