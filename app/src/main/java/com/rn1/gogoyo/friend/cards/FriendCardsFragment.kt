@@ -15,6 +15,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DiffUtil
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.extractor.ExtractorsFactory
@@ -33,9 +34,7 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
 
     private lateinit var binding: FragmentFriendCardsBinding
     private val viewModel by viewModels<FriendCardsViewModel> { getVmFactory(userId) }
-//    private val manager by lazy { CardStackLayoutManager(requireContext(), this) }
-//    private lateinit var manager: CardStackLayoutManager
-    private val adapter by lazy { CardStackAdapter(viewModel) }
+    private val adapter by lazy { CardStackAdapter(viewModel, mutableListOf()) }
     private lateinit var  cardStackView: CardStackView
     val list = mutableListOf<Users>()
     private val mp = MediaPlayer()
@@ -58,7 +57,7 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
         viewModel.usersNotFriend.observe(viewLifecycleOwner, Observer {
             it?.let {
                 Logger.d("usersNotFriend = $it")
-
+                Logger.d("aaaaaaaaaaaaaaaaaaaaa = ${it.size}")
                 list.addAll(it)
 
                 // because fire base callback bug
@@ -72,7 +71,16 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
                 } else {
                     binding.friendCardNotificationTv.visibility = View.GONE
                     binding.buttonContainer.visibility = View.VISIBLE
-                    adapter.submitList(list)
+//                    newAdapter.submitList(list)
+
+                    val old = adapter.getUsers()
+                    val new = mutableListOf<Users>().apply {
+                        addAll(list)
+                    }
+                    val callback = CardStackAdapter.UserDiffCallBack(old, new)
+                    val result = DiffUtil.calculateDiff(callback)
+                    adapter.setUsers(new)
+                    result.dispatchUpdatesTo(adapter)
                 }
             }
         })
@@ -144,9 +152,10 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
         Log.d("CardStackView", "onCardSwiped: p = ${manager.topPosition}, d = $direction")
 
         val user = list[manager.topPosition - 1]
-
+        Logger.w("user = $user")
+        Logger.w("list before = $list")
         list.remove(user)
-
+        Logger.w("list after = $list")
         when (direction) {
             Direction.Left -> {
                 viewModel.addOrPassCard(list, user.id, false)

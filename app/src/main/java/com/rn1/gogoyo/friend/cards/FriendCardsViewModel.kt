@@ -310,7 +310,7 @@ class FriendCardsViewModel(
 
 
     fun addOrPassCard(users: MutableList<Users>, cardFriendId: String, sendFriendInvite: Boolean) {
-
+        Logger.w("users in viewModel = $users")
         _usersNotFriend.value = users
 
         val idList = users.map { it.id }
