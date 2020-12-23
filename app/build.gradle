@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId "com.rn1.gogoyo"
-        minSdkVersion 26
+        minSdkVersion 28
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -125,5 +125,6 @@ dependencies {
     implementation 'com.google.android.gms:play-services-vision:16.2.0'
     implementation 'com.github.blikoon:QRCodeScanner:0.1.2'
 
-
+    //google sign in button
+    implementation 'com.shobhitpuri.custombuttons:google-signin:1.1.0'
 }

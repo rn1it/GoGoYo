@@ -23,12 +23,14 @@ import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentProfileUserBinding
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.model.Articles
+import com.rn1.gogoyo.util.Logger
 
 class ProfileUserFragment(val userId: String) : Fragment() {
 
     private lateinit var binding: FragmentProfileUserBinding
     private val viewModel by viewModels<ProfileUserViewModel> { getVmFactory(userId) }
     private var filePath: String = ""
+    val viewPagerList = mutableListOf<List<Articles>>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,12 +51,11 @@ class ProfileUserFragment(val userId: String) : Fragment() {
         viewPager.adapter = pagerAdapter
 
         // Default no value for viewPager list
-        val viewPagerList = mutableListOf<List<Articles>>()
+
         viewPagerList.add(0, mutableListOf() )
         viewPagerList.add(1, mutableListOf() )
 
-        //TODO
-//        pagerAdapter.submitList(viewPagerList)
+        pagerAdapter.submitList(viewPagerList)
 
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
@@ -79,6 +80,7 @@ class ProfileUserFragment(val userId: String) : Fragment() {
 
         viewModel.userArticles.observe(viewLifecycleOwner, Observer {
             it?.let {
+                Logger.d("aaaaaaaaaaaaaaaaaaaaa")
                 viewPagerList[0] = it
                 binding.postValueTv.text = it.size.toString()
                 pagerAdapter.submitList(viewPagerList)
@@ -87,6 +89,7 @@ class ProfileUserFragment(val userId: String) : Fragment() {
 
         viewModel.userFavArticles.observe(viewLifecycleOwner, Observer {
             it?.let {
+                Logger.d("bbbbbbbbbbbbbbbbbbbbbbb")
                 viewPagerList[1] = it
                 pagerAdapter.submitList(viewPagerList)
             }

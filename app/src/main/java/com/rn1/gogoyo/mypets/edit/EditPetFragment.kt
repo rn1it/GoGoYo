@@ -214,13 +214,14 @@ class EditPetFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         Toast.makeText(this.requireContext(), "resultCode = $resultCode , requestCode = $requestCode", Toast.LENGTH_SHORT).show()
-
+        Logger.d("aaaaaaaaaaaaaaa")
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
 
                 PICK_IMAGE -> {
                     filePath = ImagePicker.getFilePath(data) ?: ""
                     if (filePath.isNotEmpty()) {
+                        Logger.d("bbbbbbbbbbb")
                         val imgPath = filePath
                         Logger.d(" = $imgPath")
                         Toast.makeText(this.requireContext(), imgPath, Toast.LENGTH_SHORT).show()
@@ -229,6 +230,7 @@ class EditPetFragment : Fragment() {
                         viewModel.uploadImage(imgPath)
 
                     } else {
+                        Logger.d("bbbbbbbbbbbbbbb")
                         Toast.makeText(this.requireContext(), "Upload failed", Toast.LENGTH_SHORT)
                             .show()
                     }

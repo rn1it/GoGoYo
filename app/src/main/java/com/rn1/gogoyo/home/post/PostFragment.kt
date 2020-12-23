@@ -162,6 +162,7 @@ class PostFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (resultCode) {
+
             Activity.RESULT_OK -> {
                 filePath = ImagePicker.getFilePath(data) ?: ""
                 if (filePath.isNotEmpty()) {

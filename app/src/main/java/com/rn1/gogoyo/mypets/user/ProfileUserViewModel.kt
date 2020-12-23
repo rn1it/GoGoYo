@@ -27,6 +27,12 @@ class ProfileUserViewModel(
 
     private val DEFAULT_USER_PROFILE = "https://firebasestorage.googleapis.com/v0/b/turing-opus-296809.appspot.com/o/images%2Fprofile.png?alt=media&token=fe4da46c-cae1-4d82-8b76-7ec681cdd284"
 
+
+
+    private val _viewPagerList = MutableLiveData<List<Articles>>()
+    val viewPagerList: LiveData<List<Articles>>
+        get() = _viewPagerList
+
     var filePath: String = ""
 
     val outlineProvider =  MapOutlineProvider()
@@ -47,7 +53,6 @@ class ProfileUserViewModel(
         get() = _friendStatus
 
     var liveFriend = MutableLiveData<List<Friends>>()
-
 
     val profileBtText = MutableLiveData<String>()
 
@@ -94,7 +99,7 @@ class ProfileUserViewModel(
         }
         getUser()
         getUserArticle()
-        getUserFavArticle()
+
         getUserLiveFriend()
     }
 
@@ -158,6 +163,8 @@ class ProfileUserViewModel(
                     is Result.Success -> {
                         _error.value = null
                         _status.value = LoadStatus.DONE
+                        val list = mutableListOf<List<Articles>>()
+                        _viewPagerList.value
                         result.data
                     }
                     is Result.Fail -> {
@@ -177,6 +184,7 @@ class ProfileUserViewModel(
                         null
                     }
                 }
+            getUserFavArticle()
         }
     }
 
