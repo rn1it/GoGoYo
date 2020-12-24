@@ -12,7 +12,7 @@ interface GogoyoRepository {
 
     suspend fun getAudioUri(uri: Uri): Result<String>
 
-    suspend fun login(id: String, name: String): Result<Boolean>
+    suspend fun login(id: String, name: String): Result<Users>
 
     fun getLiveUserById(id: String): MutableLiveData<Users>
 

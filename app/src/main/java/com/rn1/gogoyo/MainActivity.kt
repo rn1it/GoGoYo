@@ -14,16 +14,21 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.rn1.gogoyo.databinding.ActivityMainBinding
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.util.CurrentFragmentType
 import com.rn1.gogoyo.util.Logger
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel by viewModels<MainViewModel> { getVmFactory() }
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         val navController =  findNavController(R.id.myNavHostFragment)
@@ -51,6 +56,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Obtain the FirebaseAnalytics instance.
+        firebaseAnalytics = Firebase.analytics
 
         //Login Check
         if (!UserManager.isLoggedIn) {
@@ -88,6 +96,7 @@ class MainActivity : AppCompatActivity() {
 
             setUpBottomNav()
             setupNavController()
+
 
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)

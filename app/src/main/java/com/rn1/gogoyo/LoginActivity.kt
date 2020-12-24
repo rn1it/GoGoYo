@@ -91,7 +91,7 @@ class LoginActivity : AppCompatActivity() {
                 if (user != null) {
                     UserManager.userUID = user.uid
                     UserManager.userName = user.displayName
-//                    user.photoUrl
+                    UserManager.userPhoto = user.photoUrl!!.toString()
                 }
                 startActivity(Intent(this, MainActivity::class.java))
 

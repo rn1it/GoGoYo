@@ -20,7 +20,6 @@ class HomeViewModel(private val repository: GogoyoRepository): ViewModel() {
     val articleList: LiveData<List<Articles>>
         get() = _articleList
 
-
     private val _navigateToPost = MutableLiveData<Boolean>()
     val navigateToPost: LiveData<Boolean>
         get() = _navigateToPost
@@ -37,6 +36,10 @@ class HomeViewModel(private val repository: GogoyoRepository): ViewModel() {
     val error: LiveData<String>
         get() = _error
 
+    private val _refreshStatus = MutableLiveData<Boolean>()
+    val refreshStatus: LiveData<Boolean>
+        get() = _refreshStatus
+
     private var viewModelJob = Job()
 
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -52,6 +55,8 @@ class HomeViewModel(private val repository: GogoyoRepository): ViewModel() {
 
     private fun getArticles(){
         coroutineScope.launch {
+
+            _status.value = LoadStatus.LOADING
 
             _articleList.value = when (val result = repository.getAllArticle()) {
                 is Result.Success -> {
@@ -75,6 +80,14 @@ class HomeViewModel(private val repository: GogoyoRepository): ViewModel() {
                     null
                 }
             }
+
+            _refreshStatus.value = false
+        }
+    }
+
+    fun refresh() {
+        if (status.value != LoadStatus.LOADING) {
+            getArticles()
         }
     }
 

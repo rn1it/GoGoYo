@@ -19,7 +19,7 @@ class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
         TODO("Not yet implemented")
     }
 
-    override suspend fun login(id: String, name: String): Result<Boolean> {
+    override suspend fun login(id: String, name: String): Result<Users> {
         TODO("Not yet implemented")
     }
 

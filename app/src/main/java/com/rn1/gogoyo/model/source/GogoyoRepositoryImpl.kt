@@ -22,7 +22,7 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.getAudioUri(uri)
     }
 
-    override suspend fun login(id: String, name: String): Result<Boolean> {
+    override suspend fun login(id: String, name: String): Result<Users> {
         return remoteDataSource.login(id, name)
     }
 

@@ -71,6 +71,7 @@ class FriendChatViewModel(
 
     }
 
+    // getChatRoomListWithUserInfo
     fun getChatRoomWithFriendInfo(list: List<Chatroom>) {
 
         coroutineScope.launch {

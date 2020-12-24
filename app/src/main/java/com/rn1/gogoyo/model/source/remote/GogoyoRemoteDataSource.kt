@@ -130,7 +130,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource {
             }
     }
 
-    override suspend fun login(id: String, name: String): Result<Boolean> =
+    override suspend fun login(id: String, name: String): Result<Users> =
         suspendCoroutine { continuation ->
 
             var user: Users?
@@ -145,7 +145,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource {
                         users.document(id).set(user!!).addOnCompleteListener {
                             if (it.isSuccessful) {
                                 Logger.i("Sign up: $user")
-                                continuation.resume(Result.Success(true))
+                                continuation.resume(Result.Success(user!!))
                             } else {
                                 task.exception?.let { e ->
                                     Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
@@ -163,7 +163,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource {
                     } else {
                         UserManager.userName = user!!.name
                         Logger.i("Login: $user")
-                        continuation.resume(Result.Success(true))
+                        continuation.resume(Result.Success(user!!))
                     }
 
                 } else {
@@ -551,7 +551,7 @@ object GogoyoRemoteDataSource: GogoyoDataSource {
 
                         var count = 0
                         for (document in task.result!!) {
-                            Logger.d(document.id + " => " + document.data)
+                            Logger.w(document.id + " => " + document.data)
 
                             val article = document.toObject(Articles::class.java)
 
