@@ -13,6 +13,7 @@ import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -24,6 +25,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import com.rn1.gogoyo.MainViewModel
 import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentWalkEndBinding
@@ -91,6 +93,16 @@ class WalkEndFragment : Fragment() {
             it?.let {
                 findNavController().navigate(NavigationDirections.actionGlobalPostFragment(it))
                 viewModel.navigateToPostDone()
+            }
+        })
+
+        viewModel.navigateToStatistic.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                if (it) {
+                    val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+                    mainViewModel.navigateToStatisticByBottomNav()
+                    viewModel.navigateToStatisticDone()
+                }
             }
         })
 

@@ -1351,6 +1351,53 @@ object GogoyoRemoteDataSource: GogoyoDataSource {
         return liveData
     }
 
+    override suspend fun getLiveChatRoomMessagesWithUserInfo(list: List<Messages>): Result<List<Messages>> = suspendCoroutine { continuation ->
+
+        val listWithUserInfo = mutableListOf<Messages>()
+        var count = 0
+        for (msg in list) {
+
+            if (msg.senderId == UserManager.userUID) {
+                usersRef.document(msg.receiverId).get().addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val userImg = task.result.toObject(Users::class.java)!!.image
+                        msg.friendImg = userImg
+                        listWithUserInfo.add(msg)
+                        count += 1
+                        if (count == list.size) {
+                            continuation.resume(Result.Success(listWithUserInfo))
+                        }
+
+                    } else {
+                        task.exception?.let { e ->
+                            Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                            continuation.resume(Result.Error(e))
+                        }
+                        continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+                    }
+                }
+            } else {
+                usersRef.document(msg.senderId).get().addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val userImg = task.result.toObject(Users::class.java)!!.image
+                        msg.friendImg = userImg
+                        listWithUserInfo.add(msg)
+                        count += 1
+                        if (count == list.size) {
+                            continuation.resume(Result.Success(listWithUserInfo))
+                        }
+                    } else {
+                        task.exception?.let { e ->
+                            Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
+                            continuation.resume(Result.Error(e))
+                        }
+                        continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
+                    }
+                }
+            }
+        }
+    }
+
     override suspend fun sendMessage(chatroomId: String, message: Messages): Result<Boolean> = suspendCoroutine { continuation ->
 
         chatRoomRef.document(chatroomId).collection(KEY_COLLECTION_MESSAGE).document().set(message).addOnCompleteListener { task ->
@@ -1368,24 +1415,5 @@ object GogoyoRemoteDataSource: GogoyoDataSource {
             }
         }
     }
-//    override suspend fun getWalkingList(): Result<List<Walk>> = suspendCoroutine{ continuation ->
-//
-//        walkRef.whereEqualTo("endTime", null).get().addOnCompleteListener { task ->
-//            if (task.isSuccessful) {
-//                val list = mutableListOf<Walk>()
-//                for (document in task.result) {
-//                    val walk = document.toObject(Walk::class.java)
-//                    list.add(walk)
-//                }
-//                Logger.w("walk list = $list")
-//                continuation.resume(Result.Success(list))
-//            } else {
-//                task.exception?.let {e ->
-//                    Logger.w("[${this::class.simpleName}] Error getting documents. ${e.message}")
-//                    continuation.resume(Result.Error(e))
-//                }
-//                continuation.resume(Result.Fail(GogoyoApplication.instance.getString(R.string.something_wrong)))
-//            }
-//        }
-//    }
+
 }

@@ -30,7 +30,6 @@ class ProfileUserFragment(val userId: String) : Fragment() {
     private lateinit var binding: FragmentProfileUserBinding
     private val viewModel by viewModels<ProfileUserViewModel> { getVmFactory(userId) }
     private var filePath: String = ""
-//    val viewPagerList = mutableListOf<List<Articles>>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,14 +49,6 @@ class ProfileUserFragment(val userId: String) : Fragment() {
         viewPager.isUserInputEnabled = false
         viewPager.adapter = pagerAdapter
 
-        // Default no value for viewPager list
-
-//        viewPagerList.add(0, mutableListOf() )
-//        viewPagerList.add(1, mutableListOf() )
-//
-//        pagerAdapter.submitList(viewPagerList)
-
-
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
                 0 -> tab.text = "我的動態"
@@ -66,48 +57,17 @@ class ProfileUserFragment(val userId: String) : Fragment() {
             viewPager.currentItem = tab.position
         }.attach()
 
-//        viewModel.loginUser.observe(viewLifecycleOwner, Observer {
-//            it?.let {
-//                viewModel.getFriendStatus()
-//            }
-//        })
-
         viewModel.loginUserFriends.observe(viewLifecycleOwner, Observer {
             it?.let {
                 viewModel.getFriendStatus()
             }
         })
 
-//        viewModel.userArticles.observe(viewLifecycleOwner, Observer {
-//            it?.let {
-//                Logger.d("aaaaaaaaaaaaaaaaaaaaa")
-//                viewPagerList[0] = it
-//                binding.postValueTv.text = it.size.toString()
-//                pagerAdapter.submitList(viewPagerList)
-//            }
-//        })
-//
-//        viewModel.userFavArticles.observe(viewLifecycleOwner, Observer {
-//            it?.let {
-//                Logger.d("bbbbbbbbbbbbbbbbbbbbbbb")
-//                viewPagerList[1] = it
-//                pagerAdapter.submitList(viewPagerList)
-//            }
-//        })
-
-
         viewModel.viewPagerList.observe(viewLifecycleOwner, Observer {
             it?.let {
                 pagerAdapter.submitList(it)
             }
         })
-
-
-//        viewModel.liveFriend.observe(viewLifecycleOwner, Observer {
-//            it?.let {
-//                binding.friendCountValueTv.text = it.size.toString()
-//            }
-//        })
 
         viewModel.navigateToContent.observe(viewLifecycleOwner, Observer {
             it?.let {

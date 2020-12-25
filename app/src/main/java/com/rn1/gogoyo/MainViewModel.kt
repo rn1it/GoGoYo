@@ -18,6 +18,14 @@ class MainViewModel(private val repository: GogoyoRepository): ViewModel() {
 
     val currentFragmentType =  MutableLiveData<CurrentFragmentType>()
 
+    private val _navigateToHomeByBottomNav = MutableLiveData<Boolean>()
+    val navigateToHomeByBottomNav: LiveData<Boolean>
+        get() = _navigateToHomeByBottomNav
+
+    private val _navigateToStatisticByBottomNav = MutableLiveData<Boolean>()
+    val navigateToStatisticByBottomNav: LiveData<Boolean>
+        get() = _navigateToStatisticByBottomNav
+
     private val _navigateToWalk = MutableLiveData<Boolean>()
     val navigateToWalk: LiveData<Boolean>
         get() = _navigateToWalk
@@ -116,7 +124,6 @@ class MainViewModel(private val repository: GogoyoRepository): ViewModel() {
         _toPostArticle.value = null
     }
 
-
     fun onNavigateToWalk(){
         _navigateToWalk.value = true
     }
@@ -129,5 +136,19 @@ class MainViewModel(private val repository: GogoyoRepository): ViewModel() {
         _popBack.value = true
     }
 
+    fun navigateToHomeByBottomNav() {
+        _navigateToHomeByBottomNav.value = true
+    }
 
+    fun onNavigateToHomeDone() {
+        _navigateToStatisticByBottomNav.value = null
+    }
+
+    fun navigateToStatisticByBottomNav() {
+        _navigateToStatisticByBottomNav.value = true
+    }
+
+    fun onNavigateToStatisticDone() {
+        _navigateToStatisticByBottomNav.value = null
+    }
 }

@@ -178,12 +178,12 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.getLiveChatRoomMessages(chatroomId)
     }
 
+    override suspend fun getLiveChatRoomMessagesWithUserInfo(list: List<Messages>): Result<List<Messages>> {
+        return remoteDataSource.getLiveChatRoomMessagesWithUserInfo(list)
+    }
+
     override suspend fun sendMessage(chatroomId: String, message: Messages): Result<Boolean> {
         return remoteDataSource.sendMessage(chatroomId, message)
     }
-
-//    override suspend fun getWalkingList(): Result<List<Walk>> {
-//        return remoteDataSource.getWalkingList()
-//    }
 
 }

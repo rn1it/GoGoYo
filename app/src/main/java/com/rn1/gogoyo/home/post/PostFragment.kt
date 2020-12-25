@@ -95,6 +95,7 @@ class PostFragment : Fragment() {
         viewModel.navigateToHome.observe(viewLifecycleOwner, Observer {
             it?.let {
                 if (it) {
+                    mainViewModel.navigateToHomeByBottomNav()
                     Toast.makeText(context, "發佈成功!", Toast.LENGTH_SHORT).show()
                     findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
                 }

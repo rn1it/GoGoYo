@@ -25,17 +25,12 @@ class ProfileUserViewModel(
     val userId: String
     ): ViewModel() {
 
-    private val DEFAULT_USER_PROFILE = "https://firebasestorage.googleapis.com/v0/b/turing-opus-296809.appspot.com/o/images%2Fprofile.png?alt=media&token=fe4da46c-cae1-4d82-8b76-7ec681cdd284"
-
-
+    var filePath: String = ""
+    val outlineProvider =  MapOutlineProvider()
 
     private val _viewPagerList = MutableLiveData<List<List<Articles>>>()
     val viewPagerList: LiveData<List<List<Articles>>>
         get() = _viewPagerList
-
-    var filePath: String = ""
-
-    val outlineProvider =  MapOutlineProvider()
 
     // check profile is login user or not
     val isLoginUser = userId == UserManager.userUID
@@ -55,14 +50,6 @@ class ProfileUserViewModel(
     var liveFriend = MutableLiveData<List<Friends>>()
 
     val profileBtText = MutableLiveData<String>()
-
-//    private val _userArticles = MutableLiveData<List<Articles>>()
-//    val userArticles: LiveData<List<Articles>>
-//        get() = _userArticles
-//
-//    private val _userFavArticles = MutableLiveData<List<Articles>>()
-//    val userFavArticles: LiveData<List<Articles>>
-//        get() = _userFavArticles
 
     private val _navigateToContent = MutableLiveData<Articles>()
     val navigateToContent: LiveData<Articles>
@@ -99,7 +86,6 @@ class ProfileUserViewModel(
         }
         getUser()
         getUserArticle()
-
         getUserLiveFriend()
     }
 
@@ -124,11 +110,7 @@ class ProfileUserViewModel(
                     is Result.Success -> {
                         _error.value = null
                         _status.value = LoadStatus.DONE
-                        val user = result.data
-                        if (user.image.isNullOrBlank()) {
-                            user.image = DEFAULT_USER_PROFILE
-                        }
-                        user
+                        result.data
                     }
                     is Result.Fail -> {
                         _error.value = result.error
@@ -158,7 +140,6 @@ class ProfileUserViewModel(
 
         coroutineScope.launch {
 
-//            _userArticles.value =
                 when (val result = repository.getArticlesById(userId)) {
                     is Result.Success -> {
                         _error.value = null
@@ -166,26 +147,22 @@ class ProfileUserViewModel(
                         val list = mutableListOf<List<Articles>>()
                         _viewPagerList.value
                         getUserFavArticle(result.data)
-//                        result.data
                     }
                     is Result.Fail -> {
                         _error.value = result.error
                         _status.value = LoadStatus.ERROR
                         getUserFavArticle(mutableListOf())
-//                        null
                     }
                     is Result.Error -> {
                         _error.value = result.exception.toString()
                         _status.value = LoadStatus.ERROR
                         getUserFavArticle(mutableListOf())
-//                        null
                     }
                     else -> {
                         _error.value =
                             GogoyoApplication.instance.getString(R.string.something_wrong)
                         _status.value = LoadStatus.ERROR
                         getUserFavArticle(mutableListOf())
-//                        null
                     }
                 }
         }
@@ -195,7 +172,6 @@ class ProfileUserViewModel(
 
         coroutineScope.launch {
 
-//            _userFavArticles.value =
                 when (val result = repository.getFavoriteArticlesById(userId)) {
                     is Result.Success -> {
                         _error.value = null
@@ -204,7 +180,6 @@ class ProfileUserViewModel(
                         list.add(0, userArticleList)
                         list.add(1, result.data)
                         _viewPagerList.value = list
-//                        result.data
                     }
                     is Result.Fail -> {
                         _error.value = result.error
@@ -213,7 +188,6 @@ class ProfileUserViewModel(
                         list.add(0, userArticleList)
                         list.add(1, mutableListOf())
                         _viewPagerList.value = list
-//                        null
                     }
                     is Result.Error -> {
                         _error.value = result.exception.toString()
@@ -222,7 +196,6 @@ class ProfileUserViewModel(
                         list.add(0, userArticleList)
                         list.add(1, mutableListOf())
                         _viewPagerList.value = list
-//                        null
                     }
                     else -> {
                         _error.value =
@@ -232,7 +205,6 @@ class ProfileUserViewModel(
                         list.add(0, userArticleList)
                         list.add(1, mutableListOf())
                         _viewPagerList.value = list
-//                        null
                     }
                 }
         }

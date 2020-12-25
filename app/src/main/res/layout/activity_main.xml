@@ -102,7 +102,7 @@
             android:id="@+id/coordinatorLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.ARTICLE_CONTENT || viewModel.currentFragmentType == CurrentFragmentType.CHAT_ROOM || viewModel.currentFragmentType == CurrentFragmentType.WALK_START || viewModel.currentFragmentType == CurrentFragmentType.EDIT_PET || viewModel.currentFragmentType == CurrentFragmentType.EDIT_USER ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.ARTICLE_CONTENT || viewModel.currentFragmentType == CurrentFragmentType.CHAT_ROOM || viewModel.currentFragmentType == CurrentFragmentType.WALK_START || viewModel.currentFragmentType == CurrentFragmentType.EDIT_PET || viewModel.currentFragmentType == CurrentFragmentType.EDIT_USER || viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -151,6 +151,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.ARTICLE_CONTENT || viewModel.currentFragmentType == CurrentFragmentType.CHAT_ROOM || viewModel.currentFragmentType == CurrentFragmentType.WALK_START || viewModel.currentFragmentType == CurrentFragmentType.EDIT_PET || viewModel.currentFragmentType == CurrentFragmentType.EDIT_USER ? View.GONE : View.VISIBLE}"/>
+            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.ARTICLE_CONTENT || viewModel.currentFragmentType == CurrentFragmentType.CHAT_ROOM || viewModel.currentFragmentType == CurrentFragmentType.WALK_START || viewModel.currentFragmentType == CurrentFragmentType.EDIT_PET || viewModel.currentFragmentType == CurrentFragmentType.EDIT_USER || viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.GONE : View.VISIBLE}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

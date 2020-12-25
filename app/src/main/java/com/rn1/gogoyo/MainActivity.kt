@@ -1,7 +1,6 @@
 package com.rn1.gogoyo
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -20,7 +19,6 @@ import com.google.firebase.ktx.Firebase
 import com.rn1.gogoyo.databinding.ActivityMainBinding
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.util.CurrentFragmentType
-import com.rn1.gogoyo.util.Logger
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -38,7 +36,7 @@ class MainActivity : AppCompatActivity() {
                 navController.navigate(NavigationDirections.actionGlobalHomeFragment())
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.nav_event -> {
+            R.id.nav_statistic -> {
                 navController.navigate(NavigationDirections.actionGlobalStatisticFragment())
                 return@OnNavigationItemSelectedListener true
             }
@@ -91,6 +89,20 @@ class MainActivity : AppCompatActivity() {
             viewModel.popBack.observe(this, Observer {
                 it?.let {
                     findNavController(R.id.myNavHostFragment).popBackStack()
+                }
+            })
+
+            viewModel.navigateToHomeByBottomNav.observe(this, Observer {
+                it?.let {
+                    binding.bottomNavigationView.selectedItemId = R.id.nav_home
+                    viewModel.onNavigateToHomeDone()
+                }
+            })
+
+            viewModel.navigateToStatisticByBottomNav.observe(this, Observer {
+                it?.let {
+                    binding.bottomNavigationView.selectedItemId = R.id.nav_statistic
+                    viewModel.onNavigateToStatisticDone()
                 }
             })
 

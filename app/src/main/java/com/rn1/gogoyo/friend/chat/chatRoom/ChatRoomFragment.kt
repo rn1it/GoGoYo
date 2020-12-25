@@ -44,6 +44,14 @@ class ChatRoomFragment : Fragment() {
         viewModel.liveMessages.observe(viewLifecycleOwner, Observer {
 
             it?.let {
+//                adapter.separateMsgSubmitList(it)
+//                recyclerView.smoothScrollToPosition(it.size)
+                viewModel.getLiveMessagesWithUserInfo(it)
+            }
+        })
+
+        viewModel.liveMessagesWithUserInfo.observe(viewLifecycleOwner, Observer {
+            it?.let {
                 adapter.separateMsgSubmitList(it)
                 recyclerView.smoothScrollToPosition(it.size)
             }

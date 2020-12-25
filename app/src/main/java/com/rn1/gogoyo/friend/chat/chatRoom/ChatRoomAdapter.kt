@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.rn1.gogoyo.UserManager
+import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.databinding.ItemMsgFriendBinding
 import com.rn1.gogoyo.databinding.ItemMsgUserBinding
 import com.rn1.gogoyo.model.Messages
@@ -70,6 +71,7 @@ class ChatRoomAdapter: ListAdapter<DataItem, RecyclerView.ViewHolder>(MessageDif
 
         fun bind(msg: Messages){
             binding.msg = msg
+            binding.imageView13.outlineProvider = MapOutlineProvider()
         }
 
         companion object {

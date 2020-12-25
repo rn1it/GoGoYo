@@ -40,6 +40,11 @@ class ChatRoomViewModel(
 
     var liveMessages = MutableLiveData<List<Messages>>()
 
+    private val _liveMessagesWithUserInfo = MutableLiveData<List<Messages>>()
+
+    val liveMessagesWithUserInfo: LiveData<List<Messages>>
+        get() = _liveMessagesWithUserInfo
+
     private val _refreshStatus = MutableLiveData<Boolean>()
 
     val refreshStatus: LiveData<Boolean>
@@ -109,6 +114,34 @@ class ChatRoomViewModel(
         liveMessages = repository.getLiveChatRoomMessages(chatRoom.id)
         _status.value = LoadStatus.DONE
         _refreshStatus.value = false
+    }
+
+    fun getLiveMessagesWithUserInfo(list: List<Messages>){
+
+        coroutineScope.launch {
+            _liveMessagesWithUserInfo.value = when (val result = repository.getLiveChatRoomMessagesWithUserInfo(list)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    result.data
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+            }
+        }
     }
 
 

@@ -93,7 +93,8 @@ interface GogoyoDataSource {
 
     fun getLiveChatRoomMessages(chatroomId: String): MutableLiveData<List<Messages>>
 
-    suspend fun sendMessage(chatroomId: String, message: Messages): Result<Boolean>
+    suspend fun getLiveChatRoomMessagesWithUserInfo(list: List<Messages>): Result<List<Messages>>
 
+    suspend fun sendMessage(chatroomId: String, message: Messages): Result<Boolean>
 
 }
