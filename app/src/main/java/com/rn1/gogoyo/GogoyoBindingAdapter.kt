@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.rn1.gogoyo.ext.toDisplayFormat
+import com.rn1.gogoyo.ext.toDisplayFormatForTime
 import java.text.DecimalFormat
 
 @BindingAdapter("addDecoration")
@@ -21,6 +22,12 @@ fun bindDecoration(recyclerView: RecyclerView, decoration: RecyclerView.ItemDeco
 fun bindDisplayFormatTime(textView: TextView, time: Long?) {
     textView.text = time?.toDisplayFormat()
 }
+
+@BindingAdapter("timeToDisplayFormatForTime")
+fun bindDisplayFormatJustTime(textView: TextView, time: Long?) {
+    textView.text = time?.toDisplayFormatForTime()
+}
+
 
 @BindingAdapter("changeCollectButtonStatus")
 fun bindCollectButton(imageButton: ImageButton, isCollected: Boolean) {

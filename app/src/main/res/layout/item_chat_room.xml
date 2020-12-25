@@ -40,27 +40,25 @@
 
         <TextView
             android:id="@+id/chatRoomLastMsgTv"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
             android:layout_marginBottom="8dp"
+            android:maxWidth="150dp"
             android:text="@{chatRoom.lastMsg}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/chatRoomLastMsgTimeTv"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="@+id/chatRoomFriendNameTv"
             app:layout_constraintTop_toBottomOf="@+id/chatRoomFriendNameTv" />
 
         <TextView
             android:id="@+id/chatRoomLastMsgTimeTv"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/chatRoomLastMsgTv"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/chatRoomLastMsgTv"
             app:layout_constraintStart_toEndOf="@+id/chatRoomLastMsgTv"
+            app:layout_constraintTop_toTopOf="@+id/chatRoomLastMsgTv"
+            app:layout_constraintVertical_bias="0.0"
             app:timeToDisplayFormat="@{chatRoom.msgTime}"
             tools:text="12月1日 01:36" />
 
