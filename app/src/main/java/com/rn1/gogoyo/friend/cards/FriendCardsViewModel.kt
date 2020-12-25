@@ -1,6 +1,5 @@
 package com.rn1.gogoyo.friend.cards
 
-import android.text.style.UpdateAppearance
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,7 +19,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.*
-import java.util.stream.Collector
 
 class FriendCardsViewModel(
     val repository: GogoyoRepository,
@@ -81,10 +79,6 @@ class FriendCardsViewModel(
         viewModelJob.cancel()
     }
 
-    fun onClick(){
-        Logger.i("aaaaaaaaaaaaaaaaa")
-    }
-
     private fun getAllUsers(){
 
         coroutineScope.launch {
@@ -95,7 +89,10 @@ class FriendCardsViewModel(
                     _status.value = LoadStatus.DONE
                     val users = mutableListOf<Users>()
                     users.addAll(result.data)
-                    getUserFriends(users)
+                    val filterUsers = mutableListOf<Users>()
+                    filterUsers.addAll(users.filter { it.petIdList.isNotEmpty() })
+                    Logger.d("aaaaaaaa $users")
+                    getUserFriends(filterUsers)
                 }
                 is Result.Fail -> {
                     _error.value = result.error

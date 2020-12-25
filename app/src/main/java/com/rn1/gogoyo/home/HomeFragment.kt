@@ -41,9 +41,11 @@ class HomeFragment : Fragment(){
         val adapter = HomeAdapter(HomeAdapter.OnClickListener {
             viewModel.navigateToContent(it)
         })
+        val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
 
+        recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
+        recyclerView.layoutManager = staggeredGridLayoutManager
 
         viewModel.articleList.observe(viewLifecycleOwner, Observer {
             it?.let {

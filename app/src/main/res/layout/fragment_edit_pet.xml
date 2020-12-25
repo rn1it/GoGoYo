@@ -45,13 +45,16 @@
 
             <EditText
                 android:id="@+id/addPetNameEt"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
                 android:ems="10"
-                android:hint="我叫做.."
+                android:hint="請輸入字數小於 10 的名字"
                 android:inputType="textPersonName"
+                android:maxLength="10"
                 android:text="@={viewModel.name}"
                 app:layout_constraintBottom_toBottomOf="@+id/newPetNameTv"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/addPetIntroEt"
                 app:layout_constraintTop_toTopOf="@+id/newPetNameTv" />
 
@@ -60,10 +63,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:text="性別"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/newPetNameTv" />
+                app:layout_constraintTop_toBottomOf="@+id/addPetNameEt" />
 
             <RadioGroup
                 android:id="@+id/radioGroupPetSex"
@@ -96,20 +99,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:text="品種"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView28" />
+                app:layout_constraintTop_toBottomOf="@+id/radioGroupPetSex" />
 
             <EditText
                 android:id="@+id/breedEt"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
                 android:ems="10"
-                android:hint=""
                 android:inputType="textPersonName"
+                android:maxLength="10"
                 android:text="@={viewModel.breed}"
                 app:layout_constraintBottom_toBottomOf="@+id/breedTitleTv"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/addPetIntroEt"
                 app:layout_constraintTop_toTopOf="@+id/breedTitleTv" />
 
@@ -119,23 +124,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:text="自我介紹"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/breedTitleTv" />
+                app:layout_constraintTop_toBottomOf="@+id/breedEt" />
 
             <EditText
                 android:id="@+id/addPetIntroEt"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="24dp"
                 android:ems="10"
                 android:hint="我是一隻乖狗狗.."
-                android:inputType="textPersonName"
+                android:inputType="textMultiLine"
+                android:maxLength="10"
+                android:singleLine="false"
                 android:text="@={viewModel.introduction}"
-                app:layout_constraintBottom_toBottomOf="@+id/textView29"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView29"
-                app:layout_constraintTop_toTopOf="@+id/textView29" />
+                app:layout_constraintTop_toBottomOf="@+id/breedEt" />
 
 
             <TextView
@@ -144,6 +153,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="點選更換照片"
+                android:maxLength="30"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/uploadPetIv" />
@@ -241,10 +251,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:text="上傳聲音"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView29" />
+                app:layout_constraintTop_toBottomOf="@+id/addPetIntroEt" />
 
             <TextView
                 android:id="@+id/textView18"

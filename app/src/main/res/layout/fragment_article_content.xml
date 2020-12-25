@@ -201,7 +201,6 @@
                     android:paddingTop="4dp"
                     android:clipToPadding="false"
                     app:addDecoration="@{viewModel.decoration}"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/articleContentConst" />

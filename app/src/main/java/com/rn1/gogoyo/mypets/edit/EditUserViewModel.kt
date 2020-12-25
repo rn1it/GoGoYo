@@ -83,6 +83,7 @@ class EditUserViewModel(
                     name.value = result.data.name
                     introduction.value = result.data.introduction
                     _user.value = result.data
+                    imageFilePath = result.data.image
                 }
                 is Result.Fail -> {
                     _error.value = result.error

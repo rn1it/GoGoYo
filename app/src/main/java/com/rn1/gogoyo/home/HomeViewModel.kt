@@ -62,7 +62,7 @@ class HomeViewModel(private val repository: GogoyoRepository): ViewModel() {
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadStatus.DONE
-                    result.data
+                    result.data.sortedByDescending { it.createdTime }
                 }
                 is Result.Fail -> {
                     _error.value = result.error

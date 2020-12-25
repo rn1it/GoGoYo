@@ -53,6 +53,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:maxImageSize="30dp" />
+
+            <TextView
+                android:id="@+id/noPetTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.1"
+                android:text="還沒註冊寵物\n點選左上角新增寵物吧!"
+                android:textAlignment="center"
+                android:visibility="@{viewModel.petList == null || viewModel.petList.size() == 0 ?  View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/myPetsViewPager"
+                app:layout_constraintTop_toTopOf="@+id/myPetsViewPager" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
@@ -193,7 +207,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="32dp"
-                    android:layout_marginBottom="32dp"
+                    android:layout_marginBottom="64dp"
                     android:text="@string/text_video"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -237,6 +251,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:layout_marginEnd="8dp"
                     android:background="@android:color/transparent"
                     android:ems="10"
                     android:focusable="false"
@@ -244,6 +259,7 @@
                     android:inputType="textPersonName"
                     android:text="@{viewModel.pet.introduction}"
                     app:layout_constraintBottom_toBottomOf="@+id/introductionTitleTv"
+                    app:layout_constraintEnd_toStartOf="@+id/editPetInfoBt"
                     app:layout_constraintStart_toEndOf="@+id/introductionTitleTv"
                     app:layout_constraintTop_toTopOf="@+id/introductionTitleTv" />
 

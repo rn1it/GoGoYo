@@ -59,7 +59,7 @@ class WalkEndViewModel(
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
-        if (arguments.petsIdList != null) {
+        if (arguments.petsIdList.isNotEmpty()) {
             getPets()
         }
     }

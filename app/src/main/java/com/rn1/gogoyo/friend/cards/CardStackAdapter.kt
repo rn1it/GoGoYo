@@ -113,30 +113,32 @@ class CardStackAdapter(
             var position = position
 
             binding.user = user
-            binding.pet = user.pets[position]
-            binding.viewModel = viewModel
+            if (user.pets.isNotEmpty()) {
+                binding.pet = user.pets[position]
+                binding.viewModel = viewModel
 
-            binding.dogCardCv.setOnClickListener {
-                viewModel.setShowBarkToast(user.pets[position])
-            }
+                binding.dogCardCv.setOnClickListener {
+                    viewModel.setShowBarkToast(user.pets[position])
+                }
 
-            binding.playVideoFab.setOnClickListener {
-                viewModel.setShowVideoDialog(user.pets[position])
-            }
+                binding.playVideoFab.setOnClickListener {
+                    viewModel.setShowVideoDialog(user.pets[position])
+                }
 
-            binding.backBt.setOnClickListener {
-                if (position > 0) {
-                    position -= 1
+                binding.backBt.setOnClickListener {
+                    if (position > 0) {
+                        position -= 1
+                        Logger.d("111111, ${user.pets[position].image}")
+                        viewModel.dataChange(adapterPosition, position )
+                    }
+                }
+
+                binding.nextBt.setOnClickListener {
+                    if (position < user.pets.size - 1)
+                        position += 1
                     Logger.d("111111, ${user.pets[position].image}")
                     viewModel.dataChange(adapterPosition, position )
                 }
-            }
-
-            binding.nextBt.setOnClickListener {
-                if (position < user.pets.size - 1)
-                    position += 1
-                Logger.d("111111, ${user.pets[position].image}")
-                viewModel.dataChange(adapterPosition, position )
             }
         }
 

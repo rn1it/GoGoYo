@@ -80,7 +80,7 @@ class FriendChatViewModel(
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadStatus.DONE
-                    result.data
+                    result.data.sortedByDescending { it.msgTime }
                 }
                 is Result.Fail -> {
                     _error.value = result.error

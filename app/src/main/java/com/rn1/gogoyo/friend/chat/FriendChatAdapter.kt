@@ -19,9 +19,7 @@ class FriendChatAdapter(
         fun bind(viewModel: FriendChatViewModel, chatRoom: Chatroom){
             binding.chatRoom = chatRoom
             binding.chatRoomFriendIv.outlineProvider = MapOutlineProvider()
-//            val friendId = chatRoom.userList.filter { it != UserManager.userUID }[0]
 
-//            viewModel.getUserById()
 
             binding.executePendingBindings()
         }

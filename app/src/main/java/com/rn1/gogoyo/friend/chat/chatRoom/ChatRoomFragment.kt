@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentChatRoomBinding
 import com.rn1.gogoyo.databinding.FragmentFriendChatBinding
 import com.rn1.gogoyo.ext.getVmFactory
+import com.rn1.gogoyo.home.content.ArticleResponseAdapter
 import com.rn1.gogoyo.model.Messages
 import com.rn1.gogoyo.model.Users
 
@@ -29,15 +31,21 @@ class ChatRoomFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+
         val recyclerView = binding.msgRv
         val adapter = ChatRoomAdapter()
+        val linearLayoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        // set the view to the last element
+        //linearLayoutManager.stackFromEnd = true
 
         recyclerView.adapter = adapter
+        recyclerView.layoutManager = linearLayoutManager
 
         viewModel.liveMessages.observe(viewLifecycleOwner, Observer {
 
             it?.let {
                 adapter.separateMsgSubmitList(it)
+                recyclerView.smoothScrollToPosition(it.size)
             }
         })
 

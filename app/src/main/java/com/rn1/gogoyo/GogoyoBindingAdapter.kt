@@ -1,7 +1,5 @@
 package com.rn1.gogoyo
 
-import android.content.res.ColorStateList
-import android.media.Image
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -11,7 +9,6 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.rn1.gogoyo.ext.getColor
 import com.rn1.gogoyo.ext.toDisplayFormat
 import java.text.DecimalFormat
 
@@ -60,8 +57,8 @@ fun bindImage(imgView: ImageView, imgUrl: String?) {
         .load(imgUri)
         .apply(
             RequestOptions()
-                .placeholder(R.drawable.dog_profile)
-                .error(R.drawable.my_pet))
+                .placeholder(R.drawable.dog_place_holder)
+                .error(R.drawable.dog_place_holder))
         .into(imgView)
 
 }

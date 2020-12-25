@@ -51,6 +51,10 @@ class ArticleContentViewModel(
 
     val response = MutableLiveData<String>()
 
+    private val _clearResponse = MutableLiveData<Boolean>()
+    val clearResponse: LiveData<Boolean>
+        get() = _clearResponse
+
     private val _navigateToProfile = MediatorLiveData<String>()
     val navigateToProfile: LiveData<String>
         get() = _navigateToProfile
@@ -135,7 +139,7 @@ class ArticleContentViewModel(
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadStatus.DONE
-                    Logger.d("response article success")
+                    _clearResponse.value = true
                 }
                 is Result.Fail -> {
                     _error.value = result.error
@@ -148,7 +152,6 @@ class ArticleContentViewModel(
                 else -> {
                     _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
                     _status.value = LoadStatus.ERROR
-//                    null
                 }
             }
 
@@ -224,7 +227,7 @@ class ArticleContentViewModel(
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadStatus.DONE
-                    result.data
+                    result.data.sortedBy { it.createdTime }
                 }
                 is Result.Fail -> {
                     _error.value = result.error
@@ -245,5 +248,8 @@ class ArticleContentViewModel(
         }
     }
 
+    fun onClearResponseDone(){
+        _clearResponse.value = null
+    }
 
 }

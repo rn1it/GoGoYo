@@ -29,8 +29,8 @@ class ProfileUserViewModel(
 
 
 
-    private val _viewPagerList = MutableLiveData<List<Articles>>()
-    val viewPagerList: LiveData<List<Articles>>
+    private val _viewPagerList = MutableLiveData<List<List<Articles>>>()
+    val viewPagerList: LiveData<List<List<Articles>>>
         get() = _viewPagerList
 
     var filePath: String = ""
@@ -56,13 +56,13 @@ class ProfileUserViewModel(
 
     val profileBtText = MutableLiveData<String>()
 
-    private val _userArticles = MutableLiveData<List<Articles>>()
-    val userArticles: LiveData<List<Articles>>
-        get() = _userArticles
-
-    private val _userFavArticles = MutableLiveData<List<Articles>>()
-    val userFavArticles: LiveData<List<Articles>>
-        get() = _userFavArticles
+//    private val _userArticles = MutableLiveData<List<Articles>>()
+//    val userArticles: LiveData<List<Articles>>
+//        get() = _userArticles
+//
+//    private val _userFavArticles = MutableLiveData<List<Articles>>()
+//    val userFavArticles: LiveData<List<Articles>>
+//        get() = _userFavArticles
 
     private val _navigateToContent = MutableLiveData<Articles>()
     val navigateToContent: LiveData<Articles>
@@ -158,62 +158,81 @@ class ProfileUserViewModel(
 
         coroutineScope.launch {
 
-            _userArticles.value =
+//            _userArticles.value =
                 when (val result = repository.getArticlesById(userId)) {
                     is Result.Success -> {
                         _error.value = null
                         _status.value = LoadStatus.DONE
                         val list = mutableListOf<List<Articles>>()
                         _viewPagerList.value
-                        result.data
+                        getUserFavArticle(result.data)
+//                        result.data
                     }
                     is Result.Fail -> {
                         _error.value = result.error
                         _status.value = LoadStatus.ERROR
-                        null
+                        getUserFavArticle(mutableListOf())
+//                        null
                     }
                     is Result.Error -> {
                         _error.value = result.exception.toString()
                         _status.value = LoadStatus.ERROR
-                        null
+                        getUserFavArticle(mutableListOf())
+//                        null
                     }
                     else -> {
                         _error.value =
                             GogoyoApplication.instance.getString(R.string.something_wrong)
                         _status.value = LoadStatus.ERROR
-                        null
+                        getUserFavArticle(mutableListOf())
+//                        null
                     }
                 }
-            getUserFavArticle()
         }
     }
 
-    private fun getUserFavArticle() {
+    private fun getUserFavArticle(userArticleList: List<Articles>) {
 
         coroutineScope.launch {
 
-            _userFavArticles.value =
+//            _userFavArticles.value =
                 when (val result = repository.getFavoriteArticlesById(userId)) {
                     is Result.Success -> {
                         _error.value = null
                         _status.value = LoadStatus.DONE
-                        result.data
+                        val list = mutableListOf<List<Articles>>()
+                        list.add(0, userArticleList)
+                        list.add(1, result.data)
+                        _viewPagerList.value = list
+//                        result.data
                     }
                     is Result.Fail -> {
                         _error.value = result.error
                         _status.value = LoadStatus.ERROR
-                        null
+                        val list = mutableListOf<List<Articles>>()
+                        list.add(0, userArticleList)
+                        list.add(1, mutableListOf())
+                        _viewPagerList.value = list
+//                        null
                     }
                     is Result.Error -> {
                         _error.value = result.exception.toString()
                         _status.value = LoadStatus.ERROR
-                        null
+                        val list = mutableListOf<List<Articles>>()
+                        list.add(0, userArticleList)
+                        list.add(1, mutableListOf())
+                        _viewPagerList.value = list
+//                        null
                     }
                     else -> {
                         _error.value =
                             GogoyoApplication.instance.getString(R.string.something_wrong)
                         _status.value = LoadStatus.ERROR
-                        null
+                        val list = mutableListOf<List<Articles>>()
+                        list.add(0, userArticleList)
+                        list.add(1, mutableListOf())
+                        _viewPagerList.value = list
+//                        null
                     }
                 }
         }

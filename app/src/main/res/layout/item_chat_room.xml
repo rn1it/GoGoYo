@@ -21,12 +21,11 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:scaleType="centerCrop"
+            app:imageUrl="@{chatRoom.friend.image}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-
-            app:imageUrl="@{chatRoom.friend.image}"
-            android:scaleType="centerCrop"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/chatRoomFriendNameTv"
@@ -34,41 +33,46 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
-            android:textColor="@color/black"
             android:text="@{chatRoom.friend.name}"
+            android:textColor="@color/black"
             app:layout_constraintStart_toEndOf="@+id/chatRoomFriendIv"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/chatRoomLastMsgTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
             android:layout_marginBottom="8dp"
             android:text="@{chatRoom.lastMsg}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/chatRoomFriendIv" />
+            app:layout_constraintEnd_toStartOf="@+id/chatRoomLastMsgTimeTv"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@+id/chatRoomFriendNameTv"
+            app:layout_constraintTop_toBottomOf="@+id/chatRoomFriendNameTv" />
 
         <TextView
             android:id="@+id/chatRoomLastMsgTimeTv"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="8dp"
-            app:timeToDisplayFormat="@{chatRoom.msgTime}"
-            tools:text="12月1日 01:36"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/chatRoomLastMsgTv" />
-
-        <TextView
-            android:id="@+id/isReadTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:text="已讀"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/chatRoomLastMsgTv"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/chatRoomLastMsgTv"
+            app:timeToDisplayFormat="@{chatRoom.msgTime}"
+            tools:text="12月1日 01:36" />
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/isReadTv"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="8dp"-->
+        <!--            android:layout_marginEnd="16dp"-->
+        <!--            android:text="已讀"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -56,8 +56,6 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
 
         viewModel.usersNotFriend.observe(viewLifecycleOwner, Observer {
             it?.let {
-                Logger.d("usersNotFriend = $it")
-                Logger.d("aaaaaaaaaaaaaaaaaaaaa = ${it.size}")
                 list.addAll(it)
 
                 // because fire base callback bug
