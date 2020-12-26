@@ -59,6 +59,20 @@
                     android:clipChildren="false"
                     android:orientation="horizontal">
 
+                    <TextView
+                        android:id="@+id/cardHintTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="32dp"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginLeft="32dp"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginRight="32dp"
+                        android:text="向左滑動略過卡片，向右滑動即可加好友"/>
+
+
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/skip_button"
                         android:layout_width="wrap_content"
@@ -68,6 +82,7 @@
                         android:layout_toLeftOf="@+id/rewind_button"
                         android:src="@drawable/skip_red_24dp"
                         app:backgroundTint="@android:color/white"
+                        android:visibility="gone"
                         app:fabSize="auto"
                         app:rippleColor="#22ED7563"
                         app:tint="#ED7563" />
@@ -83,7 +98,7 @@
                         android:layout_marginRight="32dp"
                         android:clickable="false"
                         android:src="@drawable/rewind_blue_24dp"
-                        android:visibility="invisible"
+                        android:visibility="gone"
                         app:backgroundTint="@android:color/white"
                         app:fabSize="mini"
                         app:rippleColor="#225BC9FA" />
@@ -96,6 +111,7 @@
                         android:layout_toEndOf="@+id/rewind_button"
                         android:layout_toRightOf="@+id/rewind_button"
                         android:src="@drawable/like_green_24dp"
+                        android:visibility="gone"
                         app:backgroundTint="@android:color/white"
                         app:fabSize="auto"
                         app:rippleColor="#226FE2B3"
@@ -110,8 +126,6 @@
                     android:layout_above="@+id/button_container"
                     android:clipToPadding="false"
                     android:padding="4dp"/>
-
-
             </RelativeLayout>
         </LinearLayout>
 

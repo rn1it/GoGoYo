@@ -66,6 +66,7 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
                 if (list.size == 0) {
                     binding.friendCardNotificationTv.visibility = View.VISIBLE
                     binding.buttonContainer.visibility = View.GONE
+                    binding.cardHintTv.visibility = View.GONE
                 } else {
                     binding.friendCardNotificationTv.visibility = View.GONE
                     binding.buttonContainer.visibility = View.VISIBLE
@@ -177,13 +178,13 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
     }
 
     override fun onCardAppeared(view: View, position: Int) {
-        val textView = view.findViewById<TextView>(R.id.item_pet_name)
-        Log.d("CardStackView", "onCardAppeared: ($position) ${textView.text}")
+//        val textView = view.findViewById<TextView>(R.id.item_pet_name)
+//        Log.d("CardStackView", "onCardAppeared: ($position) ${textView.text}")
     }
 
     override fun onCardDisappeared(view: View, position: Int) {
-        val textView = view.findViewById<TextView>(R.id.item_pet_name)
-        Log.d("CardStackView", "onCardDisappeared: ($position) ${textView.text}")
+//        val textView = view.findViewById<TextView>(R.id.item_pet_name)
+//        Log.d("CardStackView", "onCardDisappeared: ($position) ${textView.text}")
     }
 
     private fun setupButton(){

@@ -213,32 +213,24 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/voiceTitleTv" />
 
-                <EditText
+                <TextView
                     android:id="@+id/breedTitleEt"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:background="@android:color/transparent"
-                    android:ems="10"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:inputType="textPersonName"
                     android:text="@{viewModel.pet.breed}"
-                    app:layout_constraintBottom_toBottomOf="@+id/breedTitleTv"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/breedTitleTv"
                     app:layout_constraintEnd_toStartOf="@+id/editPetInfoBt"
                     app:layout_constraintStart_toEndOf="@+id/breedTitleTv"
-                    app:layout_constraintStart_toStartOf="@+id/introductionTitleEt"
-                    app:layout_constraintTop_toTopOf="@+id/breedTitleTv" />
+                    app:layout_constraintStart_toStartOf="@+id/introductionTitleEt" />
 
-                <EditText
+                <TextView
                     android:id="@+id/sexTitleEt"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:ems="10"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:inputType="textPersonName"
                     android:text="@{viewModel.pet.sex}"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@+id/sexTitleTv"
@@ -246,22 +238,18 @@
                     app:layout_constraintStart_toStartOf="@+id/breedTitleEt"
                     app:layout_constraintTop_toTopOf="@+id/sexTitleTv" />
 
-                <EditText
+                <TextView
                     android:id="@+id/introductionTitleEt"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="8dp"
-                    android:background="@android:color/transparent"
-                    android:ems="10"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:inputType="textPersonName"
                     android:text="@{viewModel.pet.introduction}"
-                    app:layout_constraintBottom_toBottomOf="@+id/introductionTitleTv"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/introductionTitleTv"
                     app:layout_constraintEnd_toStartOf="@+id/editPetInfoBt"
-                    app:layout_constraintStart_toEndOf="@+id/introductionTitleTv"
-                    app:layout_constraintTop_toTopOf="@+id/introductionTitleTv" />
+                    app:layout_constraintStart_toEndOf="@+id/introductionTitleTv" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/audioPlayBt"
