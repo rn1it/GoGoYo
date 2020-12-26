@@ -95,4 +95,8 @@ interface GogoyoRepository {
     suspend fun getLiveChatRoomMessagesWithUserInfo(list: List<Messages>): Result<List<Messages>>
 
     suspend fun sendMessage(chatroomId: String, message: Messages): Result<Boolean>
+
+    suspend fun getForeCastWeather(id: String): Result<WeatherResponse>
+
+    suspend fun getCurrentWeather(lat: Double, lng: Double): Result<CurrentWeatherResponse>
 }

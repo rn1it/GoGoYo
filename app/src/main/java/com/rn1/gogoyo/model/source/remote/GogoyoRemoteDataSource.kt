@@ -10,13 +10,16 @@ import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
 import com.rn1.gogoyo.model.*
+import com.rn1.gogoyo.model.source.CurrentWeatherResponse
 import com.rn1.gogoyo.model.source.GogoyoDataSource
+import com.rn1.gogoyo.model.source.WeatherResponse
+import com.rn1.gogoyo.network.GogoyoApi
 import com.rn1.gogoyo.util.Logger
 import java.io.File
 import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-
+import com.rn1.gogoyo.util.Util.isInternetConnected
 
 object GogoyoRemoteDataSource: GogoyoDataSource {
 
@@ -1416,4 +1419,34 @@ object GogoyoRemoteDataSource: GogoyoDataSource {
         }
     }
 
+    override suspend fun getForeCastWeather(id: String): Result<WeatherResponse> {
+
+        if (!isInternetConnected()) {
+            return Result.Fail("尚未連接 Internet")
+        }
+
+        return try {
+            val result = GogoyoApi.retrofitService.getForecast(id)
+            Result.Success(result)
+        } catch (e: Exception) {
+            Logger.w("[${this::class.simpleName}] exception=${e.message}")
+            Result.Error(e)
+        }
+
+    }
+
+    override suspend fun getCurrentWeather(lat: Double, lng: Double): Result<CurrentWeatherResponse> {
+
+        if (!isInternetConnected()) {
+            return Result.Fail("尚未連接 Internet")
+        }
+
+        return try {
+            val result = GogoyoApi.retrofitService.getCurrentWeather(lat, lng)
+            Result.Success(result)
+        } catch (e: Exception) {
+            Logger.w("[${this::class.simpleName}] exception=${e.message}")
+            Result.Error(e)
+        }
+    }
 }

@@ -58,10 +58,40 @@ class WalkFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-
         val recyclerView = binding.walkDogSelectRv
         val adapter = WalkPetAdapter(viewModel)
         recyclerView.adapter = adapter
+
+        viewModel.weatherDescription.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                Logger.d("it = $it")
+
+                when(it) {
+                    "clouds" -> {
+                        binding.lottieAnimationView.setAnimation(R.raw.clouds_2)
+                        binding.lottieAnimationView.playAnimation()
+                        binding.lottieAnimationView.loop(true)
+//                        binding.lottieAnimationView2.visibility = View.INVISIBLE
+                    }
+                    "sun" -> {
+                        Logger.d("sun = $it")
+                        binding.lottieAnimationView.setAnimation(R.raw.sunny_day)
+                        binding.lottieAnimationView.playAnimation()
+                        binding.lottieAnimationView.loop(true)
+//                        binding.lottieAnimationView2.visibility = View.INVISIBLE
+                    }
+                    "rain" -> {
+                        Logger.d("rain = $it")
+                        binding.lottieAnimationView.setAnimation(R.raw.rain_umbrella_bg)
+                        binding.lottieAnimationView2.setAnimation(R.raw.rain_umbrella_bg)
+                        binding.lottieAnimationView.playAnimation()
+                        binding.lottieAnimationView.loop(true)
+                        binding.lottieAnimationView2.playAnimation()
+                        binding.lottieAnimationView2.loop(true)
+                    }
+                }
+            }
+        })
 
         viewModel.userPetList.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -85,18 +115,12 @@ class WalkFragment : Fragment() {
 //            val intent = Intent(context, WalkTimerService::class.java)
 //            requireContext().stopService(intent)
 //        }
-
-
-
-
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.walkEndMap) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
@@ -164,6 +188,7 @@ class WalkFragment : Fragment() {
                         if (lastKnownLocation != null) {
                             myMap?.apply {
                                 addMarker(MarkerOptions().position(LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude)))
+                                viewModel.getCurrentWeather(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude)
                                 moveCamera(
                                     CameraUpdateFactory.newLatLngZoom(
                                         LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude), 13f)
@@ -178,15 +203,5 @@ class WalkFragment : Fragment() {
         } catch (e: SecurityException) {
             e.printStackTrace()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Logger.d("onDestroy")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Logger.d("onStop")
     }
 }

@@ -186,4 +186,11 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.sendMessage(chatroomId, message)
     }
 
+    override suspend fun getForeCastWeather(id: String): Result<WeatherResponse> {
+        return remoteDataSource.getForeCastWeather(id)
+    }
+
+    override suspend fun getCurrentWeather(lat: Double, lng: Double): Result<CurrentWeatherResponse> {
+        return remoteDataSource.getCurrentWeather(lat, lng)
+    }
 }

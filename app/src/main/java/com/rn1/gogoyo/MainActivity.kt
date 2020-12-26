@@ -108,12 +108,7 @@ class MainActivity : AppCompatActivity() {
 
             setUpBottomNav()
             setupNavController()
-
-
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-//            window.statusBarColor = Color.TRANSPARENT
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            setupStatusBar()
         }
     }
 
@@ -151,6 +146,13 @@ class MainActivity : AppCompatActivity() {
                 else -> viewModel.currentFragmentType.value
             }
         }
+    }
+
+    private fun setupStatusBar(){
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        //window.statusBarColor = Color.TRANSPARENT
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     }
 
     companion object {

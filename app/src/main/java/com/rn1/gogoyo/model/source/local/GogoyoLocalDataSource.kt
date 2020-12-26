@@ -4,7 +4,9 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.rn1.gogoyo.model.*
+import com.rn1.gogoyo.model.source.CurrentWeatherResponse
 import com.rn1.gogoyo.model.source.GogoyoDataSource
+import com.rn1.gogoyo.model.source.WeatherResponse
 
 class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
     override suspend fun getImageUri(filePath: String): Result<String> {
@@ -180,6 +182,14 @@ class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
     }
 
     override suspend fun sendMessage(chatroomId: String, message: Messages): Result<Boolean> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getForeCastWeather(id: String): Result<WeatherResponse> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getCurrentWeather(lat: Double, lng: Double): Result<CurrentWeatherResponse> {
         TODO("Not yet implemented")
     }
 
