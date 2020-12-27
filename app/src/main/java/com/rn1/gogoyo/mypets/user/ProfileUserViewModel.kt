@@ -140,6 +140,8 @@ class ProfileUserViewModel(
 
         coroutineScope.launch {
 
+            _status.value = LoadStatus.LOADING
+
                 when (val result = repository.getArticlesById(userId)) {
                     is Result.Success -> {
                         _error.value = null

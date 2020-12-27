@@ -180,7 +180,7 @@
                 android:layout_marginEnd="32dp"
                 android:indeterminate="true"
                 android:indeterminateTint="@android:color/holo_orange_dark"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/loadingTv" />
@@ -273,7 +273,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="32dp"
                 android:text="上傳中..."
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView18" />
 
