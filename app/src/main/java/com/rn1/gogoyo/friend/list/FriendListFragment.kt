@@ -41,15 +41,22 @@ class FriendListFragment(val userId: String) : Fragment() {
         val adapter = FriendListAdapter(viewModel)
         recyclerView.adapter = adapter
 
+        viewModel.liveFriend.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                viewModel.getFriendListById(it)
+            }
+        })
+
+
         viewModel.friendList.observe(viewLifecycleOwner, Observer {
                 it?.let {
-                    adapter.submitList(it)
+                    adapter.addStatusAndSubmitList(it)
                     Logger.d("friendlist = $it")
                     binding.friendListSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
                         override fun onQueryTextSubmit(query: String?) = false
 
                         override fun onQueryTextChange(query: String): Boolean {
-                            adapter.submitList(filter(it, query))
+                            adapter.addStatusAndSubmitList(filter(it, query))
                             return true
                         }
                     })
@@ -71,7 +78,7 @@ class FriendListFragment(val userId: String) : Fragment() {
             }
         })
 
-        setUpSpinner()
+//        setUpSpinner()
 
         return binding.root
     }
@@ -93,23 +100,23 @@ class FriendListFragment(val userId: String) : Fragment() {
         return filteredList
     }
 
-    private fun setUpSpinner(){
-        binding.relationshipSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val friendShip = parent?.getItemAtPosition(position) as String
-
-                when (friendShip) {
-                    "朋友" -> showChatBt = true
-                    "好友邀請" -> showChatBt = false
-                    "等待中" -> showChatBt = false
-
-                }
-
-                viewModel.getUserFriends(friendShip)
-            }
-            override fun onNothingSelected(p0: AdapterView<*>?) {}
-        }
-    }
+//    private fun setUpSpinner(){
+//        binding.relationshipSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+//                val friendShip = parent?.getItemAtPosition(position) as String
+//
+//                when (friendShip) {
+//                    "朋友" -> showChatBt = true
+//                    "好友邀請" -> showChatBt = false
+//                    "等待中" -> showChatBt = false
+//
+//                }
+//
+//                viewModel.getUserFriends(friendShip)
+//            }
+//            override fun onNothingSelected(p0: AdapterView<*>?) {}
+//        }
+//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Logger.d("list onViewCreated")

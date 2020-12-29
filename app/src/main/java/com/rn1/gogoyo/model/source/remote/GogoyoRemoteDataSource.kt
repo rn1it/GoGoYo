@@ -1057,26 +1057,46 @@ object GogoyoRemoteDataSource: GogoyoDataSource {
     override fun getUserLiveFriend(userId: String, status: Int?): MutableLiveData<List<Friends>> {
         val liveData = MutableLiveData<List<Friends>>()
 
-        usersRef.document(userId)
-            .collection("friendList")
-            .whereEqualTo("status", status)
-            .addSnapshotListener { snapshot, exception ->
+        if (status == null) {
+            usersRef.document(userId)
+                .collection("friendList")
+                .addSnapshotListener { snapshot, exception ->
 
-            Logger.i("addSnapshotListener detect")
+                    Logger.i("addSnapshotListener detect")
+                    exception?.let {
+                        Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    }
 
-            exception?.let {
-                Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
-            }
+                    val list = mutableListOf<Friends>()
+                    for (document in snapshot!!) {
+                        Logger.d(document.id + " => " + document.data)
+                        val walk = document.toObject(Friends::class.java)
+                        list.add(walk)
+                    }
 
-            val list = mutableListOf<Friends>()
-            for (document in snapshot!!) {
-                Logger.d(document.id + " => " + document.data)
-                val walk = document.toObject(Friends::class.java)
+                    liveData.value = list
+                }
 
-                list.add(walk)
-            }
+        } else {
+            usersRef.document(userId)
+                .collection("friendList")
+                .whereEqualTo("status", status)
+                .addSnapshotListener { snapshot, exception ->
 
-            liveData.value = list
+                    Logger.i("addSnapshotListener detect")
+                    exception?.let {
+                        Logger.w("[${this::class.simpleName}] Error getting documents. ${it.message}")
+                    }
+
+                    val list = mutableListOf<Friends>()
+                    for (document in snapshot!!) {
+                        Logger.d(document.id + " => " + document.data)
+                        val walk = document.toObject(Friends::class.java)
+                        list.add(walk)
+                    }
+
+                    liveData.value = list
+                }
         }
 
         return liveData

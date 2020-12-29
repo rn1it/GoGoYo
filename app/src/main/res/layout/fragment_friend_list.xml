@@ -18,41 +18,32 @@
         <SearchView
             android:id="@+id/friendListSearchView"
             android:layout_width="0dp"
-            android:layout_height="30dp"
+            android:layout_height="40dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:background="@color/white"
+            android:background="@drawable/msg_bubble_custom"
             app:layout_constraintBottom_toTopOf="@+id/view6"
-            app:layout_constraintEnd_toStartOf="@+id/view4"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:queryHint="Search" />
 
-        <View
-            android:id="@+id/view4"
-            android:layout_width="1dp"
-            android:layout_height="20dp"
-            app:layout_constraintBottom_toTopOf="@+id/view6"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Spinner
-            android:id="@+id/relationshipSpinner"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/msg_bubble_custom"
-            android:entries="@array/relation_array"
-            android:textAlignment="center"
-            app:layout_constraintBottom_toBottomOf="@+id/view6"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/view4"
-            app:layout_constraintTop_toTopOf="parent" />
+        <!--        <Spinner-->
+<!--            android:id="@+id/relationshipSpinner"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_marginStart="32dp"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:layout_marginEnd="8dp"-->
+<!--            android:background="@drawable/msg_bubble_custom"-->
+<!--            android:entries="@array/relation_array"-->
+<!--            android:textAlignment="center"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/view6"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/view4"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
 
 
         <View
@@ -61,8 +52,8 @@
             android:layout_height="1dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@color/black_3f3a3a"
-            app:layout_constraintEnd_toEndOf="@+id/view4"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/friendListSearchView" />
 
@@ -70,7 +61,7 @@
             android:id="@+id/friendListRv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:visibility="@{viewModel.friendList == null || viewModel.friendList.size() == 0 ? View.GONE : View.VISIBLE }"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -14,20 +14,31 @@
         android:layout_height="match_parent"
         tools:context=".friend.chat.FriendChatFragment">
 
-        <SearchView
-            android:id="@+id/friendChatListSearchView"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:elevation="@dimen/elevation_more"
-            app:layout_constraintBottom_toTopOf="@+id/view8"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:queryHint="Search" />
+<!--        <SearchView-->
+<!--            android:id="@+id/friendChatListSearchView"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:layout_marginStart="8dp"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:layout_marginEnd="8dp"-->
+<!--            android:layout_marginBottom="8dp"-->
+<!--            android:elevation="@dimen/elevation_more"-->
+<!--            app:layout_constraintBottom_toTopOf="@+id/view8"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:queryHint="Search" />-->
+
+
+<!--        <View-->
+<!--            android:id="@+id/view8"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="1dp"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:background="@color/black_3f3a3a"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/friendChatListSearchView"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/friendChatListSearchView"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/friendChatListSearchView" />-->
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -42,17 +53,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view8" />
-
-        <View
-            android:id="@+id/view8"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/black_3f3a3a"
-            app:layout_constraintEnd_toEndOf="@+id/friendChatListSearchView"
-            app:layout_constraintStart_toStartOf="@+id/friendChatListSearchView"
-            app:layout_constraintTop_toBottomOf="@+id/friendChatListSearchView" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!--        <TextView-->
 <!--            android:id="@+id/textView"-->

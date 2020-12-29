@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="com.rn1.gogoyo.friend.list.FriendListViewModel" />
@@ -23,15 +24,27 @@
             android:layout_height="wrap_content">
 
 
+            <!--            <Button-->
+            <!--                android:id="@+id/button2"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:backgroundTint="@color/white"-->
+            <!--                android:text="@{viewModel.friendStatus}"-->
+            <!--                android:textColor="@color/black_3f3a3a"-->
+            <!--                tools:layout_editor_absoluteX="113dp"-->
+            <!--                tools:layout_editor_absoluteY="8dp" />-->
+
             <ImageView
                 android:id="@+id/userImgIv"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                app:imageUrl="@{user.image}"
-                android:scaleType="centerCrop"
+                android:layout_marginBottom="8dp"
                 android:outlineProvider="@{viewModel.outlineProvider}"
+                android:scaleType="centerCrop"
+                app:imageUrl="@{user.image}"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -39,75 +52,68 @@
                 android:id="@+id/textView6"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="8dp"
                 android:text="@{user.name}"
-                tools:text="莫罕默德"
-                android:textAlignment="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/userImgIv"
-                app:layout_constraintStart_toStartOf="@+id/userImgIv"
-                app:layout_constraintTop_toBottomOf="@+id/userImgIv" />
-
-            <View
-                android:id="@+id/view2"
-                android:layout_width="1dp"
-                android:layout_height="90dp"
-                android:layout_marginStart="16dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView6"
+                style="@style/TextStyleTitle1"
+                android:textAlignment="viewStart"
+                app:layout_constraintBottom_toTopOf="@+id/friendPetRecyclerView"
+                app:layout_constraintEnd_toStartOf="@+id/friendListBt"
                 app:layout_constraintStart_toEndOf="@+id/userImgIv"
-                app:layout_constraintTop_toTopOf="@+id/userImgIv" />
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:backgroundTint="@color/white"
-                android:textColor="@color/black_3f3a3a"
-                android:text="@{viewModel.friendStatus}"
-                app:layout_constraintStart_toEndOf="@+id/view2"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="莫罕默德" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/friendPetRecyclerView"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.491"
-                app:layout_constraintStart_toEndOf="@+id/view2"
-                app:layout_constraintTop_toBottomOf="@+id/view7" />
+                app:layout_constraintStart_toEndOf="@+id/userImgIv"
+                app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
             <ImageView
                 android:id="@+id/friendListBt"
-                android:layout_width="40dp"
-                android:layout_height="0dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
                 android:padding="4dp"
-                app:layout_constraintBottom_toBottomOf="@+id/button2"
+                app:layout_constraintBottom_toTopOf="@+id/friendPetRecyclerView"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button2"
-                app:srcCompat="@drawable/chat" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/chat"
+                app:tint="@color/black_3f3a3a" />
 
-            <View
-                android:id="@+id/view7"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="8dp"
-                android:background="#999999"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/view2"
-                app:layout_constraintTop_toBottomOf="@+id/button2" />
+            <TextView
+                android:id="@+id/friendNoPetsTv"
+                style="@style/TextStyleContent14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:gravity="center"
+                android:text='@{user.pets != null ? @string/no_registry_pet_text : ""}'
+                android:visibility="@{user.pets.size() == 0 ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:visibility="@{user.pets == null || user.pets.size() == 0 ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/userImgIv"
+                app:layout_constraintTop_toBottomOf="@+id/textView6"
+                app:srcCompat="@drawable/icon_place_holder" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>

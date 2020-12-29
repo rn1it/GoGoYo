@@ -52,14 +52,14 @@ class FriendChatFragment(val userId: String) : Fragment() {
             it?.let {
                 adapter.submitList(it)
 
-                binding.friendChatListSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?) = false
-
-                    override fun onQueryTextChange(query: String): Boolean {
-                        adapter.submitList(filter(it, query))
-                        return true
-                    }
-                })
+//                binding.friendChatListSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+//                    override fun onQueryTextSubmit(query: String?) = false
+//
+//                    override fun onQueryTextChange(query: String): Boolean {
+//                        adapter.submitList(filter(it, query))
+//                        return true
+//                    }
+//                })
             }
         })
 

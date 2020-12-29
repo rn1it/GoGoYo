@@ -29,6 +29,8 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="age">年紀</string>
+    <string name="text_friend">好友</string>
+    <string name="no_registry_pet_text">未註冊寵物</string>
 
     <string-array name="relation_array">
         <item>朋友</item>

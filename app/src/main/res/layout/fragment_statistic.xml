@@ -16,7 +16,7 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/statisticTabLayout"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/tab_layout_height"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>

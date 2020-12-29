@@ -25,15 +25,15 @@ class FriendListViewModel(
     val userId: String
 ): ViewModel() {
 
-    private val _friendList = MutableLiveData<List<Users>>()
+    var liveFriend = MutableLiveData<List<Friends>>()
 
+    private val _friendList = MutableLiveData<List<Users>>()
     val friendList: LiveData<List<Users>>
         get() = _friendList
 
     val friendStatus = MutableLiveData<String>()
 
     private val _navigateToChatRoom = MutableLiveData<Chatroom>()
-
     val navigateToChatRoom: LiveData<Chatroom>
         get() = _navigateToChatRoom
 
@@ -42,12 +42,10 @@ class FriendListViewModel(
         get() = _navigateToProfile
 
     private val _status = MutableLiveData<LoadStatus>()
-
     val status: LiveData<LoadStatus>
         get() = _status
 
     private val _error = MutableLiveData<String>()
-
     val error: LiveData<String>
         get() = _error
 
@@ -58,6 +56,7 @@ class FriendListViewModel(
     val outlineProvider = MapOutlineProvider()
 
     init {
+        getUserLiveFriend()
     }
 
     override fun onCleared() {
@@ -65,25 +64,29 @@ class FriendListViewModel(
         viewModelJob.cancel()
     }
 
-    fun getUserFriends(friendShip: String){
+    private fun getUserLiveFriend(){
+        liveFriend = repository.getUserLiveFriend(UserManager.userUID!!, null)
+    }
 
-        friendStatus.value = friendShip
+    private fun getUserFriends(){
 
-        val status = when (friendShip) {
-            "朋友" -> 2
-            "好友邀請" -> 1
-            "等待中" -> 0
-            else -> 2
-        }
+//        friendStatus.value = friendShip
+
+//        val status = when (friendShip) {
+//            "朋友" -> 2
+//            "好友邀請" -> 1
+//            "等待中" -> 0
+//            else -> null
+//        }
 
         coroutineScope.launch {
 
-            when (val result = repository.getUserFriends(userId, status)) {
+            when (val result = repository.getUserFriends(userId, null)) {
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadStatus.DONE
                     val friends = result.data
-                    getFriendListById(status, friends)
+                    getFriendListById( friends)
                 }
                 is Result.Fail -> {
                     _error.value = result.error
@@ -101,7 +104,7 @@ class FriendListViewModel(
         }
     }
 
-    private fun getFriendListById(status: Int, friends: List<Friends>) {
+    fun getFriendListById(friends: List<Friends>) {
 
         val idList = mutableListOf<String>()
 
@@ -121,9 +124,15 @@ class FriendListViewModel(
                         _status.value = LoadStatus.DONE
                         val list = mutableListOf<Users>()
                         for (user in result.data){
-                            user.status = status
-                            list.add(user)
+                            for (friend in friends) {
+                                if (user.id == friend.friendId) {
+                                    user.status = friend.status
+                                    list.add(user)
+                                }
+                            }
                         }
+                        // sort by user name
+                        list.sortBy { it.name }
                         _friendList.value = list
                     }
                     is Result.Fail -> {
