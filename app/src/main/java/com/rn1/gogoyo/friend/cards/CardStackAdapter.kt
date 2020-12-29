@@ -2,9 +2,11 @@ package com.rn1.gogoyo.friend.cards
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.databinding.ItemFriendCardBinding
 import com.rn1.gogoyo.model.Users
 import com.rn1.gogoyo.util.Logger
@@ -122,7 +124,12 @@ class CardStackAdapter(
                 }
 
                 binding.playVideoFab.setOnClickListener {
-                    viewModel.setShowVideoDialog(user.pets[position])
+                    val pet = user.pets[position]
+                    if (pet.video.isNullOrEmpty()) {
+                        Toast.makeText(GogoyoApplication.instance.applicationContext, "目前沒有這隻寵物的影片喔!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        viewModel.setShowVideoDialog(user.pets[position])
+                    }
                 }
 
                 binding.backBt.setOnClickListener {
