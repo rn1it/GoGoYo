@@ -190,7 +190,7 @@ class WalkStartFragment : Fragment(){
                 val checkQrCodeFriendBt = dialog.checkQrCodeFriendBt
 
                 qrCodeUserNameIv.text = it.name
-                qrCodeUserImageIv.outlineProvider = MapOutlineProvider()
+//                qrCodeUserImageIv.outlineProvider = MapOutlineProvider()
 
                 val imgUri = it.image?.toUri()?.buildUpon()?.scheme("https")?.build()
                 Glide.with(qrCodeUserImageIv.context)

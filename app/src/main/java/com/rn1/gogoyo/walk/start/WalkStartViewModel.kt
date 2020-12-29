@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.text.DecimalFormat
 import java.util.*
 import kotlin.concurrent.schedule
 import kotlin.math.acos
@@ -334,12 +335,15 @@ class WalkStartViewModel(
 
             val walk = walk.value!!
 
+            val decimalFormat = DecimalFormat("#,##0.000")
+            val dis = decimalFormat.format(totalDistance).toFloat()
+
             walk.apply {
                 endTime = Calendar.getInstance().timeInMillis
                 points = pointsList
                 period = second.toLong()
                 mapImg = mapImgPath
-                distance = totalDistance.toFloat()
+                distance = DecimalFormat("#,##0.000").format(totalDistance).toFloat()
                 images = _imageStringList.value
             }
 
