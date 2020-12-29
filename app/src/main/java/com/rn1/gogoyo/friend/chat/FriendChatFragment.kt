@@ -35,7 +35,7 @@ class FriendChatFragment(val userId: String) : Fragment() {
         binding.viewModel = viewModel
 
         val recyclerView = binding.chatListRv
-        val adapter = FriendChatAdapter(viewModel, FriendChatAdapter.OnClickListener{
+        val adapter = FriendChatAdapter(FriendChatAdapter.OnClickListener{
             viewModel.navigateToChatRoom(it)
         })
 

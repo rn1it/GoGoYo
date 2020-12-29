@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
+import com.rn1.gogoyo.UserManager
 import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.model.Chatroom
 import com.rn1.gogoyo.model.Friends
@@ -17,6 +18,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import com.rn1.gogoyo.model.Result
 import com.rn1.gogoyo.model.Users
+import java.util.*
 
 class FriendListViewModel(
     val repository: GogoyoRepository,
@@ -56,7 +58,6 @@ class FriendListViewModel(
     val outlineProvider = MapOutlineProvider()
 
     init {
-//        getUserFriends("朋友")
     }
 
     override fun onCleared() {
@@ -171,6 +172,64 @@ class FriendListViewModel(
             }
         }
 
+    }
+
+    fun onClickProfileBt(user: Users){
+        coroutineScope.launch {
+            val friend = Friends().apply {
+                createdTime = Calendar.getInstance().timeInMillis
+                friendId = user.id
+                status = 2
+            }
+            when (val result = repository.setUserFriend(UserManager.userUID!!, friend)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    friend.apply {
+                        friendId = UserManager.userUID!!
+                        status = 2
+                    }
+                    updateFriendStatus(user, friend)
+                    //  同步更新好友的好友狀態
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                }
+            }
+        }
+    }
+
+    // 送出好友邀請後同步更新好友的好友狀態
+    private fun updateFriendStatus(user: Users, friend: Friends) {
+        coroutineScope.launch {
+            when (val result = repository.setUserFriend(user.id, friend)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                }
+            }
+        }
     }
 
     fun toProfile(id: String) {

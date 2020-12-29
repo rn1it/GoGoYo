@@ -27,38 +27,30 @@ class ChatRoomViewModel(
     var friendId  = ""
 
     private val _friend = MutableLiveData<Users>()
-
     val friend: LiveData<Users>
         get() = _friend
 
     val content = MutableLiveData<String>()
 
     private val _clearMsg = MutableLiveData<Boolean>()
-
     val clearMsg: LiveData<Boolean>
         get() = _clearMsg
 
     var liveMessages = MutableLiveData<List<Messages>>()
 
     private val _liveMessagesWithUserInfo = MutableLiveData<List<Messages>>()
-
     val liveMessagesWithUserInfo: LiveData<List<Messages>>
         get() = _liveMessagesWithUserInfo
 
     private val _refreshStatus = MutableLiveData<Boolean>()
-
     val refreshStatus: LiveData<Boolean>
         get() = _refreshStatus
 
-    // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadStatus>()
-
     val status: LiveData<LoadStatus>
         get() = _status
 
-    // error: The internal MutableLiveData that stores the error of the most recent request
     private val _error = MutableLiveData<String>()
-
     val error: LiveData<String>
         get() = _error
 

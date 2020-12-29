@@ -35,7 +35,8 @@ class ChatRoomFragment : Fragment() {
         val recyclerView = binding.msgRv
         val adapter = ChatRoomAdapter()
         val linearLayoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        // set the view to the last element
+
+        // set the view to the last element (views will created from bottom to top)
         //linearLayoutManager.stackFromEnd = true
 
         recyclerView.adapter = adapter
@@ -44,8 +45,6 @@ class ChatRoomFragment : Fragment() {
         viewModel.liveMessages.observe(viewLifecycleOwner, Observer {
 
             it?.let {
-//                adapter.separateMsgSubmitList(it)
-//                recyclerView.smoothScrollToPosition(it.size)
                 viewModel.getLiveMessagesWithUserInfo(it)
             }
         })
@@ -53,10 +52,10 @@ class ChatRoomFragment : Fragment() {
         viewModel.liveMessagesWithUserInfo.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.separateMsgSubmitList(it)
+                // set the view to the last element (list size)
                 recyclerView.smoothScrollToPosition(it.size)
             }
         })
-
 
         viewModel.clearMsg.observe(viewLifecycleOwner, Observer {
 
@@ -67,8 +66,6 @@ class ChatRoomFragment : Fragment() {
                 }
             }
         })
-
-
 
         return binding.root
     }

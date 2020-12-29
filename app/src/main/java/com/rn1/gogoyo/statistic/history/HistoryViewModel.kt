@@ -93,6 +93,7 @@ class HistoryViewModel(val repository: GogoyoRepository): ViewModel() {
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadStatus.DONE
+                    result.data.sortedByDescending { it.createdTime }
                     _walks.value = result.data
                 }
                 is Result.Fail -> {

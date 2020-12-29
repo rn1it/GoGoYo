@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.ItemFriendBinding
 import com.rn1.gogoyo.home.content.ArticleContentPetImageAdapter
 import com.rn1.gogoyo.model.Users
@@ -17,11 +18,28 @@ class FriendListAdapter(val viewModel: FriendListViewModel) : ListAdapter<Users,
         fun bind(viewModel: FriendListViewModel, user: Users){
             binding.user = user
             binding.viewModel = viewModel
-            if (user.status == 2){
-                binding.toChatRoomBt.visibility = View.VISIBLE
-            } else {
-                binding.toChatRoomBt.visibility = View.GONE
+
+            when (user.status) {
+                1 -> {
+                    binding.friendListBt.visibility = View.VISIBLE
+                    binding.friendListBt.setImageResource(R.drawable.add_user)
+                    binding.friendListBt.setOnClickListener {
+                        viewModel.onClickProfileBt(user)
+                    }
+                }
+                2 -> {
+                    binding.friendListBt.visibility = View.VISIBLE
+                    binding.friendListBt.setImageResource(R.drawable.chat)
+                    binding.friendListBt.setOnClickListener {
+                        viewModel.toChatRoom(user)
+                    }
+                }
+                else -> {
+                    binding.friendListBt.visibility = View.GONE
+                }
             }
+
+
 
             val adapter = ArticleContentPetImageAdapter()
             binding.friendPetRecyclerView.adapter = adapter
@@ -30,10 +48,6 @@ class FriendListAdapter(val viewModel: FriendListViewModel) : ListAdapter<Users,
 
             binding.userImgIv.setOnClickListener {
                 viewModel.toProfile(user.id)
-            }
-
-            binding.toChatRoomBt.setOnClickListener {
-                viewModel.toChatRoom(user)
             }
 
             binding.executePendingBindings()
@@ -45,7 +59,6 @@ class FriendListAdapter(val viewModel: FriendListViewModel) : ListAdapter<Users,
             }
         }
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return FriendViewHolder.from(parent)

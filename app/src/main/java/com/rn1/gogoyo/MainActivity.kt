@@ -1,12 +1,15 @@
 package com.rn1.gogoyo
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -27,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel by viewModels<MainViewModel> { getVmFactory() }
     private lateinit var firebaseAnalytics: FirebaseAnalytics
+    private var locationPermission = false
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         val navController =  findNavController(R.id.myNavHostFragment)
@@ -88,7 +92,7 @@ class MainActivity : AppCompatActivity() {
 
             viewModel.popBack.observe(this, Observer {
                 it?.let {
-                    findNavController(R.id.myNavHostFragment).popBackStack()
+                    findNavController(R.id.myNavHostFragment).navigateUp()
                 }
             })
 
@@ -109,6 +113,8 @@ class MainActivity : AppCompatActivity() {
             setUpBottomNav()
             setupNavController()
             setupStatusBar()
+            getLocationPermission()
+//            checkPer;ission()
         }
     }
 
@@ -155,7 +161,44 @@ class MainActivity : AppCompatActivity() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     }
 
+    private fun getLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_DENIED) {
+            locationPermission = false
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                PERMISSION_ID
+            )
+        } else {
+            locationPermission = true
+        }
+    }
+
+    private fun checkPermission() {
+        val permission = ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            //未取得權限，向使用者要求允許權限
+            ActivityCompat.requestPermissions(
+                this, arrayOf(
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ),
+                REQUEST_EXTERNAL_STORAGE
+            )
+        }
+    }
+
     companion object {
         private const val TAG = "GoGoYo"
+        private const val PERMISSION_ID = 1
+        private const val REQUEST_EXTERNAL_STORAGE = 200
     }
 }
