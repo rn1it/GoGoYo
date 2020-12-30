@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -14,6 +15,7 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -124,6 +126,20 @@ class WalkStartFragment : Fragment(){
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_walk_start, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+
+                val dialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                dialog.setTitle("退出將結束散步")
+                dialog.setMessage("確定退出?")
+                dialog.setPositiveButton("確定") { _, _ ->  viewModel.onNavigateToEndWalk()}
+                dialog.setNegativeButton("取消", null)
+
+                dialog.show()
+            }
+        })
+
 
         val recyclerView = binding.walkImgRv
         val adapter = WalkImgAdapter()
@@ -622,6 +638,5 @@ class WalkStartFragment : Fragment(){
         private const val PICK_IMAGE = 2404
         private const val CAMERA_REQUEST_CODE = 500
     }
-
 
 }
