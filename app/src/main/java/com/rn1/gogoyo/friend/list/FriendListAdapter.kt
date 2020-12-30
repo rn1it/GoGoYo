@@ -1,11 +1,13 @@
 package com.rn1.gogoyo.friend.list
 
+import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.ItemFriendBinding
 import com.rn1.gogoyo.databinding.ItemFriendStatusTitleBinding
@@ -63,9 +65,22 @@ class FriendListAdapter(val viewModel: FriendListViewModel) : ListAdapter<Friend
                 }
             }
 
-            val adapter = ArticleContentPetImageAdapter()
+            val adapter = FriendPetsAdapter()
             binding.friendPetRecyclerView.adapter = adapter
             adapter.submitList(user.pets)
+
+            binding.friendPetRecyclerView.addItemDecoration(object : RecyclerView.ItemDecoration(){
+                override fun getItemOffsets(
+                    outRect: Rect,
+                    view: View,
+                    parent: RecyclerView,
+                    state: RecyclerView.State
+                ) {
+                    super.getItemOffsets(outRect, view, parent, state)
+
+                    outRect.left = GogoyoApplication.instance.resources.getDimensionPixelSize(R.dimen.cell_margin_8dp)
+                }
+            })
 
 
             binding.userImgIv.setOnClickListener {

@@ -14,26 +14,16 @@
         android:layout_height="match_parent"
         tools:context=".walk.WalkFragment">
 
-<!--        <pl.droidsonroids.gif.GifImageView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:scaleType="centerCrop"-->
-<!--            android:src="@drawable/rain"-->
-<!--            app:layout_constraintBottom_toTopOf="@+id/cardView"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
-<!--        <com.airbnb.lottie.LottieAnimationView-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="0dp"-->
-<!--            app:layout_constraintBottom_toTopOf="@+id/cardView"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:lottie_autoPlay="true"-->
-<!--            app:lottie_loop="true"-->
-<!--            app:lottie_rawRes="@raw/rain_background" />-->
-
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/gifAnimationView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/cloud_4g"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottieAnimationView"
@@ -44,7 +34,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:lottie_autoPlay="true"
-            app:lottie_loop="true"/>
+            app:lottie_loop="true" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottieAnimationView2"
@@ -56,52 +46,6 @@
             app:layout_constraintTop_toBottomOf="@+id/lottieAnimationView"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"/>
-<!--        <view-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="200dp"/>-->
-<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--            android:id="@+id/btConst"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:elevation="@dimen/elevation_more"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent">-->
-
-<!--            <Button-->
-<!--                android:id="@+id/button6"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:backgroundTint="@color/white"-->
-<!--                android:elevation="@dimen/elevation_all"-->
-<!--                android:insetTop="0dp"-->
-<!--                android:insetBottom="0dp"-->
-<!--                android:textColor="@color/black_3f3a3a"-->
-<!--                android:text="散步紀錄"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toStartOf="@+id/button7"-->
-<!--                app:layout_constraintHorizontal_chainStyle="spread_inside"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--            <Button-->
-<!--                android:id="@+id/button7"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:backgroundTint="@color/white"-->
-<!--                android:elevation="@dimen/elevation_all"-->
-<!--                android:insetTop="0dp"-->
-<!--                android:insetBottom="0dp"-->
-<!--                android:textColor="@color/black_3f3a3a"-->
-<!--                android:text="數據統計"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toEndOf="@+id/button6"-->
-<!--                app:layout_constraintTop_toTopOf="@+id/button6" />-->
-
-
-<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout2"
@@ -128,20 +72,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:context=".walk.WalkFragment" />
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <!--        <Button-->
-        <!--            android:id="@+id/button"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginBottom="64dp"-->
-        <!--            android:backgroundTint="#FFC107"-->
-        <!--            android:onClick="@{() -> viewModel.onNavigateToStartWalk()}"-->
-        <!--            android:text="開始散步"-->
-        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent" />-->
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
@@ -163,7 +94,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:text="誰去散步?"
+                    android:text="@string/who_go_to_walk_text"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -194,7 +125,7 @@
                     android:insetBottom="0dp"
                     android:minWidth="0dp"
                     android:onClick="@{() -> viewModel.onNavigateToStartWalk()}"
-                    android:text="Go!"
+                    android:text="@string/go_text"
                     android:textAlignment="center"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
@@ -208,11 +139,5 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
-
-
-
-
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

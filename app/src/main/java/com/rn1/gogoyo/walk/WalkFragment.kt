@@ -68,26 +68,24 @@ class WalkFragment : Fragment() {
 
                 when(it) {
                     "clouds" -> {
-                        binding.lottieAnimationView.setAnimation(R.raw.clouds_2)
-                        binding.lottieAnimationView.playAnimation()
-                        binding.lottieAnimationView.loop(true)
-//                        binding.lottieAnimationView2.visibility = View.INVISIBLE
+                        binding.gifAnimationView.visibility = View.VISIBLE
                     }
                     "sun" -> {
                         Logger.d("sun = $it")
                         binding.lottieAnimationView.setAnimation(R.raw.sunny_day)
                         binding.lottieAnimationView.playAnimation()
                         binding.lottieAnimationView.loop(true)
-//                        binding.lottieAnimationView2.visibility = View.INVISIBLE
+                        binding.gifAnimationView.visibility = View.GONE
                     }
                     "rain" -> {
                         Logger.d("rain = $it")
                         binding.lottieAnimationView.setAnimation(R.raw.rain_umbrella_bg)
-                        binding.lottieAnimationView2.setAnimation(R.raw.rain_umbrella_bg)
                         binding.lottieAnimationView.playAnimation()
                         binding.lottieAnimationView.loop(true)
+                        binding.lottieAnimationView2.setAnimation(R.raw.rain_umbrella_bg)
                         binding.lottieAnimationView2.playAnimation()
                         binding.lottieAnimationView2.loop(true)
+                        binding.gifAnimationView.visibility = View.GONE
                     }
                 }
             }
@@ -106,15 +104,6 @@ class WalkFragment : Fragment() {
             }
         })
 
-//        binding.button6.setOnClickListener {
-//            val intent = Intent(context, WalkTimerService::class.java)
-//            requireContext().startService(intent)
-//        }
-//
-//        binding.button7.setOnClickListener {
-//            val intent = Intent(context, WalkTimerService::class.java)
-//            requireContext().stopService(intent)
-//        }
         return binding.root
     }
 

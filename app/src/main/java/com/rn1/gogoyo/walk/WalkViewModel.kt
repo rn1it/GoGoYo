@@ -60,7 +60,6 @@ class WalkViewModel(val repository: GogoyoRepository): ViewModel() {
 
     init {
 //        getForeCastWeather("7280291")
-        getCurrentWeather(25.0433274174151, 121.5659879661622)
         getUserPets()
         selectedPetPositionList.value = mutableListOf()
         selectedPetIdList.value = mutableListOf()
@@ -184,15 +183,14 @@ class WalkViewModel(val repository: GogoyoRepository): ViewModel() {
 
         coroutineScope.launch {
 
-            // weather 3 種狀態: rain, clouds, clear
+            // weather has 3 status : rain, clouds, clear
 
             when (val result = repository.getCurrentWeather(lat, lng)) {
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadStatus.DONE
                     Logger.d("result.data = ${result.data}")
-//                    _weatherDescription.value = "sun"
-                    if(result.data.weather!![0].main!!.contains("Rain")){
+                    if(result.data.weather!![0].main!!.contains("Rain") || result.data.weather[0].main!!.contains("Drizzle")){
                         _weatherDescription.value = "rain"
                     } else if (result.data.weather[0].main!!.contains("Clear")) {
                         _weatherDescription.value = "sun"
