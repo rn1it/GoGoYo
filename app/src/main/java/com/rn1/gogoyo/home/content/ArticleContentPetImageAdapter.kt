@@ -12,7 +12,7 @@ import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.databinding.ItemPetImageLayoutBinding
 import com.rn1.gogoyo.model.Pets
 
-class ArticleContentPetImageAdapter() : ListAdapter<Pets, RecyclerView.ViewHolder>(PetsDiffCallback) {
+class ArticleContentPetImageAdapter : ListAdapter<Pets, RecyclerView.ViewHolder>(PetsDiffCallback) {
 
     class PetImageViewHolder(
         val binding: ItemPetImageLayoutBinding

@@ -126,6 +126,11 @@
             android:name="userIdKey"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/statisticFragment"
+        android:name="com.rn1.gogoyo.statistic.StatisticFragment"
+        android:label="StatisticFragment"
+        tools:layout="@layout/fragment_statistic"/>
     <action
         android:id="@+id/action_global_homeFragment"
         app:destination="@id/homeFragment"
@@ -136,18 +141,32 @@
     <action
         android:id="@+id/action_global_walkFragment"
         app:destination="@id/walkFragment"
+        app:popUpTo="@id/navigation"
         app:popUpToInclusive="true" />
     <action android:id="@+id/action_global_eventFragment" app:destination="@id/eventFragment" />
-    <action android:id="@+id/action_global_friendFragment" app:destination="@id/friendFragment" />
+    <action
+        android:id="@+id/action_global_friendFragment"
+        app:destination="@id/friendFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
     <action android:id="@+id/action_global_postFragment" app:destination="@id/postFragment" />
     <action android:id="@+id/action_global_articleContentFragment" app:destination="@id/articleContentFragment" />
     <action android:id="@+id/action_global_friendChatFragment" app:destination="@id/friendChatFragment" />
     <action android:id="@+id/action_global_friendListFragment" app:destination="@id/friendListFragment" />
     <action android:id="@+id/action_global_walkStartFragment" app:destination="@id/walkStartFragment"/>
-    <action android:id="@+id/action_global_walkEndFragment" app:destination="@id/walkEndFragment" />
+    <action
+        android:id="@+id/action_global_walkEndFragment"
+        app:destination="@id/walkEndFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
     <action android:id="@+id/action_global_chatRoomFragment" app:destination="@id/chatRoomFragment" />
     <action android:id="@+id/action_global_newPetFragment" app:destination="@id/newPetFragment"/>
     <action android:id="@+id/action_global_editPetFragment" app:destination="@id/editPetFragment" />
     <action android:id="@+id/action_global_editUserFragment" app:destination="@id/editUserFragment" />
+    <action
+        android:id="@+id/action_global_statisticFragment"
+        app:destination="@id/statisticFragment"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true" />
 
 </navigation>

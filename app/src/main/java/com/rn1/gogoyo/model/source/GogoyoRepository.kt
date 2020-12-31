@@ -12,7 +12,7 @@ interface GogoyoRepository {
 
     suspend fun getAudioUri(uri: Uri): Result<String>
 
-    suspend fun login(id: String, name: String): Result<Boolean>
+    suspend fun login(id: String, name: String): Result<Users>
 
     fun getLiveUserById(id: String): MutableLiveData<Users>
 
@@ -54,6 +54,14 @@ interface GogoyoRepository {
 
     suspend fun responseArticle(articleId: String, response: ArticleResponse): Result<List<ArticleResponse>>
 
+    suspend fun setResponseUserImage(list: List<ArticleResponse>):Result<List<ArticleResponse>>
+
+    suspend fun getWalkListByUserId(userId: String): Result<List<Walk>>
+
+    suspend fun getWalkListInfoByWalkList(walks: List<Walk>): Result<List<Walk>>
+
+    suspend fun getWalkListUserInfoByWalkList(walks: List<Walk>): Result<List<Walk>>
+
     suspend fun insertWalk(walk: Walk): Result<Walk>
 
     suspend fun updateWalk(walk: Walk): Result<Walk>
@@ -65,6 +73,8 @@ interface GogoyoRepository {
     fun getRealTimeOthersWalkingList(userId: String): MutableLiveData<List<Walk>>
 
     suspend fun getOthersWalkingList(userId: String): Result<List<Walk>>
+
+    fun getUserLiveFriend(userId: String, status: Int?): MutableLiveData<List<Friends>>
 
     suspend fun getUserFriends(userId: String, status: Int?): Result<List<Friends>>
 
@@ -82,5 +92,11 @@ interface GogoyoRepository {
 
     fun getLiveChatRoomMessages(chatroomId: String): MutableLiveData<List<Messages>>
 
+    suspend fun getLiveChatRoomMessagesWithUserInfo(list: List<Messages>): Result<List<Messages>>
+
     suspend fun sendMessage(chatroomId: String, message: Messages): Result<Boolean>
+
+    suspend fun getForeCastWeather(id: String): Result<WeatherResponse>
+
+    suspend fun getCurrentWeather(lat: Double, lng: Double): Result<CurrentWeatherResponse>
 }

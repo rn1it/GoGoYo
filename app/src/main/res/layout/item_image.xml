@@ -8,10 +8,9 @@
             type="com.rn1.gogoyo.model.Articles" />
     </data>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:padding="2dp"
-        android:scaleType="centerCrop"
-        app:imageUrl="@{article.images[0]}" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            app:imageUrl="@{article.images[0]}" />
 </layout>

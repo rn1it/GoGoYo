@@ -4,7 +4,9 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.rn1.gogoyo.model.*
+import com.rn1.gogoyo.model.source.CurrentWeatherResponse
 import com.rn1.gogoyo.model.source.GogoyoDataSource
+import com.rn1.gogoyo.model.source.WeatherResponse
 
 class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
     override suspend fun getImageUri(filePath: String): Result<String> {
@@ -19,7 +21,7 @@ class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
         TODO("Not yet implemented")
     }
 
-    override suspend fun login(id: String, name: String): Result<Boolean> {
+    override suspend fun login(id: String, name: String): Result<Users> {
         TODO("Not yet implemented")
     }
 
@@ -103,6 +105,22 @@ class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
         TODO("Not yet implemented")
     }
 
+    override suspend fun setResponseUserImage(list: List<ArticleResponse>): Result<List<ArticleResponse>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getWalkListByUserId(userId: String): Result<List<Walk>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getWalkListInfoByWalkList(walks: List<Walk>): Result<List<Walk>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getWalkListUserInfoByWalkList(walks: List<Walk>): Result<List<Walk>> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun insertWalk(walk: Walk): Result<Walk> {
         TODO("Not yet implemented")
     }
@@ -120,6 +138,10 @@ class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
     }
 
     override suspend fun getOthersWalkingList(userId: String): Result<List<Walk>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getUserLiveFriend(userId: String, status: Int?): MutableLiveData<List<Friends>> {
         TODO("Not yet implemented")
     }
 
@@ -155,7 +177,19 @@ class GogoyoLocalDataSource(val context: Context) : GogoyoDataSource {
         TODO("Not yet implemented")
     }
 
+    override suspend fun getLiveChatRoomMessagesWithUserInfo(list: List<Messages>): Result<List<Messages>> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun sendMessage(chatroomId: String, message: Messages): Result<Boolean> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getForeCastWeather(id: String): Result<WeatherResponse> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getCurrentWeather(lat: Double, lng: Double): Result<CurrentWeatherResponse> {
         TODO("Not yet implemented")
     }
 

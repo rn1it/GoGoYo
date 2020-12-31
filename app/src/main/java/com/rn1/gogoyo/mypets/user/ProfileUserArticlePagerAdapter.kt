@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.rn1.gogoyo.GogoyoApplication
+import com.rn1.gogoyo.R
+import com.rn1.gogoyo.component.GridSpacingItemDecoration
 import com.rn1.gogoyo.databinding.ItemListLayoutBinding
 import com.rn1.gogoyo.home.HomeViewModel
 import com.rn1.gogoyo.model.Articles
@@ -21,9 +23,13 @@ class ProfileUserArticlePagerAdapter(val viewModel: ProfileUserViewModel) : List
             })
             binding.list = list
             binding.articleGridRv.adapter = adapter
-            adapter.submitList(list)
-
             binding.articleGridRv.layoutManager = GridLayoutManager(GogoyoApplication.instance, 3)
+            binding.articleGridRv.addItemDecoration(GridSpacingItemDecoration(3, GogoyoApplication.instance.resources.getDimensionPixelSize(
+                R.dimen.cell_margin_4dp), true))
+
+
+
+            adapter.submitList(list)
             binding.executePendingBindings()
         }
         companion object{

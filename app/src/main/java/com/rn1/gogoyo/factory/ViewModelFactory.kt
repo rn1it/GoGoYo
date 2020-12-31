@@ -12,6 +12,9 @@ import com.rn1.gogoyo.mypets.MyPetsViewModel
 import com.rn1.gogoyo.mypets.newpets.NewPetViewModel
 import com.rn1.gogoyo.mypets.pet.ProfilePetViewModel
 import com.rn1.gogoyo.mypets.user.ProfileUserViewModel
+import com.rn1.gogoyo.statistic.StatisticViewModel
+import com.rn1.gogoyo.statistic.history.HistoryViewModel
+import com.rn1.gogoyo.statistic.total.TotalWalkViewModel
 import com.rn1.gogoyo.walk.WalkViewModel
 import com.rn1.gogoyo.walk.end.WalkEndViewModel
 import com.rn1.gogoyo.walk.start.WalkStartViewModel
@@ -38,6 +41,15 @@ class ViewModelFactory constructor(
 
                 isAssignableFrom(NewPetViewModel::class.java) ->
                     NewPetViewModel(repository)
+
+                isAssignableFrom(HistoryViewModel::class.java) ->
+                    HistoryViewModel(repository)
+
+                isAssignableFrom(TotalWalkViewModel::class.java) ->
+                    TotalWalkViewModel(repository)
+
+                isAssignableFrom(StatisticViewModel::class.java) ->
+                    StatisticViewModel(repository)
 
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

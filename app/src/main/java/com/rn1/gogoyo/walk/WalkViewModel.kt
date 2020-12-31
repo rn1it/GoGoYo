@@ -31,24 +31,24 @@ class WalkViewModel(val repository: GogoyoRepository): ViewModel() {
     val selectedPetIdList = MutableLiveData<MutableList<String>>()
 
     private val _navigateToStartWalk = MutableLiveData<MutableList<String>>()
-
     val navigateToStartWalk: LiveData<MutableList<String>>
         get() = _navigateToStartWalk
 
     private val _userPetList = MutableLiveData<List<Pets>>()
-
     val userPetList: LiveData<List<Pets>>
         get() = _userPetList
 
+    private val _weatherDescription = MutableLiveData<String>()
+    val weatherDescription: LiveData<String>
+        get() = _weatherDescription
+
     // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadStatus>()
-
     val status: LiveData<LoadStatus>
         get() = _status
 
     // error: The internal MutableLiveData that stores the error of the most recent request
     private val _error = MutableLiveData<String>()
-
     val error: LiveData<String>
         get() = _error
 
@@ -59,6 +59,7 @@ class WalkViewModel(val repository: GogoyoRepository): ViewModel() {
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
+//        getForeCastWeather("7280291")
         getUserPets()
         selectedPetPositionList.value = mutableListOf()
         selectedPetIdList.value = mutableListOf()
@@ -145,6 +146,75 @@ class WalkViewModel(val repository: GogoyoRepository): ViewModel() {
             } else {
                 outRect.left = GogoyoApplication.instance.resources.getDimensionPixelSize(R.dimen.cell_margin_8dp)
             }
+        }
+    }
+
+    fun getForeCastWeather(id: String){
+        coroutineScope.launch {
+
+            val result = repository.getForeCastWeather(id)
+
+            when (result) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    result.data
+                    Logger.d("result.data = ${result.data}")
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                }
+            }
+
+        }
+    }
+
+    fun getCurrentWeather(lat:Double, lng:Double){
+
+
+        coroutineScope.launch {
+
+            // weather has 3 status : rain, clouds, clear
+
+            when (val result = repository.getCurrentWeather(lat, lng)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    Logger.d("result.data = ${result.data}")
+                    if(result.data.weather!![0].main!!.contains("Rain") || result.data.weather[0].main!!.contains("Drizzle")){
+                        _weatherDescription.value = "rain"
+                    } else if (result.data.weather[0].main!!.contains("Clear")) {
+                        _weatherDescription.value = "sun"
+                    } else {
+                        _weatherDescription.value = "clouds"
+                    }
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    _weatherDescription.value = "clouds"
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    _weatherDescription.value = "clouds"
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                    _weatherDescription.value = "clouds"
+                }
+            }
+
         }
     }
 

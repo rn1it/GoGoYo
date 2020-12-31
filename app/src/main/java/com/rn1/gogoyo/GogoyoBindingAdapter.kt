@@ -1,7 +1,5 @@
 package com.rn1.gogoyo
 
-import android.content.res.ColorStateList
-import android.media.Image
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -11,8 +9,9 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.rn1.gogoyo.ext.getColor
 import com.rn1.gogoyo.ext.toDisplayFormat
+import com.rn1.gogoyo.ext.toDisplayFormatForTime
+import java.text.DecimalFormat
 
 @BindingAdapter("addDecoration")
 fun bindDecoration(recyclerView: RecyclerView, decoration: RecyclerView.ItemDecoration?) {
@@ -23,6 +22,12 @@ fun bindDecoration(recyclerView: RecyclerView, decoration: RecyclerView.ItemDeco
 fun bindDisplayFormatTime(textView: TextView, time: Long?) {
     textView.text = time?.toDisplayFormat()
 }
+
+@BindingAdapter("timeToDisplayFormatForTime")
+fun bindDisplayFormatJustTime(textView: TextView, time: Long?) {
+    textView.text = time?.toDisplayFormatForTime()
+}
+
 
 @BindingAdapter("changeCollectButtonStatus")
 fun bindCollectButton(imageButton: ImageButton, isCollected: Boolean) {
@@ -59,8 +64,63 @@ fun bindImage(imgView: ImageView, imgUrl: String?) {
         .load(imgUri)
         .apply(
             RequestOptions()
-                .placeholder(R.drawable.dog_profile)
-                .error(R.drawable.my_pet))
+                .placeholder(R.drawable.dog_place_holder)
+                .error(R.drawable.dog_place_holder))
         .into(imgView)
 
+}
+
+@BindingAdapter("petGender")
+fun bindGenderSymbol(imageView: ImageView, gender: String){
+    imageView.apply {
+        if (gender == "男生") {
+            setImageResource(R.drawable.mars)
+        } else {
+            setImageResource(R.drawable.femenine)
+        }
+    }
+}
+
+@BindingAdapter("secondLong")
+fun bindFormatTime(textView: TextView, sec: Long){
+    textView.apply {
+        text = formatTime(sec.toInt())
+    }
+}
+
+@BindingAdapter("distance")
+fun bindFormatKm(textView: TextView, distance: Float){
+    textView.apply {
+        val decimalFormat = DecimalFormat("#,##0.000")
+        text = "${formatFloat(distance)} km"
+    }
+}
+
+private fun formatTime(second: Int): String{
+
+    val hour = second / 3600
+    var secondTime = second % 3600
+    val minute = secondTime / 60
+    secondTime %= 60
+
+    if (hour == 0) {
+        if (minute == 0) {
+            return "${addZero(secondTime)}秒"
+        }
+        return "${addZero(minute)}分${addZero(secondTime)}秒"
+    }
+    return "${addZero(hour)}時${addZero(minute)}分${addZero(secondTime)}秒"
+}
+
+private fun addZero(number: Int): String{
+    return if(number.toString().length == 1){
+        "0$number"
+    } else {
+        "$number"
+    }
+}
+
+private fun formatFloat(float: Float): String{
+    val decimalFormat = DecimalFormat("#,##0.000")
+    return decimalFormat.format(float)
 }

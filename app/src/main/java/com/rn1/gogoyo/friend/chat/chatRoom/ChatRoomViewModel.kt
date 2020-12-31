@@ -27,33 +27,30 @@ class ChatRoomViewModel(
     var friendId  = ""
 
     private val _friend = MutableLiveData<Users>()
-
     val friend: LiveData<Users>
         get() = _friend
 
     val content = MutableLiveData<String>()
 
     private val _clearMsg = MutableLiveData<Boolean>()
-
     val clearMsg: LiveData<Boolean>
         get() = _clearMsg
 
     var liveMessages = MutableLiveData<List<Messages>>()
 
-    private val _refreshStatus = MutableLiveData<Boolean>()
+    private val _liveMessagesWithUserInfo = MutableLiveData<List<Messages>>()
+    val liveMessagesWithUserInfo: LiveData<List<Messages>>
+        get() = _liveMessagesWithUserInfo
 
+    private val _refreshStatus = MutableLiveData<Boolean>()
     val refreshStatus: LiveData<Boolean>
         get() = _refreshStatus
 
-    // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadStatus>()
-
     val status: LiveData<LoadStatus>
         get() = _status
 
-    // error: The internal MutableLiveData that stores the error of the most recent request
     private val _error = MutableLiveData<String>()
-
     val error: LiveData<String>
         get() = _error
 
@@ -109,6 +106,34 @@ class ChatRoomViewModel(
         liveMessages = repository.getLiveChatRoomMessages(chatRoom.id)
         _status.value = LoadStatus.DONE
         _refreshStatus.value = false
+    }
+
+    fun getLiveMessagesWithUserInfo(list: List<Messages>){
+
+        coroutineScope.launch {
+            _liveMessagesWithUserInfo.value = when (val result = repository.getLiveChatRoomMessagesWithUserInfo(list)) {
+                is Result.Success -> {
+                    _error.value = null
+                    _status.value = LoadStatus.DONE
+                    result.data
+                }
+                is Result.Fail -> {
+                    _error.value = result.error
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                is Result.Error -> {
+                    _error.value = result.exception.toString()
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+                else -> {
+                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
+                    _status.value = LoadStatus.ERROR
+                    null
+                }
+            }
+        }
     }
 
 

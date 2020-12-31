@@ -6,7 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.VideoView
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -14,7 +14,6 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.extractor.ExtractorsFactory
@@ -34,6 +33,7 @@ class ProfilePetFragment(val userId: String) : Fragment() {
 
     private lateinit var binding: FragmentProfilePetBinding
     private val viewModel by viewModels<ProfilePetViewModel> { getVmFactory(userId) }
+    private val mp = MediaPlayer()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,22 +50,46 @@ class ProfilePetFragment(val userId: String) : Fragment() {
         viewPager.adapter = adapter
 
         viewModel.petList.observe(viewLifecycleOwner, Observer {
-            it?.let {
 
+            if (it.isNullOrEmpty()) {
+                binding.noPetTv.visibility = View.VISIBLE
+                binding.editPetInfoBt.visibility = View.GONE
+            } else {
+                binding.noPetTv.visibility = View.INVISIBLE
                 adapter.submitList(it)
                 // listen page change and change data for selected pet
                 viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                     override fun onPageSelected(position: Int) {
+                        stopMediaPlayer()
                         viewModel.pet.value = it[position]
                     }
                 })
+
+                binding.videoPlayBt.setOnClickListener{
+                    setExoplayer(viewModel.pet.value!!.video)
+                }
+
+                binding.audioPlayBt.setOnClickListener{
+                    play(viewModel.pet.value!!.voice)
+                }
             }
         })
 
         viewModel.navigateToNewPet.observe(viewLifecycleOwner, Observer {
             it?.let {
-                if (it) findNavController().navigate(NavigationDirections.actionGlobalNewPetFragment())
-                viewModel.onDoneNavigateToNewPet()
+                if (it) {
+                    if (viewModel.petList.value != null) {
+                        if (viewModel.petList.value!!.size == 5) {
+                            Toast.makeText(context, "很抱歉，目前最多只能註冊五隻寵物", Toast.LENGTH_SHORT).show()
+                        } else {
+                            findNavController().navigate(NavigationDirections.actionGlobalNewPetFragment())
+                            viewModel.onDoneNavigateToNewPet()
+                        }
+                    } else {
+                        findNavController().navigate(NavigationDirections.actionGlobalNewPetFragment())
+                        viewModel.onDoneNavigateToNewPet()
+                    }
+                }
             }
         })
 
@@ -75,14 +99,6 @@ class ProfilePetFragment(val userId: String) : Fragment() {
                 viewModel.toEditPetDone()
             }
         })
-
-        binding.videoPlayBt.setOnClickListener{
-            setExoplayer(viewModel.pet.value!!.video)
-        }
-
-        binding.audioPlayBt.setOnClickListener{
-            play(viewModel.pet.value!!.voice)
-        }
 
         setUpViewPager(viewPager)
 
@@ -94,24 +110,36 @@ class ProfilePetFragment(val userId: String) : Fragment() {
      */
     private fun setExoplayer(url: String?) {
 
-        val dialog = Dialog(requireContext())
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(R.layout.introvid)
-        dialog.show()
-        val playerView = dialog.findViewById(R.id.exoplayer_item) as PlayerView
+        stopMediaPlayer()
 
-        try {
-            val exoPlayer = ExoPlayerFactory.newSimpleInstance(requireContext())
-            val video = Uri.parse(url)
-            val dataSourceFactory = DefaultHttpDataSourceFactory("video")
-            val extractorsFactory: ExtractorsFactory = DefaultExtractorsFactory()
-            val mediaSource: MediaSource =
-                ExtractorMediaSource(video, dataSourceFactory, extractorsFactory, null, null)
-            playerView.player = exoPlayer
-            exoPlayer.prepare(mediaSource)
-            exoPlayer.playWhenReady = false
-        } catch (e: Exception) {
-            Log.e("ViewHolder", "exoplayer error$e")
+        if (url.isNullOrEmpty()) {
+            Toast.makeText(context, "還沒有上傳影片喔!", Toast.LENGTH_SHORT).show()
+        } else {
+            val dialog = Dialog(requireContext())
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.introvid)
+            dialog.show()
+
+            val lp = WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT)
+            lp.copyFrom(dialog.window!!.attributes)
+            dialog.window!!.attributes = lp
+
+            val playerView = dialog.findViewById(R.id.exoplayer_item) as PlayerView
+
+            try {
+                val exoPlayer = ExoPlayerFactory.newSimpleInstance(requireContext())
+                val video = Uri.parse(url)
+                val dataSourceFactory = DefaultHttpDataSourceFactory("video")
+                val extractorsFactory: ExtractorsFactory = DefaultExtractorsFactory()
+                val mediaSource: MediaSource =
+                    ExtractorMediaSource(video, dataSourceFactory, extractorsFactory, null, null)
+                playerView.player = exoPlayer
+                exoPlayer.prepare(mediaSource)
+                exoPlayer.playWhenReady = false
+            } catch (e: Exception) {
+                Toast.makeText(context, "影片播放失敗，請聯絡開發人員", Toast.LENGTH_SHORT).show()
+                Log.e("ViewHolder", "exoplayer error$e")
+            }
         }
     }
 
@@ -119,20 +147,35 @@ class ProfilePetFragment(val userId: String) : Fragment() {
      * for audio play
      */
     private fun play(path: String?) {
-        try {
+        stopMediaPlayer()
+        if (path.isNullOrBlank()) {
+                Toast.makeText(context, "還沒有上傳聲音喔!", Toast.LENGTH_SHORT).show()
+        } else {
             Logger.d("play path = $path")
-            val mp = MediaPlayer()
-            mp.setDataSource(path)
+            val uri = Uri.parse(path)
+            mp.reset()
+            mp.setDataSource(requireContext(), uri)
             mp.setOnPreparedListener {
                 it.start()
+                binding.audioPlayBt.setImageResource(R.drawable.pause_24)
+            }
+            mp.setOnCompletionListener {
+                binding.audioPlayBt.setImageResource(R.drawable.play_music)
             }
             mp.prepare()
-        } catch (e: java.lang.Exception) {
-            Logger.d("play fail")
-            e.printStackTrace()
         }
+
     }
 
+    /**
+     * for audio stop
+     */
+    private fun stopMediaPlayer() {
+        if (mp.isPlaying) {
+            mp.stop()
+            binding.audioPlayBt.setImageResource(R.drawable.play_music)
+        }
+    }
 
     private fun setUpViewPager(viewPager: ViewPager2){
         viewPager.clipToPadding = false
@@ -150,5 +193,11 @@ class ProfilePetFragment(val userId: String) : Fragment() {
         })
 
         viewPager.setPageTransformer(transformer)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopMediaPlayer()
+        Logger.d("onPause stopMediaPlayer")
     }
 }

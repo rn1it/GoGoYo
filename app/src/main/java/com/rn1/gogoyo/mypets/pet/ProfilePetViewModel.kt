@@ -85,17 +85,17 @@ class ProfilePetViewModel(
                 is Result.Fail -> {
                     _error.value = result.error
                     _status.value = LoadStatus.ERROR
-                    null
+                    mutableListOf()
                 }
                 is Result.Error -> {
                     _error.value = result.exception.toString()
                     _status.value = LoadStatus.ERROR
-                    null
+                    mutableListOf()
                 }
                 else -> {
                     _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
                     _status.value = LoadStatus.ERROR
-                    null
+                    mutableListOf()
                 }
             }
 

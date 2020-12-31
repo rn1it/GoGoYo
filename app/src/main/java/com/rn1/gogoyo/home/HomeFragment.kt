@@ -18,6 +18,7 @@ import com.rn1.gogoyo.databinding.FragmentHomeBinding
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.model.Articles
 import com.rn1.gogoyo.model.Walk
+import com.rn1.gogoyo.util.Logger
 import java.util.*
 
 
@@ -29,26 +30,36 @@ class HomeFragment : Fragment(){
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        var articleList: List<Articles>? = null
 
         val recyclerView = binding.articleRv
         val adapter = HomeAdapter(HomeAdapter.OnClickListener {
             viewModel.navigateToContent(it)
         })
+        val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
 
+        recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
+        recyclerView.layoutManager = staggeredGridLayoutManager
 
         viewModel.articleList.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.submitList(it)
-                articleList = it
+
+                binding.searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?) = false
+
+                    override fun onQueryTextChange(query: String): Boolean {
+                        adapter.submitList(filter(it, query) )
+                        return true
+                    }
+                })
+
             }
         })
 
@@ -66,14 +77,15 @@ class HomeFragment : Fragment(){
             }
         })
 
-        binding.searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?) = false
-
-            override fun onQueryTextChange(query: String): Boolean {
-                adapter.submitList(articleList?.let { filter(it, query) })
-                return true
+        viewModel.refreshStatus.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                binding.swipeRefreshLayout.isRefreshing = it
             }
         })
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.refresh()
+        }
 
         return binding.root
     }
@@ -85,8 +97,11 @@ class HomeFragment : Fragment(){
         val filteredList = mutableListOf<Articles>()
 
         for (article in list) {
-            val author = article.id.toLowerCase(Locale.ROOT)
+            val author = article.author!!.name.toLowerCase(Locale.ROOT)
             val content = article.content ?: "" .toLowerCase(Locale.ROOT)
+
+            Logger.d("author = $author, query = $query")
+            Logger.d("content = $content, query = $query")
 
             if (author.contains(lowerCaseQueryString) || content.contains(lowerCaseQueryString)) {
                 filteredList.add(article)
@@ -95,5 +110,6 @@ class HomeFragment : Fragment(){
 
         return filteredList
     }
+
 
 }

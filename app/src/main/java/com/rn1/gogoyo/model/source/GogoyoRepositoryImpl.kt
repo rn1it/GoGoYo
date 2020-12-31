@@ -22,7 +22,7 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.getAudioUri(uri)
     }
 
-    override suspend fun login(id: String, name: String): Result<Boolean> {
+    override suspend fun login(id: String, name: String): Result<Users> {
         return remoteDataSource.login(id, name)
     }
 
@@ -106,6 +106,22 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.responseArticle(articleId, response)
     }
 
+    override suspend fun setResponseUserImage(list: List<ArticleResponse>): Result<List<ArticleResponse>> {
+        return remoteDataSource.setResponseUserImage(list)
+    }
+
+    override suspend fun getWalkListByUserId(userId: String): Result<List<Walk>> {
+        return remoteDataSource.getWalkListByUserId(userId)
+    }
+
+    override suspend fun getWalkListInfoByWalkList(walks: List<Walk>): Result<List<Walk>> {
+        return remoteDataSource.getWalkListInfoByWalkList(walks)
+    }
+
+    override suspend fun getWalkListUserInfoByWalkList(walks: List<Walk>): Result<List<Walk>> {
+        return remoteDataSource.getWalkListUserInfoByWalkList(walks)
+    }
+
     override suspend fun insertWalk(walk: Walk): Result<Walk> {
         return remoteDataSource.insertWalk(walk)
     }
@@ -124,6 +140,10 @@ class GogoyoRepositoryImpl(
 
     override suspend fun getOthersWalkingList(userId: String): Result<List<Walk>> {
         return remoteDataSource.getOthersWalkingList(userId)
+    }
+
+    override fun getUserLiveFriend(userId: String, status: Int?): MutableLiveData<List<Friends>> {
+        return remoteDataSource.getUserLiveFriend(userId, status)
     }
 
     override suspend fun getUserFriends(userId: String, status: Int?): Result<List<Friends>> {
@@ -158,12 +178,19 @@ class GogoyoRepositoryImpl(
         return remoteDataSource.getLiveChatRoomMessages(chatroomId)
     }
 
+    override suspend fun getLiveChatRoomMessagesWithUserInfo(list: List<Messages>): Result<List<Messages>> {
+        return remoteDataSource.getLiveChatRoomMessagesWithUserInfo(list)
+    }
+
     override suspend fun sendMessage(chatroomId: String, message: Messages): Result<Boolean> {
         return remoteDataSource.sendMessage(chatroomId, message)
     }
 
-//    override suspend fun getWalkingList(): Result<List<Walk>> {
-//        return remoteDataSource.getWalkingList()
-//    }
+    override suspend fun getForeCastWeather(id: String): Result<WeatherResponse> {
+        return remoteDataSource.getForeCastWeather(id)
+    }
 
+    override suspend fun getCurrentWeather(lat: Double, lng: Double): Result<CurrentWeatherResponse> {
+        return remoteDataSource.getCurrentWeather(lat, lng)
+    }
 }

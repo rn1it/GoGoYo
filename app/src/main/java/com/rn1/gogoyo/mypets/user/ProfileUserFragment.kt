@@ -23,6 +23,7 @@ import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentProfileUserBinding
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.model.Articles
+import com.rn1.gogoyo.util.Logger
 
 class ProfileUserFragment(val userId: String) : Fragment() {
 
@@ -48,11 +49,6 @@ class ProfileUserFragment(val userId: String) : Fragment() {
         viewPager.isUserInputEnabled = false
         viewPager.adapter = pagerAdapter
 
-        // Default no value for viewPager list
-        val viewPagerList = mutableListOf<List<Articles>>()
-        viewPagerList.add(0, mutableListOf() )
-        viewPagerList.add(1, mutableListOf() )
-
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
                 0 -> tab.text = "我的動態"
@@ -61,29 +57,15 @@ class ProfileUserFragment(val userId: String) : Fragment() {
             viewPager.currentItem = tab.position
         }.attach()
 
-//        viewModel.loginUser.observe(viewLifecycleOwner, Observer {
-//            it?.let {
-//                viewModel.getFriendStatus()
-//            }
-//        })
-
         viewModel.loginUserFriends.observe(viewLifecycleOwner, Observer {
             it?.let {
                 viewModel.getFriendStatus()
             }
         })
 
-        viewModel.userArticles.observe(viewLifecycleOwner, Observer {
+        viewModel.viewPagerList.observe(viewLifecycleOwner, Observer {
             it?.let {
-                viewPagerList[0] = it
-                pagerAdapter.submitList(viewPagerList)
-            }
-        })
-
-        viewModel.userFavArticles.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                viewPagerList[1] = it
-                pagerAdapter.submitList(viewPagerList)
+                pagerAdapter.submitList(it)
             }
         })
 

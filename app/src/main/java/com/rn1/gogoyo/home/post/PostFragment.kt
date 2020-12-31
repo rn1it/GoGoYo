@@ -25,6 +25,7 @@ import com.rn1.gogoyo.databinding.FragmentPostBinding
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.home.post.PostViewModel.Companion.INVALID_FORMAT_CONTENT_EMPTY
 import com.rn1.gogoyo.home.post.PostViewModel.Companion.INVALID_FORMAT_TITLE_EMPTY
+import com.rn1.gogoyo.walk.start.WalkImgAdapter
 
 class PostFragment : Fragment() {
 
@@ -47,6 +48,10 @@ class PostFragment : Fragment() {
         val adapter = PostPetAdapter(viewModel)
 
         recyclerView.adapter = adapter
+
+        val imaRecyclerView = binding.imgRecyclerView
+        val walkImgAdapter = WalkImgAdapter()
+        imaRecyclerView.adapter = walkImgAdapter
 
 
         // observer main view model post button
@@ -90,9 +95,16 @@ class PostFragment : Fragment() {
         viewModel.navigateToHome.observe(viewLifecycleOwner, Observer {
             it?.let {
                 if (it) {
+                    mainViewModel.navigateToHomeByBottomNav()
                     Toast.makeText(context, "發佈成功!", Toast.LENGTH_SHORT).show()
                     findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
                 }
+            }
+        })
+
+        viewModel.images.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                walkImgAdapter.submitList(it)
             }
         })
 
@@ -151,12 +163,12 @@ class PostFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (resultCode) {
+
             Activity.RESULT_OK -> {
                 filePath = ImagePicker.getFilePath(data) ?: ""
                 if (filePath.isNotEmpty()) {
                     val imgPath = filePath
                     Toast.makeText(this.requireContext(), imgPath, Toast.LENGTH_SHORT).show()
-                    Glide.with(this.requireContext()).load(filePath).into(binding.articleUploadIv)
 
                     viewModel.uploadImage(imgPath)
 

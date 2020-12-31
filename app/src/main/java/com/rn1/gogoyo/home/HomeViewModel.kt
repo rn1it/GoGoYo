@@ -17,37 +17,31 @@ import kotlinx.coroutines.launch
 class HomeViewModel(private val repository: GogoyoRepository): ViewModel() {
 
     private val _articleList = MutableLiveData<List<Articles>>()
-
     val articleList: LiveData<List<Articles>>
         get() = _articleList
 
-
     private val _navigateToPost = MutableLiveData<Boolean>()
-
     val navigateToPost: LiveData<Boolean>
-    get() = _navigateToPost
+        get() = _navigateToPost
 
     private val _navigateToContent = MutableLiveData<Articles>()
-
     val navigateToContent: LiveData<Articles>
         get() = _navigateToContent
 
-    // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadStatus>()
-
     val status: LiveData<LoadStatus>
         get() = _status
 
-    // error: The internal MutableLiveData that stores the error of the most recent request
     private val _error = MutableLiveData<String>()
-
     val error: LiveData<String>
         get() = _error
 
-    // Create a Coroutine scope using a job to be able to cancel when needed
+    private val _refreshStatus = MutableLiveData<Boolean>()
+    val refreshStatus: LiveData<Boolean>
+        get() = _refreshStatus
+
     private var viewModelJob = Job()
 
-    // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
@@ -62,11 +56,13 @@ class HomeViewModel(private val repository: GogoyoRepository): ViewModel() {
     private fun getArticles(){
         coroutineScope.launch {
 
+            _status.value = LoadStatus.LOADING
+
             _articleList.value = when (val result = repository.getAllArticle()) {
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadStatus.DONE
-                    result.data
+                    result.data.sortedByDescending { it.createdTime }
                 }
                 is Result.Fail -> {
                     _error.value = result.error
@@ -84,12 +80,16 @@ class HomeViewModel(private val repository: GogoyoRepository): ViewModel() {
                     null
                 }
             }
+
+            _refreshStatus.value = false
         }
     }
 
-
-
-
+    fun refresh() {
+        if (status.value != LoadStatus.LOADING) {
+            getArticles()
+        }
+    }
 
 
     fun navigateToContent(articles: Articles){

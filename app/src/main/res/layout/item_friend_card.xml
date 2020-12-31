@@ -21,6 +21,7 @@
 <!--        android:layout_height="match_parent">-->
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/dogCardCv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/selectableItemBackground"
@@ -112,7 +113,9 @@
                 android:layout_height="80dp"
                 android:layout_marginStart="8dp"
                 android:alpha="0.8"
-                android:src="@drawable/back_to_90"
+                android:elevation="20dp"
+                app:tint="@color/white"
+                android:src="@drawable/left_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/item_image"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -123,41 +126,104 @@
                 android:layout_height="80dp"
                 android:layout_marginEnd="8dp"
                 android:alpha="0.8"
-                android:src="@drawable/icons8_next"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:elevation="20dp"
+                android:src="@drawable/right_24"
+                app:layout_constraintBottom_toBottomOf="@+id/backBt"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/item_image" />
+                app:layout_constraintTop_toTopOf="@+id/backBt"
+                app:tint="@color/white" />
+
+
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        <LinearLayout
-            android:orientation="vertical"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:padding="16dp"
             android:background="@drawable/gradation_black">
 
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="4dp"
+                android:paddingStart="0dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="4dp"
+                android:paddingRight="4dp"
+                android:paddingBottom="4dp"
+                app:layout_constraintBottom_toBottomOf="@+id/item_pet_name"
+                app:layout_constraintDimensionRatio="h,1:1"
+                app:layout_constraintStart_toEndOf="@id/item_pet_name"
+                app:layout_constraintTop_toTopOf="@+id/item_pet_name"
+                app:petGender="@{pet.sex}"
+                app:srcCompat="@drawable/femenine"
+                app:tint="#FFFFFF" />
+
             <TextView
                 android:id="@+id/item_pet_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:fontFamily="@font/jf_openhuninn"
                 android:text="@{pet.name}"
-                android:textStyle="bold"
                 android:textColor="@android:color/white"
-                android:textSize="26sp"/>
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="皮皮" />
 
             <TextView
                 android:id="@+id/item_pet_intro"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/jf_openhuninn"
+                android:lineSpacingExtra="4sp"
                 android:text="@{pet.introduction}"
-                android:textStyle="bold"
                 android:textColor="@android:color/white"
-                android:textSize="20sp"/>
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/playVideoFab"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/item_pet_name"
+                tools:text="大家好" />
 
-        </LinearLayout>
+<!--            <Button-->
+<!--                android:id="@+id/floatingActionButton2"-->
+<!--                android:layout_width="40dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginEnd="8dp"-->
+<!--                android:foreground="@drawable/bark"-->
+<!--                android:outlineProvider="@{viewModel.outlineProvider}"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintDimensionRatio="w,1:1"-->
+<!--                app:layout_constraintEnd_toStartOf="@+id/floatingActionButton3"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:srcCompat="@drawable/bark" />-->
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/playVideoFab"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="4dp"
+                android:clickable="true"
+                android:foreground="@drawable/play_music"
+                android:foregroundTint="@color/black"
+                app:backgroundTint="#CDDC39"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="w,1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <FrameLayout
             android:id="@+id/left_overlay"

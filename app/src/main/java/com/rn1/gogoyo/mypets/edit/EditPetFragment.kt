@@ -2,16 +2,13 @@ package com.rn1.gogoyo.mypets.edit
 
 import android.Manifest
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.MediaController
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
@@ -41,17 +38,14 @@ class EditPetFragment : Fragment() {
         ).petIdKey
     ) }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit_pet, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-
-
 
         viewModel.canEditPet.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -104,9 +98,11 @@ class EditPetFragment : Fragment() {
             it?.let {
                 if (it) {
                     binding.progressBarMain.visibility = View.VISIBLE
+                    binding.loadingTv.visibility = View.VISIBLE
                     Toast.makeText(context, "上傳中，請耐心等候...", Toast.LENGTH_LONG).show()
                 } else {
-                    binding.progressBarMain.visibility = View.INVISIBLE
+                    binding.progressBarMain.visibility = View.GONE
+                    binding.loadingTv.visibility = View.GONE
                     Toast.makeText(context, "影片上傳結束!", Toast.LENGTH_LONG).show()
                 }
             }
@@ -134,24 +130,8 @@ class EditPetFragment : Fragment() {
             chooseAudioUpload()
         }
 
-        //播放聲音
-//        binding.button12.setOnClickListener {
-//            play( "https://firebasestorage.googleapis.com/v0/b/turing-opus-296809.appspot.com/o/videos%2F1608108810806?alt=media&token=2bc69b66-4795-47d8-a00c-92ac62dce2ad")
-//        }
-
-//        setUpVideoView()
-
-//        setExoplayer("https://firebasestorage.googleapis.com/v0/b/turing-opus-296809.appspot.com/o/videos%2F1608100705343?alt=media&token=4db6e616-b8a7-481d-9852-9ca42377f612")
-
         return binding.root
     }
-
-//    private fun setUpVideoView(){
-//        val videoView = binding.videoView
-//        val mediaController = MediaController(requireContext())
-//        videoView.setMediaController(mediaController)
-//        videoView.start()
-//    }
 
     private fun chooseVideoFromGallery() {
         val intent = Intent()
@@ -212,7 +192,6 @@ class EditPetFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         Toast.makeText(this.requireContext(), "resultCode = $resultCode , requestCode = $requestCode", Toast.LENGTH_SHORT).show()
-
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
 
@@ -237,7 +216,6 @@ class EditPetFragment : Fragment() {
                         val uri = data.data!!
                         Toast.makeText(this.requireContext(), uri.toString(), Toast.LENGTH_SHORT).show()
 
-//                        binding.videoView.setVideoURI(uri)
                         viewModel.uploadVideo(uri)
                     }
                 }
@@ -247,7 +225,6 @@ class EditPetFragment : Fragment() {
                         val uri = data.data!!
                         Toast.makeText(this.requireContext(), uri.toString(), Toast.LENGTH_SHORT).show()
 
-//                        binding.videoView.setVideoURI(uri)
                         viewModel.uploadAudio(uri)
                     }
                 }
