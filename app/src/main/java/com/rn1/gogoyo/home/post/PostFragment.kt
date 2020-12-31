@@ -22,6 +22,7 @@ import com.rn1.gogoyo.MainViewModel
 import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentPostBinding
+import com.rn1.gogoyo.ext.checkPermission
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.home.post.PostViewModel.Companion.INVALID_FORMAT_CONTENT_EMPTY
 import com.rn1.gogoyo.home.post.PostViewModel.Companion.INVALID_FORMAT_TITLE_EMPTY
@@ -115,34 +116,6 @@ class PostFragment : Fragment() {
         return binding.root
     }
 
-
-    private fun checkPermission() {
-        val permission = ActivityCompat.checkSelfPermission(
-            this.requireContext(),
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            //未取得權限，向使用者要求允許權限
-            ActivityCompat.requestPermissions(
-                this.requireActivity(), arrayOf(
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ),
-                REQUEST_EXTERNAL_STORAGE
-            )
-        }
-        getLocalImg()
-    }
-    private fun getLocalImg() {
-        ImagePicker.with(this)
-            .crop()                    //Crop image(Optional), Check Customization for more option
-            .compress(1024)            //Final image size will be less than 1 MB(Optional)
-            .maxResultSize(
-                1080,
-                1080
-            )    //Final image resolution will be less than 1080 x 1080(Optional)
-            .start()
-    }
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,

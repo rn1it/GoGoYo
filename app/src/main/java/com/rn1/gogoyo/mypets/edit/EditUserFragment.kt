@@ -21,6 +21,7 @@ import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
 import com.rn1.gogoyo.databinding.FragmentEditUserBinding
+import com.rn1.gogoyo.ext.checkPermission
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.mypets.newpets.NewPetViewModel
 import com.rn1.gogoyo.util.Logger
@@ -72,32 +73,6 @@ class EditUserFragment : Fragment() {
         }
 
         return binding.root
-    }
-
-    private fun checkPermission() {
-        val permission = ActivityCompat.checkSelfPermission(
-            this.requireContext(),
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            //未取得權限，向使用者要求允許權限
-            ActivityCompat.requestPermissions(
-                this.requireActivity(), arrayOf(
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ),
-                REQUEST_EXTERNAL_STORAGE
-            )
-        }
-        getLocalImg()
-    }
-
-    private fun getLocalImg() {
-        ImagePicker.with(this)
-            .crop()
-            .compress(1024)
-            .maxResultSize(1080, 1080)
-            .start()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

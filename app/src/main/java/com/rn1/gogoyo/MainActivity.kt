@@ -1,17 +1,13 @@
 package com.rn1.gogoyo
 
 import android.Manifest
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
@@ -26,7 +22,6 @@ import com.google.firebase.ktx.Firebase
 import com.rn1.gogoyo.databinding.ActivityMainBinding
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.util.CurrentFragmentType
-import com.rn1.gogoyo.util.Logger
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -119,7 +114,6 @@ class MainActivity : AppCompatActivity() {
             setupNavController()
             setupStatusBar()
             getLocationPermission()
-//            checkPer;ission()
         }
     }
 
@@ -172,38 +166,23 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_DENIED) {
             locationPermission = false
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                PERMISSION_ID
-            )
+            requestPermission()
         } else {
             locationPermission = true
         }
     }
 
-    private fun checkPermission() {
-        val permission = ActivityCompat.checkSelfPermission(
+    private fun requestPermission(){
+        ActivityCompat.requestPermissions(
             this,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            //未取得權限，向使用者要求允許權限
-            ActivityCompat.requestPermissions(
-                this, arrayOf(
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ),
-                REQUEST_EXTERNAL_STORAGE
-            )
-        }
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            PERMISSION_ID)
     }
 
     companion object {
         private const val TAG = "GoGoYo"
         private const val PERMISSION_ID = 1
-        private const val REQUEST_EXTERNAL_STORAGE = 200
     }
 }
