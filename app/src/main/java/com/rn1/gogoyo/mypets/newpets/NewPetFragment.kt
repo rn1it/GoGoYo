@@ -24,11 +24,13 @@ import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
 import com.rn1.gogoyo.databinding.FragmentNewPetBinding
+import com.rn1.gogoyo.ext.checkPermission
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.mypets.newpets.NewPetViewModel.Companion.INVALID_FORMAT_INTRODUCTION_EMPTY
 import com.rn1.gogoyo.mypets.newpets.NewPetViewModel.Companion.INVALID_FORMAT_NAME_EMPTY
 import com.rn1.gogoyo.mypets.newpets.NewPetViewModel.Companion.INVALID_FORMAT_SEX_EMPTY
 import com.rn1.gogoyo.mypets.newpets.NewPetViewModel.Companion.INVALID_IMAGE_PATH_EMPTY
+import com.rn1.gogoyo.util.Logger
 import java.io.File
 
 
@@ -83,35 +85,6 @@ class NewPetFragment : Fragment() {
         return binding.root
     }
 
-
-
-    private fun checkPermission() {
-        val permission = ActivityCompat.checkSelfPermission(
-            this.requireContext(),
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            //未取得權限，向使用者要求允許權限
-            ActivityCompat.requestPermissions(
-                this.requireActivity(), arrayOf(
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ),
-                REQUEST_EXTERNAL_STORAGE
-            )
-        }
-        getLocalImg()
-    }
-    private fun getLocalImg() {
-        ImagePicker.with(this)
-            .crop()                    //Crop image(Optional), Check Customization for more option
-            .compress(1024)            //Final image size will be less than 1 MB(Optional)
-            .maxResultSize(
-                1080,
-                1080
-            )    //Final image resolution will be less than 1080 x 1080(Optional)
-            .start()
-    }
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -120,38 +93,35 @@ class NewPetFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             REQUEST_EXTERNAL_STORAGE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //get image
-                } else {
-                    Toast.makeText(this.context, "Permission denied", Toast.LENGTH_SHORT).show()
+                if (grantResults.isEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Logger.d("Permission denied")
                 }
                 return
             }
         }
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (resultCode) {
+
             Activity.RESULT_OK -> {
                 filePath = ImagePicker.getFilePath(data) ?: ""
                 if (filePath.isNotEmpty()) {
                     val imgPath = filePath
-                    Toast.makeText(this.requireContext(), imgPath, Toast.LENGTH_SHORT).show()
                     Glide.with(this.requireContext()).load(filePath).into(binding.uploadPetIv)
 
                     viewModel.uploadImage(imgPath)
 
                 } else {
-                    Toast.makeText(this.requireContext(), "Upload failed", Toast.LENGTH_SHORT)
+                    Toast.makeText(this.requireContext(), "上傳失敗", Toast.LENGTH_SHORT)
                         .show()
                 }
             }
-            ImagePicker.RESULT_ERROR -> Toast.makeText(
-                this.requireContext(),
-                ImagePicker.getError(data),
-                Toast.LENGTH_SHORT
-            ).show()
-            else -> Toast.makeText(this.requireContext(), "Task Cancelled", Toast.LENGTH_SHORT)
+
+            ImagePicker.RESULT_ERROR -> Logger.d(ImagePicker.getError(data))
+
+            else -> Toast.makeText(this.requireContext(), "上傳失敗", Toast.LENGTH_SHORT)
                 .show()
         }
     }
