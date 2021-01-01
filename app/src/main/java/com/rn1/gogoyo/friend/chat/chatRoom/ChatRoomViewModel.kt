@@ -54,10 +54,8 @@ class ChatRoomViewModel(
     val error: LiveData<String>
         get() = _error
 
-    // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
 
-    // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
@@ -140,7 +138,6 @@ class ChatRoomViewModel(
     fun sendMessage(){
         coroutineScope.launch {
             val message = Messages(UserManager.userUID!!, friendId, content.value!!)
-            Logger.d("message = $message")
 
             when (val result = repository.sendMessage(chatRoom.id, message)) {
                 is Result.Success -> {

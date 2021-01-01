@@ -32,7 +32,9 @@ import kotlin.math.abs
 class ProfilePetFragment(val userId: String) : Fragment() {
 
     private lateinit var binding: FragmentProfilePetBinding
-    private val viewModel by viewModels<ProfilePetViewModel> { getVmFactory(userId) }
+    private val viewModel by viewModels<ProfilePetViewModel> {
+        getVmFactory(userId)
+    }
     private val mp = MediaPlayer()
 
     override fun onCreateView(
@@ -80,7 +82,7 @@ class ProfilePetFragment(val userId: String) : Fragment() {
                 if (it) {
                     if (viewModel.petList.value != null) {
                         if (viewModel.petList.value!!.size == 5) {
-                            Toast.makeText(context, "很抱歉，目前最多只能註冊五隻寵物", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, getString(R.string.pet_registry_limit_text), Toast.LENGTH_SHORT).show()
                         } else {
                             findNavController().navigate(NavigationDirections.actionGlobalNewPetFragment())
                             viewModel.onDoneNavigateToNewPet()
@@ -113,7 +115,7 @@ class ProfilePetFragment(val userId: String) : Fragment() {
         stopMediaPlayer()
 
         if (url.isNullOrEmpty()) {
-            Toast.makeText(context, "還沒有上傳影片喔!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, getString(R.string.no_pet_video_text), Toast.LENGTH_SHORT).show()
         } else {
             val dialog = Dialog(requireContext())
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -137,7 +139,7 @@ class ProfilePetFragment(val userId: String) : Fragment() {
                 exoPlayer.prepare(mediaSource)
                 exoPlayer.playWhenReady = false
             } catch (e: Exception) {
-                Toast.makeText(context, "影片播放失敗，請聯絡開發人員", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.play_video_fail_text), Toast.LENGTH_SHORT).show()
                 Log.e("ViewHolder", "exoplayer error$e")
             }
         }
@@ -149,7 +151,7 @@ class ProfilePetFragment(val userId: String) : Fragment() {
     private fun play(path: String?) {
         stopMediaPlayer()
         if (path.isNullOrBlank()) {
-                Toast.makeText(context, "還沒有上傳聲音喔!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.no_pet_audio_text), Toast.LENGTH_SHORT).show()
         } else {
             Logger.d("play path = $path")
             val uri = Uri.parse(path)

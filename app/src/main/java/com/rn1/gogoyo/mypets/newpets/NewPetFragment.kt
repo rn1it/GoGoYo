@@ -1,37 +1,27 @@
 package com.rn1.gogoyo.mypets.newpets
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.github.dhaval2404.imagepicker.ImagePicker
-import com.google.firebase.storage.StorageMetadata
-import com.google.firebase.storage.StorageReference
 import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
 import com.rn1.gogoyo.databinding.FragmentNewPetBinding
 import com.rn1.gogoyo.ext.checkPermission
 import com.rn1.gogoyo.ext.getVmFactory
-import com.rn1.gogoyo.mypets.newpets.NewPetViewModel.Companion.INVALID_FORMAT_INTRODUCTION_EMPTY
-import com.rn1.gogoyo.mypets.newpets.NewPetViewModel.Companion.INVALID_FORMAT_NAME_EMPTY
-import com.rn1.gogoyo.mypets.newpets.NewPetViewModel.Companion.INVALID_FORMAT_SEX_EMPTY
-import com.rn1.gogoyo.mypets.newpets.NewPetViewModel.Companion.INVALID_IMAGE_PATH_EMPTY
-import com.rn1.gogoyo.util.Logger
-import java.io.File
+import com.rn1.gogoyo.util.*
 
 
 class NewPetFragment : Fragment() {
@@ -40,11 +30,10 @@ class NewPetFragment : Fragment() {
     private val viewModel by viewModels<NewPetViewModel> { getVmFactory() }
     private var filePath: String = ""
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_pet, container, false)
         binding.lifecycleOwner = this
@@ -94,7 +83,7 @@ class NewPetFragment : Fragment() {
         when (requestCode) {
             REQUEST_EXTERNAL_STORAGE -> {
                 if (grantResults.isEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    Logger.d("Permission denied")
+                    Toast.makeText(this.context, "開啟權限後即可使用此功能", Toast.LENGTH_SHORT).show()
                 }
                 return
             }
@@ -121,8 +110,7 @@ class NewPetFragment : Fragment() {
 
             ImagePicker.RESULT_ERROR -> Logger.d(ImagePicker.getError(data))
 
-            else -> Toast.makeText(this.requireContext(), "上傳失敗", Toast.LENGTH_SHORT)
-                .show()
+            else -> Logger.d("Camera Task Cancelled")
         }
     }
 

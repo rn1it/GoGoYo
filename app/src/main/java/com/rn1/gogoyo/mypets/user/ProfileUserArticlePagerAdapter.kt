@@ -14,24 +14,30 @@ import com.rn1.gogoyo.databinding.ItemListLayoutBinding
 import com.rn1.gogoyo.home.HomeViewModel
 import com.rn1.gogoyo.model.Articles
 
-class ProfileUserArticlePagerAdapter(val viewModel: ProfileUserViewModel) : ListAdapter<List<Articles>, RecyclerView.ViewHolder>(ListDiffCallback) {
+class ProfileUserArticlePagerAdapter(
+    val viewModel: ProfileUserViewModel
+    ) : ListAdapter<List<Articles>, RecyclerView.ViewHolder>(ListDiffCallback) {
 
-    class ArticleListViewHolder(private val binding: ItemListLayoutBinding): RecyclerView.ViewHolder(binding.root){
+    class ArticleListViewHolder(
+        private val binding: ItemListLayoutBinding
+        ): RecyclerView.ViewHolder(binding.root){
+
         fun bind(viewModel: ProfileUserViewModel, list: List<Articles>) {
             val adapter = UserArticleAdapter(UserArticleAdapter.OnClickListener{
                 viewModel.navigateToContent(it)
             })
+
             binding.list = list
             binding.articleGridRv.adapter = adapter
             binding.articleGridRv.layoutManager = GridLayoutManager(GogoyoApplication.instance, 3)
             binding.articleGridRv.addItemDecoration(GridSpacingItemDecoration(3, GogoyoApplication.instance.resources.getDimensionPixelSize(
                 R.dimen.cell_margin_4dp), true))
 
-
-
             adapter.submitList(list)
+
             binding.executePendingBindings()
         }
+
         companion object{
             fun from(parent: ViewGroup): ArticleListViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)

@@ -100,7 +100,6 @@ class WalkStartFragment : Fragment(){
         viewModel.onLineWalks.observe(viewLifecycleOwner, Observer {
             it?.let {
 
-                Logger.d("current online list = $it")
                 if (it.isNotEmpty()) {
                     removeMarkers()
                 }
@@ -108,15 +107,12 @@ class WalkStartFragment : Fragment(){
             }
         })
 
-//        googleMap.setOnMarkerClickListener
         googleMap.setOnMarkerClickListener(OnMarkerClickListener { mark ->
             mark.showInfoWindow()
             val handler = Handler()
             handler.postDelayed(Runnable { mark.showInfoWindow() }, 200)
             true
         })
-
-
     }
 
     override fun onCreateView(
@@ -319,8 +315,6 @@ class WalkStartFragment : Fragment(){
             REQUEST_EXTERNAL_STORAGE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     //get image
-                } else {
-                    Toast.makeText(this.context, "Permission denied", Toast.LENGTH_SHORT).show()
                 }
                 return
             }
@@ -459,11 +453,6 @@ class WalkStartFragment : Fragment(){
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Toast.makeText(
-            this.requireContext(),
-            "resultCode = $resultCode , requestCode = $requestCode",
-            Toast.LENGTH_SHORT
-        ).show()
 
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
@@ -478,7 +467,7 @@ class WalkStartFragment : Fragment(){
                         viewModel.uploadImage(imgPath)
 
                     } else {
-                        Toast.makeText(this.requireContext(), "Upload failed", Toast.LENGTH_SHORT)
+                        Toast.makeText(this.requireContext(), "上傳失敗", Toast.LENGTH_SHORT)
                             .show()
                     }
                 }

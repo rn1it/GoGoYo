@@ -44,11 +44,6 @@
         android:label="fragment_walk"
         tools:layout="@layout/fragment_walk" />
     <fragment
-        android:id="@+id/eventFragment"
-        android:name="com.rn1.gogoyo.event.EventFragment"
-        android:label="fragment_event"
-        tools:layout="@layout/fragment_event" />
-    <fragment
         android:id="@+id/friendFragment"
         android:name="com.rn1.gogoyo.friend.FriendFragment"
         android:label="FriendFragment"
@@ -143,7 +138,6 @@
         app:destination="@id/walkFragment"
         app:popUpTo="@id/navigation"
         app:popUpToInclusive="true" />
-    <action android:id="@+id/action_global_eventFragment" app:destination="@id/eventFragment" />
     <action
         android:id="@+id/action_global_friendFragment"
         app:destination="@id/friendFragment"

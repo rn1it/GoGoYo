@@ -21,26 +21,24 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.rn1.gogoyo.MainViewModel
 import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentWalkEndBinding
 import com.rn1.gogoyo.ext.getVmFactory
-import com.rn1.gogoyo.model.Pets
 import com.rn1.gogoyo.model.Points
 import com.rn1.gogoyo.model.Walk
-import com.rn1.gogoyo.util.Logger
 
 private const val PERMISSION_ID = 1
 
 class WalkEndFragment : Fragment() {
 
     private lateinit var binding:FragmentWalkEndBinding
-    private val viewModel by viewModels<WalkEndViewModel> { getVmFactory(WalkEndFragmentArgs.fromBundle(requireArguments()).walkKey) }
+    private val viewModel by viewModels<WalkEndViewModel> {
+        getVmFactory(WalkEndFragmentArgs.fromBundle(requireArguments()).walkKey)
+    }
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var locationPermission = false
@@ -58,19 +56,16 @@ class WalkEndFragment : Fragment() {
         getDeviceLocation()
 
         drawLine(walk.points!!)
-
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_walk_end, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-
-
 
         val recyclerView = binding.walkEndPetRv
         val adapter = PetAdapter()
@@ -117,8 +112,6 @@ class WalkEndFragment : Fragment() {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
     }
-
-
 
     private fun drawLine(list: List<Points>){
 

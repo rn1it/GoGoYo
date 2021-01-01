@@ -15,13 +15,8 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 
-private const val CITY = "Tainan"
 private const val HOST_NAME = "api.openweathermap.org"
-
-//private const val BASE_URL = "http://api.openweathermap.org/data/2.5/forecast?q=${CITY},tw&mode=json&appid="
 private const val API_KEY = "c85e691f3438722f98f9193c008f89f2"
-//private const val URL_WEATHER = "${BASE_URL}${API_KEY}"
-
 private const val BASE_URL = "https://$HOST_NAME/"
 
 private val moshi = Moshi.Builder()

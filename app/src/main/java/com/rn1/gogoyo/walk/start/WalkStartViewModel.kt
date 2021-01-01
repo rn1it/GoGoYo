@@ -233,7 +233,6 @@ class WalkStartViewModel(
                     _error.value = null
                     _status.value = LoadStatus.DONE
                     Logger.d("result.data = ${result.data}")
-//                    setUserWalkingStatus(false)
                     result.data
                 }
                 is Result.Fail -> {

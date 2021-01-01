@@ -1,5 +1,6 @@
 package com.rn1.gogoyo.home
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -31,6 +32,8 @@ class HomeFragment : Fragment(){
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        Logger.d("onCreateView")
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         binding.lifecycleOwner = this
@@ -100,9 +103,6 @@ class HomeFragment : Fragment(){
             val author = article.author!!.name.toLowerCase(Locale.ROOT)
             val content = article.content ?: "" .toLowerCase(Locale.ROOT)
 
-            Logger.d("author = $author, query = $query")
-            Logger.d("content = $content, query = $query")
-
             if (author.contains(lowerCaseQueryString) || content.contains(lowerCaseQueryString)) {
                 filteredList.add(article)
             }
@@ -111,5 +111,49 @@ class HomeFragment : Fragment(){
         return filteredList
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        Logger.d("onAttach")
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Logger.d("onCreate")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Logger.d("onResume")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Logger.d("onStart")
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        Logger.d("onActivityCreated")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Logger.d("onStop")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Logger.d("onPause")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Logger.d("onDestroy")
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Logger.d("onDetach")
+    }
 
 }

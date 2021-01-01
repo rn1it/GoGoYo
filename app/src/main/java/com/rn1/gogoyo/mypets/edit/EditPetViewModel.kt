@@ -11,8 +11,7 @@ import com.rn1.gogoyo.model.Pets
 import com.rn1.gogoyo.model.Result
 import com.rn1.gogoyo.model.source.GogoyoRepository
 import com.rn1.gogoyo.mypets.newpets.NewPetViewModel
-import com.rn1.gogoyo.util.LoadStatus
-import com.rn1.gogoyo.util.Logger
+import com.rn1.gogoyo.util.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -133,10 +132,10 @@ class EditPetViewModel(
                 && petSex.isNotEmpty()
                 && !imageFilePath.isNullOrBlank()
         when {
-            imageFilePath.isNullOrBlank() -> _invalidInfo.value = NewPetViewModel.INVALID_IMAGE_PATH_EMPTY
-            name.value.isNullOrEmpty() -> _invalidInfo.value = NewPetViewModel.INVALID_FORMAT_NAME_EMPTY
-            petSex.isEmpty() -> _invalidInfo.value = NewPetViewModel.INVALID_FORMAT_SEX_EMPTY
-            introduction.value.isNullOrBlank() -> _invalidInfo.value = NewPetViewModel.INVALID_FORMAT_INTRODUCTION_EMPTY
+            imageFilePath.isNullOrBlank() -> _invalidInfo.value = INVALID_IMAGE_PATH_EMPTY
+            name.value.isNullOrEmpty() -> _invalidInfo.value = INVALID_FORMAT_NAME_EMPTY
+            petSex.isEmpty() -> _invalidInfo.value = INVALID_FORMAT_SEX_EMPTY
+            introduction.value.isNullOrBlank() -> _invalidInfo.value = INVALID_FORMAT_INTRODUCTION_EMPTY
         }
     }
 

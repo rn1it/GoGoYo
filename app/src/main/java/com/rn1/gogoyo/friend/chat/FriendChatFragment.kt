@@ -51,15 +51,6 @@ class FriendChatFragment(val userId: String) : Fragment() {
         viewModel.chatList.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.submitList(it)
-
-//                binding.friendChatListSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-//                    override fun onQueryTextSubmit(query: String?) = false
-//
-//                    override fun onQueryTextChange(query: String): Boolean {
-//                        adapter.submitList(filter(it, query))
-//                        return true
-//                    }
-//                })
             }
         })
 
@@ -73,19 +64,4 @@ class FriendChatFragment(val userId: String) : Fragment() {
         return binding.root
     }
 
-    fun filter(list: List<Chatroom>, query: String): List<Chatroom> {
-
-        val lowerCaseQueryString = query.toLowerCase(Locale.ROOT)
-        val filteredList = mutableListOf<Chatroom>()
-
-        for (chatRoom in list) {
-            val name = chatRoom.friend!!.name.toLowerCase(Locale.ROOT)
-            val lastMsg = chatRoom.lastMsg ?: "".toLowerCase(Locale.ROOT)
-            if (lastMsg.contains(lowerCaseQueryString) || name.contains(lowerCaseQueryString)) {
-                filteredList.add(chatRoom)
-            }
-        }
-
-        return filteredList
-    }
 }

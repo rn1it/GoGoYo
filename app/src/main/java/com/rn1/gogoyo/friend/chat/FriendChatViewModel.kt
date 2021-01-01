@@ -20,7 +20,6 @@ class FriendChatViewModel(
 ): ViewModel() {
 
     private val _navigateToChatRoom = MutableLiveData<Chatroom>()
-
     val navigateToChatRoom: LiveData<Chatroom>
         get() = _navigateToChatRoom
 
@@ -91,9 +90,7 @@ class FriendChatViewModel(
                     null
                 }
             }
-
         }
-
     }
 
 }
