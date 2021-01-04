@@ -15,6 +15,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DiffUtil
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.extractor.ExtractorsFactory
@@ -33,9 +34,7 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
 
     private lateinit var binding: FragmentFriendCardsBinding
     private val viewModel by viewModels<FriendCardsViewModel> { getVmFactory(userId) }
-//    private val manager by lazy { CardStackLayoutManager(requireContext(), this) }
-//    private lateinit var manager: CardStackLayoutManager
-    private val adapter by lazy { CardStackAdapter(viewModel) }
+    private val adapter by lazy { CardStackAdapter(viewModel, mutableListOf()) }
     private lateinit var  cardStackView: CardStackView
     val list = mutableListOf<Users>()
     private val mp = MediaPlayer()
@@ -53,12 +52,9 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
         cardStackView.adapter = adapter
 
         cardStackView.layoutManager = CardStackLayoutManager(requireContext(), this)
-//        manager = CardStackLayoutManager(requireContext(), this)
 
         viewModel.usersNotFriend.observe(viewLifecycleOwner, Observer {
             it?.let {
-                Logger.d("usersNotFriend = $it")
-
                 list.addAll(it)
 
                 // because fire base callback bug
@@ -69,10 +65,19 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
                 if (list.size == 0) {
                     binding.friendCardNotificationTv.visibility = View.VISIBLE
                     binding.buttonContainer.visibility = View.GONE
+                    binding.cardHintTv.visibility = View.GONE
                 } else {
                     binding.friendCardNotificationTv.visibility = View.GONE
                     binding.buttonContainer.visibility = View.VISIBLE
-                    adapter.submitList(list)
+
+                    val old = adapter.getUsers()
+                    val new = mutableListOf<Users>().apply {
+                        addAll(list)
+                    }
+                    val callback = CardStackAdapter.UserDiffCallBack(old, new)
+                    val result = DiffUtil.calculateDiff(callback)
+                    adapter.setUsers(new)
+                    result.dispatchUpdatesTo(adapter)
                 }
             }
         })
@@ -101,7 +106,6 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
 
         setupCardStackView()
         setupButton()
-
 
         return binding.root
     }
@@ -144,9 +148,10 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
         Log.d("CardStackView", "onCardSwiped: p = ${manager.topPosition}, d = $direction")
 
         val user = list[manager.topPosition - 1]
-
+        Logger.w("user = $user")
+        Logger.w("list before = $list")
         list.remove(user)
-
+        Logger.w("list after = $list")
         when (direction) {
             Direction.Left -> {
                 viewModel.addOrPassCard(list, user.id, false)
@@ -170,13 +175,13 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
     }
 
     override fun onCardAppeared(view: View, position: Int) {
-        val textView = view.findViewById<TextView>(R.id.item_pet_name)
-        Log.d("CardStackView", "onCardAppeared: ($position) ${textView.text}")
+//        val textView = view.findViewById<TextView>(R.id.item_pet_name)
+//        Log.d("CardStackView", "onCardAppeared: ($position) ${textView.text}")
     }
 
     override fun onCardDisappeared(view: View, position: Int) {
-        val textView = view.findViewById<TextView>(R.id.item_pet_name)
-        Log.d("CardStackView", "onCardDisappeared: ($position) ${textView.text}")
+//        val textView = view.findViewById<TextView>(R.id.item_pet_name)
+//        Log.d("CardStackView", "onCardDisappeared: ($position) ${textView.text}")
     }
 
     private fun setupButton(){
@@ -213,17 +218,19 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
             viewModel.addOrPassCard(list, user.id, true)
         }
 
-        //        val rewind = binding.rewindButton
-//        rewind.setOnClickListener {
-//            val setting = RewindAnimationSetting.Builder()
-//                .setDirection(Direction.Bottom)
-//                .setDuration(Duration.Normal.duration)
-//                .setInterpolator(DecelerateInterpolator())
-//                .build()
-//            manager.setRewindAnimationSetting(setting)
-//            cardStackView.rewind()
-//            Log.d("CardStackView", "rewind: p = ${manager.topPosition}")
-//        }
+        /*
+        val rewind = binding.rewindButton
+        rewind.setOnClickListener {
+            val setting = RewindAnimationSetting.Builder()
+                .setDirection(Direction.Bottom)
+                .setDuration(Duration.Normal.duration)
+                .setInterpolator(DecelerateInterpolator())
+                .build()
+            manager.setRewindAnimationSetting(setting)
+            cardStackView.rewind()
+            Log.d("CardStackView", "rewind: p = ${manager.topPosition}")
+        }
+         */
     }
 
     /**
@@ -232,7 +239,7 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
     private fun play(path: String?) {
         stopMediaPlayer()
         if (path.isNullOrBlank()) {
-            Toast.makeText(context, "還沒有上傳聲音喔!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, getString(R.string.no_pet_audio_text), Toast.LENGTH_SHORT).show()
         } else {
 
             // show bark toast
@@ -253,8 +260,6 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
             mp.setDataSource(requireContext(), uri)
             mp.setOnPreparedListener {
                 it.start()
-
-
             }
             mp.prepare()
         }
@@ -267,7 +272,6 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
     private fun stopMediaPlayer() {
         if (mp.isPlaying) {
             mp.stop()
-//            binding.audioPlayBt.setImageResource(R.drawable.play_music)
         }
     }
 
@@ -300,7 +304,7 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
             exoPlayer.prepare(mediaSource)
             exoPlayer.playWhenReady = false
         } catch (e: Exception) {
-            Toast.makeText(context, "還沒有上傳影片喔!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, getString(R.string.no_pet_video_text), Toast.LENGTH_SHORT).show()
             Log.e("ViewHolder", "exoplayer error$e")
         }
     }

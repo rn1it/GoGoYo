@@ -26,36 +26,24 @@ class TotalWalkViewModel(val repository: GogoyoRepository): ViewModel() {
     var totalTime = 0L
     var totalDistance = 0.0
 
-
-
-
     private val _pet = MutableLiveData<List<Pets>>()
     val pet: LiveData<List<Pets>>
         get() = _pet
 
-
-    // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadStatus>()
-
     val status: LiveData<LoadStatus>
         get() = _status
 
-    // error: The internal MutableLiveData that stores the error of the most recent request
     private val _error = MutableLiveData<String>()
-
     val error: LiveData<String>
         get() = _error
 
-    // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
 
-    // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
         getUsrPets()
-
-
     }
 
     override fun onCleared() {
@@ -77,8 +65,6 @@ class TotalWalkViewModel(val repository: GogoyoRepository): ViewModel() {
                         totalTime = getTotalTime(walks)
                         totalDistance = getTotalDistance(walks)
                         getWalksWithPetInfo(totalTime, totalDistance, walks, pets)
-                    } else {
-                        //TODO
                     }
                 }
                 is Result.Fail -> {
@@ -176,24 +162,21 @@ class TotalWalkViewModel(val repository: GogoyoRepository): ViewModel() {
         val petsWithTotalInfo = mutableListOf<Pets>()
 
         for (pet in pets){
+
             for (walk in walks) {
                 if (walk.petsIdList.isNotEmpty()) {
                     for (petId in walk.petsIdList) {
                         if (pet.id == petId) {
                             pet.divTotalDistance += ((walk.distance ?: 0.0).toDouble() )
                             pet.divTotalTime += walk.period ?: 0
-                            petsWithTotalInfo.add(pet)
                         }
                     }
                 }
             }
+            petsWithTotalInfo.add(pet)
         }
-
         _pet.value = petsWithTotalInfo
     }
-
-
-
 
     val decoration = object : RecyclerView.ItemDecoration(){
         override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State

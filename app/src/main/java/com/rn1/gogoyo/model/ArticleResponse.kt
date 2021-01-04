@@ -9,4 +9,6 @@ data class ArticleResponse(
     var userId: String =  "",
     var content: String = "",
     var createdTime: Long = -1,
+    var userImg: String? = null,
+    var userName: String? = null
 ): Parcelable

@@ -10,8 +10,7 @@ import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.model.Pets
 import com.rn1.gogoyo.model.Result
 import com.rn1.gogoyo.model.source.GogoyoRepository
-import com.rn1.gogoyo.util.LoadStatus
-import com.rn1.gogoyo.util.Logger
+import com.rn1.gogoyo.util.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -38,36 +37,26 @@ class NewPetViewModel(val repository: GogoyoRepository): ViewModel() {
             else -> ""
         }
 
-    // Handle the error for adding new pet
     private val _invalidInfo = MutableLiveData<Int>()
-
     val invalidInfo: LiveData<Int>
         get() = _invalidInfo
 
     val canAddPet = MutableLiveData<Boolean>()
 
     private val _navigateToPets = MutableLiveData<Boolean>()
-
     val navigateToPets: LiveData<Boolean>
         get() = _navigateToPets
 
-
-    // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadStatus>()
-
     val status: LiveData<LoadStatus>
         get() = _status
 
-    // error: The internal MutableLiveData that stores the error of the most recent request
     private val _error = MutableLiveData<String>()
-
     val error: LiveData<String>
         get() = _error
 
-    // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
 
-    // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     override fun onCleared() {
@@ -150,18 +139,7 @@ class NewPetViewModel(val repository: GogoyoRepository): ViewModel() {
         }
     }
 
-
-
     fun onDoneNavigateToPet(){
         _navigateToPets.value = null
     }
-
-    companion object {
-
-        const val INVALID_FORMAT_NAME_EMPTY = 0x11
-        const val INVALID_FORMAT_INTRODUCTION_EMPTY = 0x12
-        const val INVALID_FORMAT_SEX_EMPTY          = 0x13
-        const val INVALID_IMAGE_PATH_EMPTY          = 0x14
-    }
-
 }

@@ -5,21 +5,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.databinding.ItemChatRoomBinding
 import com.rn1.gogoyo.model.Chatroom
 
-class FriendChatAdapter(
-    val viewModel: FriendChatViewModel,
-    private val onClickListener: OnClickListener
-): ListAdapter<Chatroom, RecyclerView.ViewHolder>(ChatRoomDiffCallback) {
+class FriendChatAdapter(private val onClickListener: OnClickListener): ListAdapter<Chatroom, RecyclerView.ViewHolder>(ChatRoomDiffCallback) {
 
     class ChatRoomViewHolder(val binding: ItemChatRoomBinding): RecyclerView.ViewHolder(binding.root){
 
-        fun bind(viewModel: FriendChatViewModel, chatRoom: Chatroom){
+        fun bind(chatRoom: Chatroom){
             binding.chatRoom = chatRoom
-//            val friendId = chatRoom.userList.filter { it != UserManager.userUID }[0]
-
-//            viewModel.getUserById()
+            binding.chatRoomFriendIv.outlineProvider = MapOutlineProvider()
 
             binding.executePendingBindings()
         }
@@ -30,7 +26,6 @@ class FriendChatAdapter(
             }
         }
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ChatRoomViewHolder.from(parent)
@@ -43,7 +38,7 @@ class FriendChatAdapter(
             onClickListener.onClick(chatRoom)
         }
 
-        chatRoomViewHolder.bind(viewModel, chatRoom)
+        chatRoomViewHolder.bind(chatRoom)
     }
 
     companion object ChatRoomDiffCallback: DiffUtil.ItemCallback<Chatroom>(){

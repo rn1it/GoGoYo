@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.databinding.ItemResponseBinding
 import com.rn1.gogoyo.model.ArticleResponse
 
@@ -14,6 +15,8 @@ class ArticleResponseAdapter: ListAdapter<ArticleResponse, RecyclerView.ViewHold
         fun bind(articleResponse: ArticleResponse){
             binding.response = articleResponse
             binding.executePendingBindings()
+            binding.imageView14.outlineProvider = MapOutlineProvider()
+
         }
 
         companion object{

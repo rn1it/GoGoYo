@@ -29,6 +29,26 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="age">年紀</string>
+    <string name="text_friend">好友</string>
+    <string name="no_registry_pet_text">未註冊寵物</string>
+    <string name="go_text">Go!</string>
+    <string name="who_go_to_walk_text">誰去散步?</string>
+    <string name="start_to_make_new_friend_text">快去加入新朋友吧!</string>
+    <string name="empty_pet_name_text">寵物姓名不可以空白!</string>
+    <string name="empty_introduction_text">來段簡短的介紹讓大家更認識你!</string>
+    <string name="empty_pet_gender_text">記得選擇寵物性別喔!</string>
+    <string name="empty_pet_image_text">別忘記上傳一張寵物的萌照啊!</string>
+    <string name="empty_user_name">姓名不可以空白!</string>
+    <string name="empty_user_image_text">請上傳照片!</string>
+    <string name="no_pet_video_text">目前沒有這隻寵物的影片喔!</string>
+    <string name="no_pet_audio_text">還沒有上傳聲音喔!</string>
+    <string name="friend_waiting_accept_text">等待中</string>
+    <string name="friend_invite_text">好友邀請</string>
+    <string name="friend_text">好友</string>
+    <string name="pet_registry_limit_text">很抱歉，目前最多只能註冊五隻寵物</string>
+    <string name="play_video_fail_text">影片播放失敗，請聯絡開發人員</string>
+    <string name="user_article_text">我的動態</string>
+    <string name="collect_text">收藏</string>
 
     <string-array name="relation_array">
         <item>朋友</item>

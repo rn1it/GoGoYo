@@ -25,13 +25,13 @@ class ProfileUserViewModel(
     val userId: String
     ): ViewModel() {
 
-    private val DEFAULT_USER_PROFILE = "https://firebasestorage.googleapis.com/v0/b/turing-opus-296809.appspot.com/o/images%2Fprofile.png?alt=media&token=fe4da46c-cae1-4d82-8b76-7ec681cdd284"
-
     var filePath: String = ""
-
     val outlineProvider =  MapOutlineProvider()
 
-    // check profile is login user or not
+    private val _viewPagerList = MutableLiveData<List<List<Articles>>>()
+    val viewPagerList: LiveData<List<List<Articles>>>
+        get() = _viewPagerList
+
     val isLoginUser = userId == UserManager.userUID
 
     var loginUser = MutableLiveData<Users>()
@@ -39,53 +39,35 @@ class ProfileUserViewModel(
     var loginUserFriends = MutableLiveData<List<Friends>>()
 
     private val _user = MutableLiveData<Users>()
-
     val user: LiveData<Users>
         get() = _user
 
     private val _friendStatus = MutableLiveData<Int>()
-
     val friendStatus: LiveData<Int>
         get() = _friendStatus
 
+    var liveFriend = MutableLiveData<List<Friends>>()
+
     val profileBtText = MutableLiveData<String>()
 
-    private val _userArticles = MutableLiveData<List<Articles>>()
-
-    val userArticles: LiveData<List<Articles>>
-        get() = _userArticles
-
-    private val _userFavArticles = MutableLiveData<List<Articles>>()
-
-    val userFavArticles: LiveData<List<Articles>>
-        get() = _userFavArticles
-
     private val _navigateToContent = MutableLiveData<Articles>()
-
     val navigateToContent: LiveData<Articles>
         get() = _navigateToContent
 
     private val _navigateToEdit = MutableLiveData<String>()
-
     val navigateToEdit: LiveData<String>
         get() = _navigateToEdit
 
-    // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadStatus>()
-
     val status: LiveData<LoadStatus>
         get() = _status
 
-    // error: The internal MutableLiveData that stores the error of the most recent request
     private val _error = MutableLiveData<String>()
-
     val error: LiveData<String>
         get() = _error
 
-    // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
 
-    // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
@@ -99,7 +81,7 @@ class ProfileUserViewModel(
         }
         getUser()
         getUserArticle()
-        getUserFavArticle()
+        getUserLiveFriend()
     }
 
     override fun onCleared() {
@@ -123,11 +105,7 @@ class ProfileUserViewModel(
                     is Result.Success -> {
                         _error.value = null
                         _status.value = LoadStatus.DONE
-                        val user = result.data
-                        if (user.image.isNullOrBlank()) {
-                            user.image = DEFAULT_USER_PROFILE
-                        }
-                        user
+                        result.data
                     }
                     is Result.Fail -> {
                         _error.value = result.error
@@ -147,65 +125,83 @@ class ProfileUserViewModel(
                     }
                 }
         }
+    }
+
+    private fun getUserLiveFriend(){
+        liveFriend = repository.getUserLiveFriend(UserManager.userUID!!, 2)
     }
 
     private fun getUserArticle() {
 
         coroutineScope.launch {
 
-            _userArticles.value =
+            _status.value = LoadStatus.LOADING
+
                 when (val result = repository.getArticlesById(userId)) {
                     is Result.Success -> {
                         _error.value = null
                         _status.value = LoadStatus.DONE
-                        result.data
+                        val list = mutableListOf<List<Articles>>()
+                        _viewPagerList.value
+                        getUserFavArticle(result.data)
                     }
                     is Result.Fail -> {
                         _error.value = result.error
                         _status.value = LoadStatus.ERROR
-                        null
+                        getUserFavArticle(mutableListOf())
                     }
                     is Result.Error -> {
                         _error.value = result.exception.toString()
                         _status.value = LoadStatus.ERROR
-                        null
+                        getUserFavArticle(mutableListOf())
                     }
                     else -> {
                         _error.value =
                             GogoyoApplication.instance.getString(R.string.something_wrong)
                         _status.value = LoadStatus.ERROR
-                        null
+                        getUserFavArticle(mutableListOf())
                     }
                 }
         }
     }
 
-    private fun getUserFavArticle() {
+    private fun getUserFavArticle(userArticleList: List<Articles>) {
 
         coroutineScope.launch {
 
-            _userFavArticles.value =
                 when (val result = repository.getFavoriteArticlesById(userId)) {
                     is Result.Success -> {
                         _error.value = null
                         _status.value = LoadStatus.DONE
-                        result.data
+                        val list = mutableListOf<List<Articles>>()
+                        list.add(0, userArticleList)
+                        list.add(1, result.data)
+                        _viewPagerList.value = list
                     }
                     is Result.Fail -> {
                         _error.value = result.error
                         _status.value = LoadStatus.ERROR
-                        null
+                        val list = mutableListOf<List<Articles>>()
+                        list.add(0, userArticleList)
+                        list.add(1, mutableListOf())
+                        _viewPagerList.value = list
                     }
                     is Result.Error -> {
                         _error.value = result.exception.toString()
                         _status.value = LoadStatus.ERROR
-                        null
+                        val list = mutableListOf<List<Articles>>()
+                        list.add(0, userArticleList)
+                        list.add(1, mutableListOf())
+                        _viewPagerList.value = list
                     }
                     else -> {
                         _error.value =
                             GogoyoApplication.instance.getString(R.string.something_wrong)
                         _status.value = LoadStatus.ERROR
-                        null
+                        val list = mutableListOf<List<Articles>>()
+                        list.add(0, userArticleList)
+                        list.add(1, mutableListOf())
+                        _viewPagerList.value = list
                     }
                 }
         }
@@ -390,7 +386,7 @@ class ProfileUserViewModel(
         }
     }
 
-    fun updateUserImage(){
+    private fun updateUserImage(){
 
         coroutineScope.launch {
             _status.value = LoadStatus.LOADING
@@ -417,7 +413,6 @@ class ProfileUserViewModel(
             }
         }
     }
-
 
     fun onDoneNavigateToEdit(){
         _navigateToEdit.value = null

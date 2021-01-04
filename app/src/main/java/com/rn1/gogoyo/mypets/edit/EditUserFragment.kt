@@ -1,5 +1,8 @@
 package com.rn1.gogoyo.mypets.edit
 
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,17 +13,27 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.github.dhaval2404.imagepicker.ImagePicker
 import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
 import com.rn1.gogoyo.databinding.FragmentEditUserBinding
+import com.rn1.gogoyo.ext.checkPermission
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.mypets.newpets.NewPetViewModel
+import com.rn1.gogoyo.util.INVALID_FORMAT_INTRODUCTION_EMPTY
+import com.rn1.gogoyo.util.INVALID_FORMAT_NAME_EMPTY
+import com.rn1.gogoyo.util.INVALID_IMAGE_PATH_EMPTY
+import com.rn1.gogoyo.util.Logger
 
 class EditUserFragment : Fragment() {
 
+    private var filePath: String = ""
     private lateinit var binding: FragmentEditUserBinding
-    private val viewModel by viewModels<EditUserViewModel> { getVmFactory(EditUserFragmentArgs.fromBundle(requireArguments()).userIdKey) }
+    private val viewModel by viewModels<EditUserViewModel> {
+        getVmFactory(EditUserFragmentArgs.fromBundle(requireArguments()).userIdKey)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,9 +53,9 @@ class EditUserFragment : Fragment() {
         viewModel.invalidInfo.observe(viewLifecycleOwner, Observer {
             it?.let {
                 when(it){
-                    NewPetViewModel.INVALID_FORMAT_NAME_EMPTY -> Toast.makeText(context, "寵物姓名不可以空白!", Toast.LENGTH_SHORT).show()
-                    NewPetViewModel.INVALID_FORMAT_INTRODUCTION_EMPTY -> Toast.makeText(context, "來段簡短的介紹讓大家更認識你!", Toast.LENGTH_SHORT).show()
-                    NewPetViewModel.INVALID_FORMAT_SEX_EMPTY ->  Toast.makeText(context, "記得選擇寵物性別喔!", Toast.LENGTH_SHORT).show()
+                    INVALID_FORMAT_NAME_EMPTY -> Toast.makeText(context, getString(R.string.empty_user_name), Toast.LENGTH_SHORT).show()
+                    INVALID_FORMAT_INTRODUCTION_EMPTY -> Toast.makeText(context, getString(R.string.empty_introduction_text), Toast.LENGTH_SHORT).show()
+                    INVALID_IMAGE_PATH_EMPTY -> Toast.makeText(context, getString(R.string.empty_user_image_text), Toast.LENGTH_SHORT).show()
                 }
             }
         })
@@ -57,6 +70,50 @@ class EditUserFragment : Fragment() {
             }
         })
 
+        binding.uploadUserIv.setOnClickListener {
+            checkPermission()
+        }
+
         return binding.root
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_EXTERNAL_STORAGE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //get image
+                } else {
+                    Toast.makeText(this.context, "Permission denied", Toast.LENGTH_SHORT).show()
+                }
+                return
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+
+                PICK_IMAGE -> {
+                    filePath = ImagePicker.getFilePath(data) ?: ""
+                    if (filePath.isNotEmpty()) {
+                        val imgPath = filePath
+                        Glide.with(this.requireContext()).load(filePath).into(binding.uploadUserIv)
+
+                        viewModel.uploadImage(imgPath)
+
+                    } else {
+                        Logger.d("Camera Task Cancelled")
+                    }
+                }
+            }
+        }
+    }
+
+    companion object {
+        private const val REQUEST_EXTERNAL_STORAGE = 200
+        private const val PICK_IMAGE = 2404
     }
 }

@@ -9,23 +9,15 @@
             type="com.rn1.gogoyo.walk.start.WalkStartViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".walk.start.WalkStartFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout5"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:elevation="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent"
+            tools:context=".walk.start.WalkStartFragment">
 
             <fragment
-                android:id="@+id/walkEndMap"
+                android:id="@+id/walkingMap"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -35,11 +27,11 @@
                 tools:context=".walk.WalkFragment" />
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardView2"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-
                 app:cardCornerRadius="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -78,11 +70,32 @@
 
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/addFriendBt"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:clickable="true"
+                app:cardCornerRadius="30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardView2">
+
+                <ImageView
+                    android:id="@+id/addFriendIv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="12dp"
+                    app:srcCompat="@drawable/add_user"
+                    app:tint="@color/white" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="32dp"
+                android:layout_marginBottom="50dp"
                 app:cardBackgroundColor="#F4F4F4"
                 app:cardCornerRadius="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -92,7 +105,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayout4"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
+                    android:layout_height="180dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent">
@@ -125,7 +138,7 @@
                     <!--                android:layout_width="wrap_content"-->
                     <!--                android:layout_height="wrap_content"-->
                     <!--                android:text="TextView"-->
-                    <!--                app:layout_constraintBottom_toTopOf="@+id/button6"-->
+                    <!--                app:layout_constraintBottom_toTopOf="@+id/walkFinishBt"-->
                     <!--                app:layout_constraintEnd_toEndOf="parent"-->
                     <!--                app:layout_constraintHorizontal_bias="0.5"-->
                     <!--                app:layout_constraintStart_toEndOf="@+id/view5"-->
@@ -142,7 +155,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <Button
-                        android:id="@+id/button6"
+                        android:id="@+id/walkFinishBt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="4dp"
@@ -150,7 +163,6 @@
                         android:backgroundTint="#FFC107"
                         android:insetLeft="6dp"
                         android:insetRight="6dp"
-                        android:onClick="@{() -> viewModel.onNavigateToEndWalk()}"
                         android:text="結束"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent" />
@@ -166,16 +178,27 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/walkImgRv"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:layout_marginStart="16dp"
+                        android:layout_marginTop="4dp"
                         android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="4dp"
                         android:orientation="horizontal"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintBottom_toTopOf="@+id/button6"
+                        app:layout_constraintBottom_toTopOf="@+id/walkFinishBt"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView13" />
+
+<!--                    <Button-->
+<!--                        android:id="@+id/button4"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Button"-->
+<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                        app:layout_constraintStart_toStartOf="parent" />-->
 
 
                     <!--                    <androidx.cardview.widget.CardView-->
@@ -197,6 +220,7 @@
 
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cameraBt"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginBottom="16dp"
@@ -204,8 +228,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:clickable="true"
-                android:onClick="@{() -> viewModel.onclick()}">
+                android:clickable="true">
 
                 <ImageView
                     android:id="@+id/imageView7"
@@ -218,5 +241,4 @@
 
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

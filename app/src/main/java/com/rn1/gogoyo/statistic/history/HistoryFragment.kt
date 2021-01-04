@@ -33,13 +33,15 @@ class HistoryFragment : Fragment() {
 
         recyclerView.adapter = adapter
 
-        viewModel.walks.observe(viewLifecycleOwner, Observer { list ->
-            list?.let { it1 ->
-                it1.sortedBy { it.endTime }
-                for (i in it1) {
-                    Logger.d("i = ${i.endTime}")
+        viewModel.walks.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                if (it.isEmpty()) {
+                    binding.noHistoryDataTv.visibility = View.VISIBLE
+                } else {
+                    binding.noHistoryDataTv.visibility = View.GONE
+                    it.sortedByDescending { walk -> walk.createdTime }
+                    adapter.submitList(it)
                 }
-                adapter.submitList(it1)
             }
         })
 

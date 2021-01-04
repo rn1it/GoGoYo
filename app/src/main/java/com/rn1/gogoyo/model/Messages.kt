@@ -9,5 +9,6 @@ data class Messages(
     val id: String = "",
     @field:JvmField // use this annotation if your Boolean field is prefixed with 'is'
     val isRead: Boolean = false,
-    val msgTime: Long = Calendar.getInstance().timeInMillis
+    val msgTime: Long = Calendar.getInstance().timeInMillis,
+    var friendImg: String? = null
 )

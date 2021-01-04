@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentArticleContentBinding
@@ -52,7 +53,12 @@ class ArticleContentFragment : Fragment() {
 
 
         val articleResponseRv = binding.articleRespRv
+        val linearLayoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
+        // set the view to the last element
+        linearLayoutManager.stackFromEnd = true
         val responseAdapter = ArticleResponseAdapter()
+        articleResponseRv.layoutManager = linearLayoutManager
         articleResponseRv.adapter = responseAdapter
         articleResponseRv.addItemDecoration(
             DividerItemDecoration(
@@ -77,10 +83,15 @@ class ArticleContentFragment : Fragment() {
         // observe every change in article
         viewModel.liveArticle.observe(viewLifecycleOwner, Observer {
             it?.let {
-                responseAdapter.submitList(it.responseList)
-
+                viewModel.getResponseUserInfo(it)
                 //TODO 發文到最底
 //                binding.articleSv.post(Runnable { binding.articleSv.fullScroll(ScrollView.FOCUS_DOWN) })
+            }
+        })
+
+        viewModel.responseList.observe(viewLifecycleOwner, Observer {
+            it?.let{
+                responseAdapter.submitList(it)
             }
         })
 
@@ -94,6 +105,13 @@ class ArticleContentFragment : Fragment() {
             it?.let {
                 findNavController().navigate(NavigationDirections.actionGlobalMyPetsFragment(it))
                 viewModel.toProfileDone()
+            }
+        })
+
+        viewModel.clearResponse.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                viewModel.response.value = null
+                viewModel.onClearResponseDone()
             }
         })
 

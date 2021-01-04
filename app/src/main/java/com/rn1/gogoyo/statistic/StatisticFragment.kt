@@ -9,12 +9,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import com.google.android.material.tabs.TabLayoutMediator
 import com.rn1.gogoyo.R
-import com.rn1.gogoyo.databinding.FragmentFriendBinding
 import com.rn1.gogoyo.databinding.FragmentStatisticBinding
 import com.rn1.gogoyo.ext.getVmFactory
-import com.rn1.gogoyo.friend.cards.FriendCardsFragment
-import com.rn1.gogoyo.friend.chat.FriendChatFragment
-import com.rn1.gogoyo.friend.list.FriendListFragment
 import com.rn1.gogoyo.statistic.history.HistoryFragment
 import com.rn1.gogoyo.statistic.total.TotalWalkFragment
 

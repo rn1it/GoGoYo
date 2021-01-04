@@ -7,22 +7,19 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.rn1.gogoyo.databinding.ActivityLoginBinding
 import com.rn1.gogoyo.util.Logger
+import com.rn1.gogoyo.util.RC_SIGN_IN
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.fragment_profile_pet.*
-import kotlinx.android.synthetic.main.fragment_profile_pet.view
 
-private const val RC_SIGN_IN = 20
+
 class LoginActivity : AppCompatActivity() {
 
     private val TAG = this.javaClass.name
@@ -91,7 +88,7 @@ class LoginActivity : AppCompatActivity() {
                 if (user != null) {
                     UserManager.userUID = user.uid
                     UserManager.userName = user.displayName
-//                    user.photoUrl
+                    UserManager.userPhoto = user.photoUrl!!.toString()
                 }
                 startActivity(Intent(this, MainActivity::class.java))
 

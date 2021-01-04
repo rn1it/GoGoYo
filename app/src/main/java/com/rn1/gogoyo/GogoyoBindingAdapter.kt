@@ -1,7 +1,5 @@
 package com.rn1.gogoyo
 
-import android.content.res.ColorStateList
-import android.media.Image
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -11,8 +9,9 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.rn1.gogoyo.ext.getColor
 import com.rn1.gogoyo.ext.toDisplayFormat
+import com.rn1.gogoyo.ext.toDisplayFormatForTime
+import java.text.DecimalFormat
 
 @BindingAdapter("addDecoration")
 fun bindDecoration(recyclerView: RecyclerView, decoration: RecyclerView.ItemDecoration?) {
@@ -23,6 +22,12 @@ fun bindDecoration(recyclerView: RecyclerView, decoration: RecyclerView.ItemDeco
 fun bindDisplayFormatTime(textView: TextView, time: Long?) {
     textView.text = time?.toDisplayFormat()
 }
+
+@BindingAdapter("timeToDisplayFormatForTime")
+fun bindDisplayFormatJustTime(textView: TextView, time: Long?) {
+    textView.text = time?.toDisplayFormatForTime()
+}
+
 
 @BindingAdapter("changeCollectButtonStatus")
 fun bindCollectButton(imageButton: ImageButton, isCollected: Boolean) {
@@ -59,8 +64,8 @@ fun bindImage(imgView: ImageView, imgUrl: String?) {
         .load(imgUri)
         .apply(
             RequestOptions()
-                .placeholder(R.drawable.dog_profile)
-                .error(R.drawable.my_pet))
+                .placeholder(R.drawable.dog_place_holder)
+                .error(R.drawable.dog_place_holder))
         .into(imgView)
 
 }
@@ -86,7 +91,8 @@ fun bindFormatTime(textView: TextView, sec: Long){
 @BindingAdapter("distance")
 fun bindFormatKm(textView: TextView, distance: Float){
     textView.apply {
-        text = "$distance km"
+        val decimalFormat = DecimalFormat("#,##0.000")
+        text = "${formatFloat(distance)} km"
     }
 }
 
@@ -101,7 +107,7 @@ private fun formatTime(second: Int): String{
         if (minute == 0) {
             return "${addZero(secondTime)}秒"
         }
-        return "時${addZero(minute)}分${addZero(secondTime)}秒"
+        return "${addZero(minute)}分${addZero(secondTime)}秒"
     }
     return "${addZero(hour)}時${addZero(minute)}分${addZero(secondTime)}秒"
 }
@@ -112,4 +118,9 @@ private fun addZero(number: Int): String{
     } else {
         "$number"
     }
+}
+
+private fun formatFloat(float: Float): String{
+    val decimalFormat = DecimalFormat("#,##0.000")
+    return decimalFormat.format(float)
 }

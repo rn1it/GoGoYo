@@ -8,6 +8,10 @@ fun Long.toDisplayFormat(): String {
     return SimpleDateFormat("yyyy.MM.dd hh:mm", Locale.TAIWAN).format(this)
 }
 
+fun Long.toDisplayFormatForTime(): String {
+    return SimpleDateFormat("hh:mm", Locale.TAIWAN).format(this)
+}
+
 fun getColor(resourceId: Int): Int {
     return GogoyoApplication.instance.getColor(resourceId)
 }

@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.dev.materialspinner.MaterialSpinner
 import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentFriendListBinding
@@ -25,12 +26,11 @@ class FriendListFragment(val userId: String) : Fragment() {
     private lateinit var binding: FragmentFriendListBinding
     private val viewModel by viewModels<FriendListViewModel> { getVmFactory(userId) }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        Logger.d("list onCreateView")
+    ): View {
+
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_friend_list, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
@@ -40,15 +40,21 @@ class FriendListFragment(val userId: String) : Fragment() {
         val adapter = FriendListAdapter(viewModel)
         recyclerView.adapter = adapter
 
+        viewModel.liveFriend.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                viewModel.getFriendListById(it)
+            }
+        })
+
         viewModel.friendList.observe(viewLifecycleOwner, Observer {
                 it?.let {
-                    adapter.submitList(it)
-                    Logger.d("friendlist = $it")
+                    adapter.addStatusAndSubmitList(it)
+
                     binding.friendListSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
                         override fun onQueryTextSubmit(query: String?) = false
 
                         override fun onQueryTextChange(query: String): Boolean {
-                            adapter.submitList(filter(it, query))
+                            adapter.addStatusAndSubmitList(filter(it, query))
                             return true
                         }
                     })
@@ -63,7 +69,12 @@ class FriendListFragment(val userId: String) : Fragment() {
             }
         })
 
-        setUpSpinner()
+        viewModel.navigateToProfile.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                findNavController().navigate(NavigationDirections.actionGlobalMyPetsFragment(it))
+                viewModel.toProfileDone()
+            }
+        })
 
         return binding.root
     }
@@ -83,19 +94,5 @@ class FriendListFragment(val userId: String) : Fragment() {
         }
 
         return filteredList
-    }
-
-    private fun setUpSpinner(){
-        binding.relationshipSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val friendShip = parent?.getItemAtPosition(position) as String
-                viewModel.getUserFriends(friendShip)
-            }
-            override fun onNothingSelected(p0: AdapterView<*>?) {}
-        }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Logger.d("list onViewCreated")
     }
 }

@@ -19,69 +19,163 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:background="@color/colorPrimaryDark"
             android:elevation="@dimen/elevation_all"
-            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.ARTICLE_CONTENT || viewModel.currentFragmentType == CurrentFragmentType.WALK_START || viewModel.currentFragmentType == CurrentFragmentType.WALK_END ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.ARTICLE_CONTENT || viewModel.currentFragmentType == CurrentFragmentType.WALK_START || viewModel.currentFragmentType == CurrentFragmentType.WALK_END || viewModel.currentFragmentType == CurrentFragmentType.WALK || viewModel.currentFragmentType == CurrentFragmentType.FRIEND ? View.GONE : View.VISIBLE}"
+            app:contentInsetStart="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/toolbarBackIv"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="start"
-                android:letterSpacing="0.15"
-                android:onClick="@{() -> viewModel.back()}"
-                android:src="@drawable/arrow_back"
-                android:text="@string/app_name"
-                android:textColor="@color/black_3f3a3a"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE || viewModel.currentFragmentType == CurrentFragmentType.CHAT_ROOM ? View.VISIBLE : View.GONE}"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="18dp" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:letterSpacing="0.15"
-                android:paddingStart="10dp"
-                android:text="建立動態"
-                android:fontFamily="@font/jf_openhuninn"
-                android:textColor="@color/black_3f3a3a"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.VISIBLE : View.GONE}" />
+                <ImageView
+                    android:id="@+id/toolbarBackIv"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="8dp"
+                    android:letterSpacing="0.15"
+                    android:onClick="@{() -> viewModel.back()}"
+                    android:src="@drawable/arrow_back"
+                    android:text="@string/app_name"
+                    app:tint="@color/black_3f3a3a"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE || viewModel.currentFragmentType == CurrentFragmentType.CHAT_ROOM || viewModel.currentFragmentType == CurrentFragmentType.EDIT_PET || viewModel.currentFragmentType == CurrentFragmentType.EDIT_USER ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/toolbarTitleTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:fontFamily="@font/jf_openhuninn"
-                android:letterSpacing="0.15"
-                android:text="@{viewModel.currentFragmentType.value}"
-                android:textColor="@color/black_3f3a3a"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.GONE : View.VISIBLE}"
-                tools:text="GoGoYo" />
+                <TextView
+                    android:id="@+id/textView40"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="@font/jf_openhuninn"
+                    android:letterSpacing="0.15"
+                    android:paddingStart="10dp"
+                    android:text="建立動態"
+                    android:textColor="@color/black_3f3a3a"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/toolbarBackIv"
+                    app:layout_constraintStart_toEndOf="@+id/toolbarBackIv"
+                    app:layout_constraintTop_toTopOf="@+id/toolbarBackIv" />
 
-            <Button
-                android:id="@+id/button5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginEnd="8dp"
-                android:backgroundTint="#ffffff"
-                android:elevation="@dimen/elevation_more"
-                android:text="@string/text_post"
-                android:textColor="@color/black"
-                android:onClick="@{() -> viewModel.postArticle() }"
-                android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.VISIBLE : View.GONE}" />
+
+                <TextView
+                    android:id="@+id/toolbarTitleTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/jf_openhuninn"
+                    android:letterSpacing="0.15"
+                    android:text="@{viewModel.currentFragmentType.value}"
+                    android:textColor="@color/black_3f3a3a"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="GoGoYo" />
+
+                <Button
+                    android:id="@+id/button5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="16dp"
+                    android:backgroundTint="#ffffff"
+                    android:elevation="@dimen/elevation_more"
+                    android:onClick="@{() -> viewModel.postArticle() }"
+                    android:text="@string/text_post"
+                    android:textColor="@color/black"
+                    android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--            <ImageView-->
+<!--                android:id="@+id/toolbarBackIv"-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:layout_gravity="start"-->
+<!--                android:letterSpacing="0.15"-->
+<!--                android:onClick="@{() -> viewModel.back()}"-->
+<!--                android:src="@drawable/arrow_back"-->
+<!--                android:text="@string/app_name"-->
+<!--                android:textColor="@color/black_3f3a3a"-->
+<!--                android:textSize="20sp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE || viewModel.currentFragmentType == CurrentFragmentType.CHAT_ROOM || viewModel.currentFragmentType == CurrentFragmentType.EDIT_PET || viewModel.currentFragmentType == CurrentFragmentType.EDIT_USER ? View.VISIBLE : View.GONE}"-->
+<!--                tools:layout_editor_absoluteX="16dp"-->
+<!--                tools:layout_editor_absoluteY="18dp" />-->
+
+            <!--            <SearchView-->
+            <!--                android:id="@+id/friendListSearchView"-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_height="30dp"-->
+            <!--                android:layout_marginStart="8dp"-->
+            <!--                android:layout_marginTop="8dp"-->
+            <!--                android:layout_marginEnd="8dp"-->
+            <!--                android:layout_marginBottom="8dp"-->
+            <!--                android:background="@color/white"-->
+            <!--                app:layout_constraintBottom_toTopOf="@+id/view6"-->
+            <!--                app:layout_constraintEnd_toStartOf="@+id/view4"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toTopOf="parent"-->
+            <!--                app:queryHint="Search" />-->
+            <!--            -->
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="start"-->
+<!--                android:fontFamily="@font/jf_openhuninn"-->
+<!--                android:letterSpacing="0.15"-->
+<!--                android:paddingStart="10dp"-->
+<!--                android:text="建立動態"-->
+<!--                android:textColor="@color/black_3f3a3a"-->
+<!--                android:textSize="20sp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.VISIBLE : View.GONE}" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/toolbarTitleTv"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:fontFamily="@font/jf_openhuninn"-->
+<!--                android:letterSpacing="0.15"-->
+<!--                android:text="@{viewModel.currentFragmentType.value}"-->
+<!--                android:textColor="@color/black_3f3a3a"-->
+<!--                android:textSize="20sp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.GONE : View.VISIBLE}"-->
+<!--                tools:text="GoGoYo" />-->
+
+<!--            <Button-->
+<!--                android:id="@+id/button5"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="end"-->
+<!--                android:layout_marginEnd="8dp"-->
+<!--                android:backgroundTint="#ffffff"-->
+<!--                android:elevation="@dimen/elevation_more"-->
+<!--                android:onClick="@{() -> viewModel.postArticle() }"-->
+<!--                android:text="@string/text_post"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.VISIBLE : View.GONE}" />-->
 
 
         </androidx.appcompat.widget.Toolbar>
@@ -102,7 +196,7 @@
             android:id="@+id/coordinatorLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.ARTICLE_CONTENT || viewModel.currentFragmentType == CurrentFragmentType.CHAT_ROOM || viewModel.currentFragmentType == CurrentFragmentType.WALK_START ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.ARTICLE_CONTENT || viewModel.currentFragmentType == CurrentFragmentType.CHAT_ROOM || viewModel.currentFragmentType == CurrentFragmentType.WALK_START || viewModel.currentFragmentType == CurrentFragmentType.EDIT_PET || viewModel.currentFragmentType == CurrentFragmentType.EDIT_USER || viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -151,6 +245,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.ARTICLE_CONTENT || viewModel.currentFragmentType == CurrentFragmentType.CHAT_ROOM || viewModel.currentFragmentType == CurrentFragmentType.WALK_START ? View.GONE : View.VISIBLE}"/>
+            android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.ARTICLE_CONTENT || viewModel.currentFragmentType == CurrentFragmentType.CHAT_ROOM || viewModel.currentFragmentType == CurrentFragmentType.WALK_START || viewModel.currentFragmentType == CurrentFragmentType.EDIT_PET || viewModel.currentFragmentType == CurrentFragmentType.EDIT_USER || viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.GONE : View.VISIBLE}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

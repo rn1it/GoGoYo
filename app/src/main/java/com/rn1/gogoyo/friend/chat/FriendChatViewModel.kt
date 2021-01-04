@@ -20,33 +20,25 @@ class FriendChatViewModel(
 ): ViewModel() {
 
     private val _navigateToChatRoom = MutableLiveData<Chatroom>()
-
     val navigateToChatRoom: LiveData<Chatroom>
         get() = _navigateToChatRoom
 
     var liveChatRoomList = MutableLiveData<List<Chatroom>>()
 
     private val _chatList = MutableLiveData<List<Chatroom>>()
-
     val chatList: LiveData<List<Chatroom>>
         get() = _chatList
 
-    // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadStatus>()
-
     val status: LiveData<LoadStatus>
         get() = _status
 
-    // error: The internal MutableLiveData that stores the error of the most recent request
     private val _error = MutableLiveData<String>()
-
     val error: LiveData<String>
         get() = _error
 
-    // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
 
-    // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
@@ -71,6 +63,7 @@ class FriendChatViewModel(
 
     }
 
+    // getChatRoomListWithUserInfo
     fun getChatRoomWithFriendInfo(list: List<Chatroom>) {
 
         coroutineScope.launch {
@@ -79,7 +72,7 @@ class FriendChatViewModel(
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadStatus.DONE
-                    result.data
+                    result.data.sortedByDescending { it.msgTime }
                 }
                 is Result.Fail -> {
                     _error.value = result.error
@@ -97,9 +90,7 @@ class FriendChatViewModel(
                     null
                 }
             }
-
         }
-
     }
 
 }

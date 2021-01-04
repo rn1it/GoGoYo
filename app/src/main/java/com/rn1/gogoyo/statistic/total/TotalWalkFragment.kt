@@ -39,11 +39,8 @@ class TotalWalkFragment : Fragment() {
         viewModel.pet.observe(viewLifecycleOwner, Observer {
             it?.let {
                 for (pet in it) {
-                    Logger.d("pet.divTotalTime = ${pet.divTotalTime}, pet.divTotalDistance = ${pet.divTotalDistance}")
-
                     val valueTime = PieEntry(pet.divTotalTime, pet.name)
                     val valueDistance = PieEntry(pet.divTotalDistance.toFloat(), pet.name)
-                    Logger.d("valueTime = $valueTime, valueDistance = $valueDistance")
                     pieValueTime.add(valueTime)
                     pieValueDistance.add(valueDistance)
                 }
@@ -54,7 +51,6 @@ class TotalWalkFragment : Fragment() {
                         when (checkedId) {
                             R.id.timeBt -> {
                                 val pieChart = binding.pie
-//                                pieChart.setUsePercentValues(true)
                                 pieChart.holeRadius = 60f
                                 pieChart.transparentCircleRadius = 65f
                                 pieChart.description.isEnabled = false
@@ -64,7 +60,7 @@ class TotalWalkFragment : Fragment() {
                                 val pieDataSet = PieDataSet(pieValueTime, "")
                                 pieDataSet.valueTextSize = 16f
                                 pieDataSet.valueTextColor = Color.YELLOW
-                                pieDataSet.colors = JOYFUL_COLORS2.toList()
+                                pieDataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
 
                                 val pieData = PieData(pieDataSet)
 
@@ -84,7 +80,7 @@ class TotalWalkFragment : Fragment() {
                                 val pieDataSet = PieDataSet(pieValueDistance, "")
                                 pieDataSet.valueTextSize = 16f
                                 pieDataSet.valueTextColor = Color.YELLOW
-                                pieDataSet.colors = JOYFUL_COLORS2.toList()
+                                pieDataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
 
                                 val pieData = PieData(pieDataSet)
 
@@ -99,13 +95,6 @@ class TotalWalkFragment : Fragment() {
         })
 
         return binding.root
-    }
-
-    companion object{
-        val JOYFUL_COLORS2 = intArrayOf(
-            Color.rgb(217, 80, 138), Color.rgb(254, 149, 7), Color.rgb(128, 128, 255),
-            Color.rgb(106, 167, 134), Color.rgb(53, 194, 209), Color.rgb(254, 247, 120)
-        )
     }
 
     private fun formatTime(second: Int): String{
@@ -127,7 +116,7 @@ class TotalWalkFragment : Fragment() {
     }
 
     private fun formatFloat(float: Float): String{
-        val decimalFormat = DecimalFormat("#.00")
+        val decimalFormat = DecimalFormat("#,##0.000")
         return decimalFormat.format(float)
     }
 }

@@ -28,16 +28,14 @@ class FriendChatFragment(val userId: String) : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_friend_chat, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-
-
         val recyclerView = binding.chatListRv
-        val adapter = FriendChatAdapter(viewModel, FriendChatAdapter.OnClickListener{
+        val adapter = FriendChatAdapter(FriendChatAdapter.OnClickListener{
             viewModel.navigateToChatRoom(it)
         })
 
@@ -53,18 +51,8 @@ class FriendChatFragment(val userId: String) : Fragment() {
         viewModel.chatList.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.submitList(it)
-
-                binding.friendChatListSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?) = false
-
-                    override fun onQueryTextChange(query: String): Boolean {
-                        adapter.submitList(filter(it, query))
-                        return true
-                    }
-                })
             }
         })
-
 
         viewModel.navigateToChatRoom.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -73,25 +61,7 @@ class FriendChatFragment(val userId: String) : Fragment() {
             }
         })
 
-
-
         return binding.root
     }
 
-    // return query list
-    fun filter(list: List<Chatroom>, query: String): List<Chatroom> {
-
-        val lowerCaseQueryString = query.toLowerCase(Locale.ROOT)
-        val filteredList = mutableListOf<Chatroom>()
-
-//        for (chatRoom in list) {
-//            val name = chatRoom.user1Id.toLowerCase(Locale.ROOT)
-//            val lastMsg = chatRoom.lastMsg ?: "".toLowerCase(Locale.ROOT)
-//            if (name.contains(lowerCaseQueryString)) {
-//                filteredList.add(chatRoom)
-//            }
-//        }
-
-        return filteredList
-    }
 }

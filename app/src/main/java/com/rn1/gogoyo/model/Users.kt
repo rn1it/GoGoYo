@@ -19,5 +19,6 @@ data class Users(
     val friendList: List<Friends> = mutableListOf(),
     var pets: List<Pets> = mutableListOf(),
     var enterFriendCardTime: Long? = null,
-    var recommendList: List<String>? = null
+    var recommendList: List<String>? = null,
+    var status: Int? = null
 ): Parcelable

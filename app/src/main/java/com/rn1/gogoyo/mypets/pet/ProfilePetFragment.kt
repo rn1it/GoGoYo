@@ -32,7 +32,9 @@ import kotlin.math.abs
 class ProfilePetFragment(val userId: String) : Fragment() {
 
     private lateinit var binding: FragmentProfilePetBinding
-    private val viewModel by viewModels<ProfilePetViewModel> { getVmFactory(userId) }
+    private val viewModel by viewModels<ProfilePetViewModel> {
+        getVmFactory(userId)
+    }
     private val mp = MediaPlayer()
 
     override fun onCreateView(
@@ -50,8 +52,12 @@ class ProfilePetFragment(val userId: String) : Fragment() {
         viewPager.adapter = adapter
 
         viewModel.petList.observe(viewLifecycleOwner, Observer {
-            it?.let {
 
+            if (it.isNullOrEmpty()) {
+                binding.noPetTv.visibility = View.VISIBLE
+                binding.editPetInfoBt.visibility = View.GONE
+            } else {
+                binding.noPetTv.visibility = View.INVISIBLE
                 adapter.submitList(it)
                 // listen page change and change data for selected pet
                 viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -60,13 +66,32 @@ class ProfilePetFragment(val userId: String) : Fragment() {
                         viewModel.pet.value = it[position]
                     }
                 })
+
+                binding.videoPlayBt.setOnClickListener{
+                    setExoplayer(viewModel.pet.value!!.video)
+                }
+
+                binding.audioPlayBt.setOnClickListener{
+                    play(viewModel.pet.value!!.voice)
+                }
             }
         })
 
         viewModel.navigateToNewPet.observe(viewLifecycleOwner, Observer {
             it?.let {
-                if (it) findNavController().navigate(NavigationDirections.actionGlobalNewPetFragment())
-                viewModel.onDoneNavigateToNewPet()
+                if (it) {
+                    if (viewModel.petList.value != null) {
+                        if (viewModel.petList.value!!.size == 5) {
+                            Toast.makeText(context, getString(R.string.pet_registry_limit_text), Toast.LENGTH_SHORT).show()
+                        } else {
+                            findNavController().navigate(NavigationDirections.actionGlobalNewPetFragment())
+                            viewModel.onDoneNavigateToNewPet()
+                        }
+                    } else {
+                        findNavController().navigate(NavigationDirections.actionGlobalNewPetFragment())
+                        viewModel.onDoneNavigateToNewPet()
+                    }
+                }
             }
         })
 
@@ -76,14 +101,6 @@ class ProfilePetFragment(val userId: String) : Fragment() {
                 viewModel.toEditPetDone()
             }
         })
-
-        binding.videoPlayBt.setOnClickListener{
-            setExoplayer(viewModel.pet.value!!.video)
-        }
-
-        binding.audioPlayBt.setOnClickListener{
-            play(viewModel.pet.value!!.voice)
-        }
 
         setUpViewPager(viewPager)
 
@@ -97,30 +114,34 @@ class ProfilePetFragment(val userId: String) : Fragment() {
 
         stopMediaPlayer()
 
-        val dialog = Dialog(requireContext())
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(R.layout.introvid)
-        dialog.show()
+        if (url.isNullOrEmpty()) {
+            Toast.makeText(context, getString(R.string.no_pet_video_text), Toast.LENGTH_SHORT).show()
+        } else {
+            val dialog = Dialog(requireContext())
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.introvid)
+            dialog.show()
 
-        val lp = WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT)
-        lp.copyFrom(dialog.window!!.attributes)
-        dialog.window!!.attributes = lp
+            val lp = WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT)
+            lp.copyFrom(dialog.window!!.attributes)
+            dialog.window!!.attributes = lp
 
-        val playerView = dialog.findViewById(R.id.exoplayer_item) as PlayerView
+            val playerView = dialog.findViewById(R.id.exoplayer_item) as PlayerView
 
-        try {
-            val exoPlayer = ExoPlayerFactory.newSimpleInstance(requireContext())
-            val video = Uri.parse(url)
-            val dataSourceFactory = DefaultHttpDataSourceFactory("video")
-            val extractorsFactory: ExtractorsFactory = DefaultExtractorsFactory()
-            val mediaSource: MediaSource =
-                ExtractorMediaSource(video, dataSourceFactory, extractorsFactory, null, null)
-            playerView.player = exoPlayer
-            exoPlayer.prepare(mediaSource)
-            exoPlayer.playWhenReady = false
-        } catch (e: Exception) {
-            Toast.makeText(context, "還沒有上傳影片喔!", Toast.LENGTH_SHORT).show()
-            Log.e("ViewHolder", "exoplayer error$e")
+            try {
+                val exoPlayer = ExoPlayerFactory.newSimpleInstance(requireContext())
+                val video = Uri.parse(url)
+                val dataSourceFactory = DefaultHttpDataSourceFactory("video")
+                val extractorsFactory: ExtractorsFactory = DefaultExtractorsFactory()
+                val mediaSource: MediaSource =
+                    ExtractorMediaSource(video, dataSourceFactory, extractorsFactory, null, null)
+                playerView.player = exoPlayer
+                exoPlayer.prepare(mediaSource)
+                exoPlayer.playWhenReady = false
+            } catch (e: Exception) {
+                Toast.makeText(context, getString(R.string.play_video_fail_text), Toast.LENGTH_SHORT).show()
+                Log.e("ViewHolder", "exoplayer error$e")
+            }
         }
     }
 
@@ -130,7 +151,7 @@ class ProfilePetFragment(val userId: String) : Fragment() {
     private fun play(path: String?) {
         stopMediaPlayer()
         if (path.isNullOrBlank()) {
-                Toast.makeText(context, "還沒有上傳聲音喔!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.no_pet_audio_text), Toast.LENGTH_SHORT).show()
         } else {
             Logger.d("play path = $path")
             val uri = Uri.parse(path)
@@ -139,6 +160,9 @@ class ProfilePetFragment(val userId: String) : Fragment() {
             mp.setOnPreparedListener {
                 it.start()
                 binding.audioPlayBt.setImageResource(R.drawable.pause_24)
+            }
+            mp.setOnCompletionListener {
+                binding.audioPlayBt.setImageResource(R.drawable.play_music)
             }
             mp.prepare()
         }

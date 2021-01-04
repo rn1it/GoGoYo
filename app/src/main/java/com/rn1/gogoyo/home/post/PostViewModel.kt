@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
+import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.model.Articles
 import com.rn1.gogoyo.model.Pets
 import com.rn1.gogoyo.model.Result
@@ -28,12 +29,20 @@ class PostViewModel(
 
     private val DEFAULT_IMAGE = "https://firebasestorage.googleapis.com/v0/b/turing-opus-296809.appspot.com/o/images%2Fdog_1.png?alt=media&token=0d165c4e-a3fe-47e3-b82e-a4c11d167419"
 
+    val outline = MapOutlineProvider()
+
     private val _walk = MutableLiveData<Walk>().apply {
         value = argument
     }
 
     val walk: LiveData<Walk>
         get() = _walk
+
+    private val _images = MutableLiveData<List<String>>()
+    val images: LiveData<List<String>>
+        get() = _images
+
+
 
     var filePath: String = ""
 
@@ -101,6 +110,7 @@ class PostViewModel(
                 positionList.add(index)
                 idList.add(petId)
             }
+            _images.value = argument.images
 
             selectedPetPositionList.value = positionList
             selectedPetIdList.value = idList
@@ -109,6 +119,7 @@ class PostViewModel(
             getUserPets()
             selectedPetPositionList.value = mutableListOf()
             selectedPetIdList.value = mutableListOf()
+            _images.value = mutableListOf()
         }
 
     }
@@ -179,33 +190,39 @@ class PostViewModel(
     fun uploadImage(path: String){
         coroutineScope.launch {
 
-            filePath = when (val result = repository.getImageUri(path)) {
+//            filePath =
+                when (val result = repository.getImageUri(path)) {
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadStatus.DONE
                     Logger.d("uri = ${result.data}")
-                    result.data
+                    val list = mutableListOf<String>()
+                    list.addAll(_images.value!!)
+                    list.add(result.data)
+                    _images.value = list
+
+//                    result.data
                 }
                 is Result.Fail -> {
                     _error.value = result.error
                     _status.value = LoadStatus.ERROR
-                    ""
+//                    ""
                 }
                 is Result.Error -> {
                     _error.value = result.exception.toString()
                     _status.value = LoadStatus.ERROR
-                    ""
+//                    ""
                 }
                 else -> {
                     _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
                     _status.value = LoadStatus.ERROR
-                    ""
+//                    ""
                 }
             }
         }
     }
 
-    fun getWalkPets(){
+    private fun getWalkPets(){
         coroutineScope.launch {
 
             _userPetList.value = when (val result = repository.getPetsByIdList(argument.petsIdList)) {
@@ -253,14 +270,16 @@ class PostViewModel(
             article.authorId = UserManager.userUID
             article.petIdList = selectedPetIdList.value!!
 
-            if (filePath == "") {
-                filePath = DEFAULT_IMAGE
+//            if (filePath == "") {
+//                filePath = DEFAULT_IMAGE
+//            }
+
+            val images = _images.value
+//            images.add(filePath)
+
+            if (images != null) {
+                article.images = images
             }
-
-            val images = mutableListOf<String>()
-            images.add(filePath)
-
-            article.images = images
 
 
             when(val result = repository.postArticle(article)) {
