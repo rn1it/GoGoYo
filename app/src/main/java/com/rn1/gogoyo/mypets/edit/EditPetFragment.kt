@@ -1,6 +1,5 @@
 package com.rn1.gogoyo.mypets.edit
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -25,7 +23,7 @@ import com.rn1.gogoyo.databinding.FragmentEditPetBinding
 import com.rn1.gogoyo.ext.checkPermission
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.mypets.newpets.NewPetViewModel
-import com.rn1.gogoyo.util.Logger
+import com.rn1.gogoyo.util.*
 import java.lang.Exception
 
 
@@ -57,24 +55,24 @@ class EditPetFragment : Fragment() {
         viewModel.invalidInfo.observe(viewLifecycleOwner, Observer {
             it?.let {
                 when (it) {
-                    NewPetViewModel.INVALID_FORMAT_NAME_EMPTY -> Toast.makeText(
+                    INVALID_FORMAT_NAME_EMPTY -> Toast.makeText(
                         context,
-                        "寵物姓名不可以空白!",
+                        getString(R.string.empty_pet_name_text),
                         Toast.LENGTH_SHORT
                     ).show()
-                    NewPetViewModel.INVALID_FORMAT_INTRODUCTION_EMPTY -> Toast.makeText(
+                    INVALID_FORMAT_INTRODUCTION_EMPTY -> Toast.makeText(
                         context,
-                        "來段簡短的介紹讓大家更認識你!",
+                        getString(R.string.empty_introduction_text),
                         Toast.LENGTH_SHORT
                     ).show()
-                    NewPetViewModel.INVALID_FORMAT_SEX_EMPTY -> Toast.makeText(
+                    INVALID_FORMAT_SEX_EMPTY -> Toast.makeText(
                         context,
-                        "記得選擇寵物性別喔!",
+                        getString(R.string.empty_pet_gender_text),
                         Toast.LENGTH_SHORT
                     ).show()
-                    NewPetViewModel.INVALID_IMAGE_PATH_EMPTY -> Toast.makeText(
+                    INVALID_IMAGE_PATH_EMPTY -> Toast.makeText(
                         context,
-                        "別忘記上傳一張寵物的萌照啊!",
+                        getString(R.string.empty_pet_image_text),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -163,7 +161,7 @@ class EditPetFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Toast.makeText(this.requireContext(), "resultCode = $resultCode , requestCode = $requestCode", Toast.LENGTH_SHORT).show()
+        Logger.d("edit pet: resultCode = $resultCode , requestCode = $requestCode")
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
 
@@ -171,22 +169,20 @@ class EditPetFragment : Fragment() {
                     filePath = ImagePicker.getFilePath(data) ?: ""
                     if (filePath.isNotEmpty()) {
                         val imgPath = filePath
-                        Logger.d(" = $imgPath")
-                        Toast.makeText(this.requireContext(), imgPath, Toast.LENGTH_SHORT).show()
+                        Logger.d("edit pet: PICK_IMAGE => imgPath = $imgPath")
                         Glide.with(this.requireContext()).load(filePath).into(binding.uploadPetIv)
 
                         viewModel.uploadImage(imgPath)
 
                     } else {
-                        Toast.makeText(this.requireContext(), "Upload failed", Toast.LENGTH_SHORT)
-                            .show()
+                        Logger.d("Camera Task Cancelled")
                     }
                 }
 
                 PICK_VIDEO -> {
                     if (data?.data != null) {
                         val uri = data.data!!
-                        Toast.makeText(this.requireContext(), uri.toString(), Toast.LENGTH_SHORT).show()
+                        Logger.d("edit pet: PICK_VIDEO => uri = $uri")
 
                         viewModel.uploadVideo(uri)
                     }
@@ -195,7 +191,7 @@ class EditPetFragment : Fragment() {
                 PICK_AUDIO -> {
                     if (data?.data != null) {
                         val uri = data.data!!
-                        Toast.makeText(this.requireContext(), uri.toString(), Toast.LENGTH_SHORT).show()
+                        Logger.d("edit pet: PICK_AUDIO => uri = $uri")
 
                         viewModel.uploadAudio(uri)
                     }

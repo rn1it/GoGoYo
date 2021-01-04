@@ -1,21 +1,11 @@
 package com.rn1.gogoyo.walk.start
 
-import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
-import com.google.android.gms.maps.model.Marker
-import com.rn1.gogoyo.R
 import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.databinding.ItemPetImageLayoutBinding
 import com.rn1.gogoyo.model.Pets

@@ -39,10 +39,8 @@ class TotalWalkFragment : Fragment() {
         viewModel.pet.observe(viewLifecycleOwner, Observer {
             it?.let {
                 for (pet in it) {
-                    Logger.d("pet.divTotalTime = ${pet.divTotalTime}, pet.divTotalDistance = ${pet.divTotalDistance}")
                     val valueTime = PieEntry(pet.divTotalTime, pet.name)
                     val valueDistance = PieEntry(pet.divTotalDistance.toFloat(), pet.name)
-//                    Logger.d("valueTime = $valueTime, valueDistance = $valueDistance")
                     pieValueTime.add(valueTime)
                     pieValueDistance.add(valueDistance)
                 }
@@ -53,7 +51,6 @@ class TotalWalkFragment : Fragment() {
                         when (checkedId) {
                             R.id.timeBt -> {
                                 val pieChart = binding.pie
-//                                pieChart.setUsePercentValues(true)
                                 pieChart.holeRadius = 60f
                                 pieChart.transparentCircleRadius = 65f
                                 pieChart.description.isEnabled = false

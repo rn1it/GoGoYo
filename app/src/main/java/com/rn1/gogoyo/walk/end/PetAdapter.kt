@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -14,22 +13,21 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.target.Target
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.databinding.ItemPetImageLayoutBinding
 import com.rn1.gogoyo.home.post.PostPetAdapter
 import com.rn1.gogoyo.model.Pets
-import com.rn1.gogoyo.util.Logger
-
 
 class PetAdapter: ListAdapter<Pets, RecyclerView.ViewHolder>(PostPetAdapter) {
 
-    class PetViewHolder(val binding: ItemPetImageLayoutBinding): RecyclerView.ViewHolder(binding.root){
+    class PetViewHolder(
+        val binding: ItemPetImageLayoutBinding
+        ): RecyclerView.ViewHolder(binding.root){
+
         fun bind(pets: Pets){
             binding.pets = pets
-            Logger.d("aaa pet = $pets")
 
             val imgUri = pets.image?.toUri()?.buildUpon()?.scheme("https")?.build()
             Glide.with(binding.petsIv.context)
@@ -63,7 +61,6 @@ class PetAdapter: ListAdapter<Pets, RecyclerView.ViewHolder>(PostPetAdapter) {
                         .error(R.drawable.my_pet)
                 )
                 .into(binding.petsIv)
-
 
             binding.petImageOuterSel.visibility = View.GONE
             binding.petImageOuter.visibility = View.GONE
@@ -103,7 +100,5 @@ class PetAdapter: ListAdapter<Pets, RecyclerView.ViewHolder>(PostPetAdapter) {
         override fun areContentsTheSame(oldItem: Pets, newItem: Pets): Boolean {
             return oldItem == newItem
         }
-
     }
-
 }

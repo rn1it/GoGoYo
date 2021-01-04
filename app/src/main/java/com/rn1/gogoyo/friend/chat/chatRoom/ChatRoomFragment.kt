@@ -20,24 +20,25 @@ import com.rn1.gogoyo.model.Users
 class ChatRoomFragment : Fragment() {
 
     private lateinit var binding: FragmentChatRoomBinding
-    private val viewModel by viewModels<ChatRoomViewModel> { getVmFactory( ChatRoomFragmentArgs.fromBundle(requireArguments()).chatRoomKey) }
+    private val viewModel by viewModels<ChatRoomViewModel> {
+        getVmFactory( ChatRoomFragmentArgs.fromBundle(requireArguments()).chatRoomKey)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_chat_room, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-
 
         val recyclerView = binding.msgRv
         val adapter = ChatRoomAdapter()
         val linearLayoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         // set the view to the last element (views will created from bottom to top)
-        //linearLayoutManager.stackFromEnd = true
+        // linearLayoutManager.stackFromEnd = true
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = linearLayoutManager

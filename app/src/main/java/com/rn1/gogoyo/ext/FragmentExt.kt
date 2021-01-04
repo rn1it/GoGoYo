@@ -10,9 +10,7 @@ import com.rn1.gogoyo.factory.*
 import com.rn1.gogoyo.model.Articles
 import com.rn1.gogoyo.model.Chatroom
 import com.rn1.gogoyo.model.Walk
-import com.rn1.gogoyo.util.Util
-
-const val REQUEST_EXTERNAL_STORAGE = 200
+import com.rn1.gogoyo.util.REQUEST_EXTERNAL_STORAGE
 
 fun Fragment.getVmFactory(): ViewModelFactory{
     val repository = (requireContext().applicationContext as GogoyoApplication).repository
@@ -50,7 +48,6 @@ fun Fragment.checkPermission() {
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
     if (permission != PackageManager.PERMISSION_GRANTED) {
-        //未取得權限，向使用者要求允許權限
         ActivityCompat.requestPermissions(
             requireActivity(), arrayOf(
                 Manifest.permission.CAMERA,
@@ -61,13 +58,18 @@ fun Fragment.checkPermission() {
     getLocalImg(this)
 }
 
+/**
+ * Crop image (Optional), Check Customization for more option
+ * compress, Final image size will be less than 1 MB (Optional)
+ * ResultSize, Final image resolution will be less than 1080 x 1080 (Optional)
+ */
 private fun getLocalImg(fragment: Fragment) {
     ImagePicker.with(fragment)
-        .crop()                    //Crop image(Optional), Check Customization for more option
-        .compress(1024)            //Final image size will be less than 1 MB(Optional)
+        .crop()
+        .compress(1024)
         .maxResultSize(
             1080,
             1080
-        )    //Final image resolution will be less than 1080 x 1080(Optional)
+        )
         .start()
 }

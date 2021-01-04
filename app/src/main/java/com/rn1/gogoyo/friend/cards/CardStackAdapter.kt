@@ -4,104 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.rn1.gogoyo.GogoyoApplication
+import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.ItemFriendCardBinding
 import com.rn1.gogoyo.model.Users
-import com.rn1.gogoyo.util.Logger
-
-
-//class CardStackAdapter(
-//    val viewModel: FriendCardsViewModel,
-//    private var users: List<Users> = emptyList()
-//) : ListAdapter<Users, RecyclerView.ViewHolder>(UserDiffCallback()) {
-//
-//    class ViewHolder(val binding: ItemFriendCardBinding) : RecyclerView.ViewHolder(binding.root) {
-//
-//        fun bind(viewModel: FriendCardsViewModel, user: Users, position: Int = 0) {
-//
-//            var position = position
-//
-//            binding.user = user
-//            binding.pet = user.pets[position]
-//            binding.viewModel = viewModel
-//
-//            binding.dogCardCv.setOnClickListener {
-//                viewModel.setShowBarkToast(user.pets[position])
-//            }
-//
-//            binding.playVideoFab.setOnClickListener {
-//                viewModel.setShowVideoDialog(user.pets[position])
-//            }
-//
-//            binding.backBt.setOnClickListener {
-//                if (position > 0) {
-//                    position -= 1
-//                    Logger.d("111111, ${user.pets[position].image}")
-//                    viewModel.dataChange(adapterPosition, position )
-//                }
-//            }
-//
-//            binding.nextBt.setOnClickListener {
-//                if (position < user.pets.size - 1)
-//                    position += 1
-//                    Logger.d("111111, ${user.pets[position].image}")
-//                    viewModel.dataChange(adapterPosition, position )
-//                }
-//            }
-//
-//        companion object{
-//            fun from(parent: ViewGroup): ViewHolder{
-//                val inflater = LayoutInflater.from(parent.context)
-//                val binding = ItemFriendCardBinding.inflate(inflater, parent, false)
-//                return ViewHolder(binding)
-//            }
-//        }
-//    }
-//
-//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-//        return ViewHolder.from(parent)
-//    }
-//
-//    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-//
-//        val viewHolder = holder as ViewHolder
-//        val user = getItem(position)
-//
-//        viewHolder.bind(viewModel, user)
-//    }
-//
-//    override fun onBindViewHolder(
-//        holder: RecyclerView.ViewHolder,
-//        position: Int,
-//        payloads: MutableList<Any>
-//    ) {
-//        if (payloads.isEmpty()) {
-//            //payloads 為 空，說明是更新整個 ViewHolder
-//            onBindViewHolder(holder, position)
-//            Logger.d("111111, onBindViewHolder")
-//        } else {
-//
-//            val viewHolder = holder as ViewHolder
-//            val user = getItem(position)
-//            viewHolder.bind(viewModel, user, payloads[0] as Int)
-//            Logger.d("2222222, onBindViewHolder ${payloads[0]}")
-//        }
-//    }
-//
-//    class UserDiffCallback: DiffUtil.ItemCallback<Users>(){
-//        override fun areItemsTheSame(oldItem: Users, newItem: Users): Boolean {
-//            return oldItem === newItem
-//        }
-//
-//        override fun areContentsTheSame(oldItem: Users, newItem: Users): Boolean {
-//            return oldItem == newItem
-//        }
-//
-//    }
-//}
-
 
 class CardStackAdapter(
     val viewModel: FriendCardsViewModel,
@@ -110,9 +17,9 @@ class CardStackAdapter(
 
     class ViewHolder(val binding: ItemFriendCardBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(viewModel: FriendCardsViewModel, user: Users, position: Int = 0) {
+        fun bind(viewModel: FriendCardsViewModel, user: Users, currentPosition: Int = 0) {
 
-            var position = position
+            var position = currentPosition
 
             binding.user = user
             if (user.pets.isNotEmpty()) {
@@ -126,7 +33,9 @@ class CardStackAdapter(
                 binding.playVideoFab.setOnClickListener {
                     val pet = user.pets[position]
                     if (pet.video.isNullOrEmpty()) {
-                        Toast.makeText(GogoyoApplication.instance.applicationContext, "目前沒有這隻寵物的影片喔!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(GogoyoApplication.instance.applicationContext
+                            , GogoyoApplication.instance.getString(R.string.no_pet_video_text)
+                            , Toast.LENGTH_SHORT).show()
                     } else {
                         viewModel.setShowVideoDialog(user.pets[position])
                     }
@@ -135,7 +44,6 @@ class CardStackAdapter(
                 binding.backBt.setOnClickListener {
                     if (position > 0) {
                         position -= 1
-                        Logger.d("111111, ${user.pets[position].image}")
                         viewModel.dataChange(adapterPosition, position )
                     }
                 }
@@ -143,7 +51,6 @@ class CardStackAdapter(
                 binding.nextBt.setOnClickListener {
                     if (position < user.pets.size - 1)
                         position += 1
-                    Logger.d("111111, ${user.pets[position].image}")
                     viewModel.dataChange(adapterPosition, position )
                 }
             }
@@ -175,7 +82,6 @@ class CardStackAdapter(
         payloads: MutableList<Any>
     ) {
         if (payloads.isEmpty()) {
-            //payloads 為 空，說明是更新整個 ViewHolder
             onBindViewHolder(holder, position)
         } else {
             val viewHolder = holder as ViewHolder
@@ -183,7 +89,6 @@ class CardStackAdapter(
             viewHolder.bind(viewModel, user, payloads[0] as Int)
         }
     }
-
 
     override fun getItemCount(): Int {
         return users.size
@@ -201,6 +106,7 @@ class CardStackAdapter(
         private val old: List<Users>,
         private val new: List<Users>
     ): DiffUtil.Callback() {
+
         override fun getOldListSize(): Int {
             return old.size
         }

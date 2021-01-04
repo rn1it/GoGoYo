@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.activity.viewModels
@@ -22,6 +21,8 @@ import com.google.firebase.ktx.Firebase
 import com.rn1.gogoyo.databinding.ActivityMainBinding
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.util.CurrentFragmentType
+import com.rn1.gogoyo.util.Logger
+import com.rn1.gogoyo.util.PERMISSION_ID
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -78,9 +79,9 @@ class MainActivity : AppCompatActivity() {
 
             // observe current fragment change, only for show info
             viewModel.currentFragmentType.observe(this, Observer {
-                Log.d(TAG,"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-                Log.d(TAG,"[${viewModel.currentFragmentType.value}]")
-                Log.d(TAG,"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+                Logger.d("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+                Logger.d("[${viewModel.currentFragmentType.value}]")
+                Logger.d("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
             })
 
             viewModel.navigateToWalk.observe(this, Observer {
@@ -113,7 +114,8 @@ class MainActivity : AppCompatActivity() {
             setUpBottomNav()
             setupNavController()
             setupStatusBar()
-            getLocationPermission()
+//            getLocationPermission()
+            requestPermission()
         }
     }
 
@@ -179,10 +181,5 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE),
             PERMISSION_ID)
-    }
-
-    companion object {
-        private const val TAG = "GoGoYo"
-        private const val PERMISSION_ID = 1
     }
 }

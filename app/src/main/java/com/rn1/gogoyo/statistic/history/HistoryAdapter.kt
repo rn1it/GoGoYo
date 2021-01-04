@@ -23,10 +23,11 @@ class HistoryAdapter: ListAdapter<Walk, HistoryAdapter.WalkViewHolder>(WalkDiffC
     class WalkViewHolder(val binding: ItemWalkBinding): RecyclerView.ViewHolder(binding.root){
 
         fun bind(walk: Walk){
-            binding.walk = walk
             val adapter = ArticleContentPetImageAdapter()
-            binding.petsImageRv.adapter = adapter
             adapter.submitList(walk.pets)
+
+            binding.walk = walk
+            binding.petsImageRv.adapter = adapter
         }
 
         companion object{
@@ -47,23 +48,5 @@ class HistoryAdapter: ListAdapter<Walk, HistoryAdapter.WalkViewHolder>(WalkDiffC
             return oldItem == newItem
         }
 
-    }
-
-    private fun formatTime(second: Int): String{
-
-        val hour = second / 3600
-        var secondTime = second % 3600
-        val minute = secondTime / 60
-        secondTime %= 60
-
-        return "${addZero(hour)}時${addZero(minute)}分${addZero(secondTime)}秒"
-    }
-
-    private fun addZero(number: Int): String{
-        return if(number.toString().length == 1){
-            "0$number"
-        } else {
-            "$number"
-        }
     }
 }
