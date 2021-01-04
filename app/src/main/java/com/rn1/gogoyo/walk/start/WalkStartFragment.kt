@@ -243,7 +243,15 @@ class WalkStartFragment : Fragment(){
         }
 
         binding.cameraBt.setOnClickListener {
-            checkPermission()
+            if (viewModel.imageStringList.value!= null) {
+                if (viewModel.imageStringList.value!!.size >= 3) {
+                    Toast.makeText(context, "很抱歉，目前最多只能拍攝三張照片!", Toast.LENGTH_SHORT).show()
+                } else {
+                    checkPermission()
+                }
+            } else {
+                checkPermission()
+            }
         }
 
         binding.addFriendBt.setOnClickListener {

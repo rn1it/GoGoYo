@@ -144,15 +144,15 @@
                     <!--                app:layout_constraintStart_toEndOf="@+id/view5"-->
                     <!--                app:layout_constraintTop_toBottomOf="@+id/textView15" />-->
 
-                    <Button
-                        android:id="@+id/stopBt"
-                        android:layout_width="10dp"
-                        android:layout_height="20dp"
-                        android:backgroundTint="#FF9800"
-                        android:onClick="@{() -> viewModel.stopOrContinueCounter()}"
-                        android:text="@{viewModel.counterBtString}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+<!--                    <Button-->
+<!--                        android:id="@+id/stopBt"-->
+<!--                        android:layout_width="10dp"-->
+<!--                        android:layout_height="20dp"-->
+<!--                        android:backgroundTint="#FF9800"-->
+<!--                        android:onClick="@{() -> viewModel.stopOrContinueCounter()}"-->
+<!--                        android:text="@{viewModel.counterBtString}"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintTop_toTopOf="parent" />-->
 
                     <Button
                         android:id="@+id/walkFinishBt"
