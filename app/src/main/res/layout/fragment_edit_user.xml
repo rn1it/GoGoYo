@@ -7,6 +7,7 @@
         <variable
             name="viewModel"
             type="com.rn1.gogoyo.mypets.edit.EditUserViewModel" />
+        <import type="com.rn1.gogoyo.util.LoadStatus"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -101,6 +102,7 @@
             android:backgroundTint="#FFC107"
             android:maxLength="25"
             android:onClick="@{() -> viewModel.checkUserInfo()}"
+            android:clickable="@{viewModel.status == LoadStatus.LOADING ? false : true}"
             android:text="修改資料"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

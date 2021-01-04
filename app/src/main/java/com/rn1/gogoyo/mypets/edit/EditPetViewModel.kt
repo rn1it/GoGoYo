@@ -140,6 +140,9 @@ class EditPetViewModel(
     }
 
     fun editPet(){
+
+        _status.value = LoadStatus.LOADING
+
         val pet = pet.value!!
         pet.name = name.value!!
         pet.introduction = introduction.value
@@ -151,7 +154,6 @@ class EditPetViewModel(
 
 
         coroutineScope.launch {
-            _status.value = LoadStatus.LOADING
 
             when(val result = repository.editPets(pet)) {
                 is Result.Success -> {

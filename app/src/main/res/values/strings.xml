@@ -49,6 +49,21 @@
     <string name="play_video_fail_text">影片播放失敗，請聯絡開發人員</string>
     <string name="user_article_text">我的動態</string>
     <string name="collect_text">收藏</string>
+    <string name="add_new_pet_text">新增成員</string>
+    <string name="pet_introduction_hint_text">我是一隻乖狗狗..</string>
+    <string name="girl_text">女生</string>
+    <string name="boy_text">男生</string>
+    <string name="pet_name_hint_text">我叫做..</string>
+    <string name="name_text">名字</string>
+    <string name="upload_image_hint_text">點選上傳照片</string>
+    <string name="uploading_text">上傳中...</string>
+    <string name="upload_pet_video_text">上傳小短片</string>
+    <string name="upload_pet_audio_text">上傳聲音</string>
+    <string name="upload_audio_btn_text">上傳叫聲</string>
+    <string name="edit_profile_text">修改資料</string>
+    <string name="upload_video_btn_text">上傳影片</string>
+    <string name="upload_change_image_text">點選更換照片</string>
+    <string name="name_length_limit_text">請輸入字數小於 10 的名字</string>
 
     <string-array name="relation_array">
         <item>朋友</item>

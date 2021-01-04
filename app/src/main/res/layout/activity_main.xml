@@ -9,6 +9,7 @@
             type="com.rn1.gogoyo.MainViewModel" />
         <import type="com.rn1.gogoyo.util.CurrentFragmentType"/>
         <import type="android.view.View"/>
+        <import type="com.rn1.gogoyo.util.LoadStatus"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -96,6 +97,7 @@
                     android:backgroundTint="#ffffff"
                     android:elevation="@dimen/elevation_more"
                     android:onClick="@{() -> viewModel.postArticle() }"
+                    android:clickable="@{viewModel.status == LoadStatus.LOADING ? false : true}"
                     android:text="@string/text_post"
                     android:textColor="@color/black"
                     android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.POST_ARTICLE ? View.VISIBLE : View.GONE}"

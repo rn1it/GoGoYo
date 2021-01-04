@@ -111,13 +111,15 @@ class EditUserViewModel(
     }
 
     fun editUser(){
+
+        _status.value = LoadStatus.LOADING
+
         val user = user.value!!
         user.name = name.value!!
         user.introduction = introduction.value!!
         user.image = imageFilePath
 
         coroutineScope.launch {
-            _status.value = LoadStatus.LOADING
 
             when(val result = repository.editUsers(user)) {
                 is Result.Success -> {

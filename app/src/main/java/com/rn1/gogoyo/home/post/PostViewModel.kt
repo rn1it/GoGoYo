@@ -27,22 +27,15 @@ class PostViewModel(
     private val argument: Walk
 ): ViewModel() {
 
-    private val DEFAULT_IMAGE = "https://firebasestorage.googleapis.com/v0/b/turing-opus-296809.appspot.com/o/images%2Fdog_1.png?alt=media&token=0d165c4e-a3fe-47e3-b82e-a4c11d167419"
-
-    val outline = MapOutlineProvider()
-
     private val _walk = MutableLiveData<Walk>().apply {
         value = argument
     }
-
     val walk: LiveData<Walk>
         get() = _walk
 
     private val _images = MutableLiveData<List<String>>()
     val images: LiveData<List<String>>
         get() = _images
-
-
 
     var filePath: String = ""
 
@@ -54,53 +47,41 @@ class PostViewModel(
     val selectedPetIdList = MutableLiveData<MutableList<String>>()
 
     private val _navigateToHome = MutableLiveData<Boolean>()
-
     val navigateToHome: LiveData<Boolean>
         get() = _navigateToHome
 
     val title = MutableLiveData<String>()
     val content = MutableLiveData<String>()
 
-    // Handle the error for post article
     private val _invalidInfo = MutableLiveData<Int>()
-
     val invalidInfo: LiveData<Int>
         get() = _invalidInfo
 
     private val _canPost = MutableLiveData<Boolean>()
-
     val canPost: LiveData<Boolean>
         get() = _canPost
 
     private val _userPetList = MutableLiveData<List<Pets>>()
-
     val userPetList: LiveData<List<Pets>>
         get() = _userPetList
 
-    // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadStatus>()
-
     val status: LiveData<LoadStatus>
         get() = _status
 
-    // error: The internal MutableLiveData that stores the error of the most recent request
     private val _error = MutableLiveData<String>()
-
     val error: LiveData<String>
         get() = _error
 
-    // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
 
-    // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
 
-        // check if post article from walk end
         if (argument.id != "") {
             title.value = "今天散步好開心^^"
-            content.value = "這次散步時間 ${argument.period} 秒，走了 ${argument.distance ?: "0.12"} 公里， 下次還要挑戰走更久更遠!!"
+            content.value = "這次散步時間 ${argument.period} 秒，走了 ${argument.distance ?: "0.00"} 公里， 下次還要挑戰走更久更遠!!"
             getWalkPets()
 
             val positionList = mutableListOf<Int>()
@@ -111,7 +92,6 @@ class PostViewModel(
                 idList.add(petId)
             }
             _images.value = argument.images
-
             selectedPetPositionList.value = positionList
             selectedPetIdList.value = idList
 
@@ -190,33 +170,26 @@ class PostViewModel(
     fun uploadImage(path: String){
         coroutineScope.launch {
 
-//            filePath =
                 when (val result = repository.getImageUri(path)) {
                 is Result.Success -> {
                     _error.value = null
                     _status.value = LoadStatus.DONE
-                    Logger.d("uri = ${result.data}")
                     val list = mutableListOf<String>()
                     list.addAll(_images.value!!)
                     list.add(result.data)
                     _images.value = list
-
-//                    result.data
                 }
                 is Result.Fail -> {
                     _error.value = result.error
                     _status.value = LoadStatus.ERROR
-//                    ""
                 }
                 is Result.Error -> {
                     _error.value = result.exception.toString()
                     _status.value = LoadStatus.ERROR
-//                    ""
                 }
                 else -> {
                     _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
                     _status.value = LoadStatus.ERROR
-//                    ""
                 }
             }
         }
@@ -262,6 +235,8 @@ class PostViewModel(
 
     fun post(){
 
+        _status.value = LoadStatus.LOADING
+
         coroutineScope.launch {
 
             val article = Articles()
@@ -270,12 +245,7 @@ class PostViewModel(
             article.authorId = UserManager.userUID
             article.petIdList = selectedPetIdList.value!!
 
-//            if (filePath == "") {
-//                filePath = DEFAULT_IMAGE
-//            }
-
             val images = _images.value
-//            images.add(filePath)
 
             if (images != null) {
                 article.images = images
@@ -323,7 +293,6 @@ class PostViewModel(
     }
 
     companion object {
-
         const val INVALID_FORMAT_TITLE_EMPTY = 0x11
         const val INVALID_FORMAT_CONTENT_EMPTY = 0x12
     }

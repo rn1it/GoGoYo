@@ -116,6 +116,7 @@ class MainViewModel(private val repository: GogoyoRepository): ViewModel() {
     }
 
     fun postArticle(){
+        _status.value = LoadStatus.LOADING
         _toPostArticle.value = true
     }
 
