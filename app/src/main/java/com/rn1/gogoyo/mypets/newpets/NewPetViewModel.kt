@@ -80,6 +80,8 @@ class NewPetViewModel(val repository: GogoyoRepository): ViewModel() {
     fun uploadImage(path: String){
         coroutineScope.launch {
 
+            _status.value = LoadStatus.LOADING
+
             filePath = when (val result = repository.getImageUri(path)) {
                 is Result.Success -> {
                     _error.value = null
@@ -107,6 +109,9 @@ class NewPetViewModel(val repository: GogoyoRepository): ViewModel() {
     }
 
     fun addNewPet(){
+
+        _status.value = LoadStatus.LOADING
+
         val pet = Pets()
         pet.name = name.value!!
         pet.introduction = introduction.value

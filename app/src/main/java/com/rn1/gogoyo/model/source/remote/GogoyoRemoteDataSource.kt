@@ -408,6 +408,11 @@ object GogoyoRemoteDataSource: GogoyoDataSource {
 
                         // wait for all data set to the list, resume when all data ready
                         var count = 0
+
+                        if (user!!.petIdList.isEmpty()) {
+                            continuation.resume(Result.Success(list))
+                        }
+
                         for (petId in user!!.petIdList!!) {
                             petsRef.document(petId).get().addOnCompleteListener { task2 ->
                                 if (task2.isSuccessful) {
@@ -497,6 +502,10 @@ object GogoyoRemoteDataSource: GogoyoDataSource {
             val list = mutableListOf<Pets>()
             var count = 0
 
+            if (idList.isEmpty()) {
+                continuation.resume(Result.Success(list))
+            }
+
             for (id in idList) {
                 petsRef.document(id).get().addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -553,6 +562,11 @@ object GogoyoRemoteDataSource: GogoyoDataSource {
                         val list = mutableListOf<Articles>()
 
                         var count = 0
+
+                        if (task.result!!.size() == 0) {
+                            continuation.resume(Result.Success(list))
+                        }
+
                         for (document in task.result!!) {
                             Logger.w(document.id + " => " + document.data)
 
@@ -609,6 +623,11 @@ object GogoyoRemoteDataSource: GogoyoDataSource {
                     val list = mutableListOf<Articles>()
 
                     var count = 0
+
+                    if (task.result!!.size() == 0) {
+                        continuation.resume(Result.Success(list))
+                    }
+
                     for (document in task.result!!) {
                         Logger.d(document.id + " => " + document.data)
 
@@ -664,6 +683,11 @@ object GogoyoRemoteDataSource: GogoyoDataSource {
                     val list = mutableListOf<Articles>()
 
                     var count = 0
+
+                    if (task.result!!.size() == 0) {
+                        continuation.resume(Result.Success(list))
+                    }
+
                     for (document in task.result!!) {
                         Logger.d(document.id + " => " + document.data)
 
@@ -826,6 +850,11 @@ object GogoyoRemoteDataSource: GogoyoDataSource {
         val responseList = mutableListOf<ArticleResponse>()
 
         var count = 0
+
+        if (list.isEmpty()) {
+            continuation.resume(Result.Success(responseList))
+        }
+
         for (resp in list) {
             usersRef.whereEqualTo("id", resp.userId).get().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -875,6 +904,11 @@ object GogoyoRemoteDataSource: GogoyoDataSource {
         val walkList = mutableListOf<Walk>()
 
         var countWalk = 0
+
+        if (walks.isEmpty()) {
+            continuation.resume(Result.Success(walkList))
+        }
+
         for (walk in walks) {
 
             val petIdList = walk.petsIdList
@@ -915,6 +949,11 @@ object GogoyoRemoteDataSource: GogoyoDataSource {
         val walkList = mutableListOf<Walk>()
 
         var countWalk = 0
+
+        if (walks.isEmpty()) {
+            continuation.resume(Result.Success(walkList))
+        }
+
         for (walk in walks) {
 
             usersRef.whereEqualTo("id", walk.userId).get().addOnCompleteListener { task ->
@@ -1293,6 +1332,11 @@ object GogoyoRemoteDataSource: GogoyoDataSource {
         } else {
 
             var count = 0
+
+            if (list.isEmpty()) {
+                continuation.resume(Result.Success(chatRooms))
+            }
+
             for (chatRoom in list) {
 
                 val anotherUserId = chatRoom.userList.filter { it != UserManager.userUID }[0]
@@ -1378,6 +1422,11 @@ object GogoyoRemoteDataSource: GogoyoDataSource {
 
         val listWithUserInfo = mutableListOf<Messages>()
         var count = 0
+
+        if (list.isEmpty()) {
+            continuation.resume(Result.Success(listWithUserInfo))
+        }
+
         for (msg in list) {
 
             if (msg.senderId == UserManager.userUID) {

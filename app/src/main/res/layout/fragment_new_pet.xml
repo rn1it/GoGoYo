@@ -7,6 +7,7 @@
         <variable
             name="viewModel"
             type="com.rn1.gogoyo.mypets.newpets.NewPetViewModel" />
+        <import type="com.rn1.gogoyo.util.LoadStatus"/>
     </data>
 
     <ScrollView
@@ -37,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:maxLength="30"
-            android:text="點選上傳照片"
+            android:text="@string/upload_image_hint_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/uploadPetIv" />
@@ -48,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="36dp"
-            android:text="名字"
+            android:text="@string/name_text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
@@ -58,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:ems="10"
-            android:hint="我叫做.."
+            android:hint="@string/pet_name_hint_text"
             android:inputType="textPersonName"
             android:text="@={viewModel.name}"
             app:layout_constraintBottom_toBottomOf="@+id/newPetNameTv"
@@ -72,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="32dp"
-            android:text="性別"
+            android:text="@string/text_sex"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/newPetNameTv" />
 
@@ -90,15 +91,17 @@
                 android:id="@+id/radioBoy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingStart="0dp"
                 android:paddingEnd="10dp"
-                android:text="男生" />
+                android:text="@string/boy_text" />
 
             <RadioButton
                 android:id="@+id/radioGirl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingStart="0dp"
                 android:paddingEnd="10dp"
-                android:text="女生" />
+                android:text="@string/girl_text" />
 
         </RadioGroup>
 
@@ -108,7 +111,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="32dp"
-            android:text="品種"
+            android:text="@string/text_breed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView28" />
 
@@ -118,7 +121,6 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:ems="10"
-            android:hint=""
             android:inputType="textPersonName"
             android:text="@={viewModel.breed}"
             app:layout_constraintBottom_toBottomOf="@+id/breedTitleTv"
@@ -132,7 +134,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="32dp"
-            android:text="自我介紹"
+            android:text="@string/text_introduction"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/breedTitleTv" />
 
@@ -144,7 +146,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginEnd="24dp"
             android:ems="10"
-            android:hint="我是一隻乖狗狗.."
+            android:hint="@string/pet_introduction_hint_text"
             android:inputType="textMultiLine"
             android:maxLength="10"
             android:singleLine="false"
@@ -163,7 +165,8 @@
             android:layout_marginBottom="32dp"
             android:backgroundTint="#FFC107"
             android:onClick="@{() -> viewModel.checkPetInfo()}"
-            android:text="新增成員"
+            android:clickable="@{viewModel.status == LoadStatus.LOADING ? false : true}"
+            android:text="@string/add_new_pet_text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

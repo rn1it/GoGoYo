@@ -100,6 +100,8 @@ class ProfileUserViewModel(
     private fun getUser() {
         coroutineScope.launch {
 
+            _status.value = LoadStatus.LOADING
+
             _user.value =
                 when (val result = repository.getUserById(userId)) {
                     is Result.Success -> {
@@ -141,8 +143,6 @@ class ProfileUserViewModel(
                     is Result.Success -> {
                         _error.value = null
                         _status.value = LoadStatus.DONE
-                        val list = mutableListOf<List<Articles>>()
-                        _viewPagerList.value
                         getUserFavArticle(result.data)
                     }
                     is Result.Fail -> {
@@ -165,9 +165,11 @@ class ProfileUserViewModel(
         }
     }
 
-    private fun getUserFavArticle(userArticleList: List<Articles>) {
+    fun getUserFavArticle(userArticleList: List<Articles>) {
 
         coroutineScope.launch {
+
+            _status.value = LoadStatus.LOADING
 
                 when (val result = repository.getFavoriteArticlesById(userId)) {
                     is Result.Success -> {
@@ -223,6 +225,8 @@ class ProfileUserViewModel(
             when (_friendStatus.value) {
                 -1 -> { // send friend invite
                     coroutineScope.launch {
+
+                        _status.value = LoadStatus.LOADING
 
                         val friend = Friends().apply {
                             createdTime = Calendar.getInstance().timeInMillis
@@ -295,6 +299,9 @@ class ProfileUserViewModel(
     // 送出好友邀請後同步更新好友的好友狀態
     private fun updateFriendStatus(friend: Friends) {
         coroutineScope.launch {
+
+            _status.value = LoadStatus.LOADING
+
             when (val result = repository.setUserFriend(userId, friend)) {
                 is Result.Success -> {
                     _error.value = null
@@ -320,6 +327,8 @@ class ProfileUserViewModel(
 
         if (!isLoginUser) {
             coroutineScope.launch {
+
+                _status.value = LoadStatus.LOADING
 
                 when (val result = repository.getUserFriends(UserManager.userUID!!, null)){
 
@@ -362,6 +371,8 @@ class ProfileUserViewModel(
     fun uploadImage(path: String){
         coroutineScope.launch {
 
+            _status.value = LoadStatus.LOADING
+
             when (val result = repository.getImageUri(path)) {
                 is Result.Success -> {
                     _error.value = null
@@ -389,7 +400,9 @@ class ProfileUserViewModel(
     private fun updateUserImage(){
 
         coroutineScope.launch {
+
             _status.value = LoadStatus.LOADING
+
             val user = user.value!!
             user.image = filePath
 
