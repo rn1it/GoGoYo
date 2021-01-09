@@ -6,7 +6,6 @@
 功能介紹
 ---
 1. 首頁: 呈現所有使用者的動態，幫助使用者交流
-
 <span align="left">
 <img width="270" height="480" src="https://github.com/rn1it/GoGoYo/blob/master/images/Screenshot_1610198174.png"> 
   &nbsp;
@@ -19,7 +18,6 @@
 
 
 3. 散步功能: 選擇寵物散步後，系統會自動記錄散步的路線，使用者也可以在散步過程中找到其他散步中的使用者
-
 <span align="left">
 <img width="270" height="480" src="https://github.com/rn1it/GoGoYo/blob/master/images/Screenshot_1610198949.png"/>
   &nbsp;
@@ -27,7 +25,6 @@
 </span>
 
 4. 統計功能: 呈現使用者的歷史散步紀錄以及所有散步的數據統計
-
 <span align="left">
 <img width="270" height="480" src="https://github.com/rn1it/GoGoYo/blob/master/images/Screenshot_1610198483.png"/>
   &nbsp;
@@ -35,9 +32,6 @@
 </span>
 
 5. 個人功能: 編輯使用者與寵物的資訊
-
-<img width="270" height="480" src="https://github.com/rn1it/GoGoYo/blob/master/images/Screenshot_1610198256.png"/>
-
 
 框架與工具
 ---
