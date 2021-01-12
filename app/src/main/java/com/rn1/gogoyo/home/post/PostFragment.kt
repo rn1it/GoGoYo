@@ -1,6 +1,5 @@
 package com.rn1.gogoyo.home.post
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,21 +9,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.rn1.gogoyo.MainViewModel
 import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.FragmentPostBinding
+import com.rn1.gogoyo.ext.checkPermission
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.home.post.PostViewModel.Companion.INVALID_FORMAT_CONTENT_EMPTY
 import com.rn1.gogoyo.home.post.PostViewModel.Companion.INVALID_FORMAT_TITLE_EMPTY
+import com.rn1.gogoyo.util.Logger
 import com.rn1.gogoyo.walk.start.WalkImgAdapter
 
 class PostFragment : Fragment() {
@@ -115,34 +114,6 @@ class PostFragment : Fragment() {
         return binding.root
     }
 
-
-    private fun checkPermission() {
-        val permission = ActivityCompat.checkSelfPermission(
-            this.requireContext(),
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            //未取得權限，向使用者要求允許權限
-            ActivityCompat.requestPermissions(
-                this.requireActivity(), arrayOf(
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ),
-                REQUEST_EXTERNAL_STORAGE
-            )
-        }
-        getLocalImg()
-    }
-    private fun getLocalImg() {
-        ImagePicker.with(this)
-            .crop()                    //Crop image(Optional), Check Customization for more option
-            .compress(1024)            //Final image size will be less than 1 MB(Optional)
-            .maxResultSize(
-                1080,
-                1080
-            )    //Final image resolution will be less than 1080 x 1080(Optional)
-            .start()
-    }
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -154,7 +125,7 @@ class PostFragment : Fragment() {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     //get image
                 } else {
-                    Toast.makeText(this.context, "Permission denied", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this.context, "開啟權限後即可使用此功能", Toast.LENGTH_SHORT).show()
                 }
                 return
             }
@@ -169,11 +140,10 @@ class PostFragment : Fragment() {
                 if (filePath.isNotEmpty()) {
                     val imgPath = filePath
                     Toast.makeText(this.requireContext(), imgPath, Toast.LENGTH_SHORT).show()
-
                     viewModel.uploadImage(imgPath)
 
                 } else {
-                    Toast.makeText(this.requireContext(), "Upload failed", Toast.LENGTH_SHORT)
+                    Toast.makeText(this.requireContext(), "上傳失敗", Toast.LENGTH_SHORT)
                         .show()
                 }
             }
@@ -182,8 +152,7 @@ class PostFragment : Fragment() {
                 ImagePicker.getError(data),
                 Toast.LENGTH_SHORT
             ).show()
-            else -> Toast.makeText(this.requireContext(), "Task Cancelled", Toast.LENGTH_SHORT)
-                .show()
+            else -> Logger.d("Camera Task Cancelled")
         }
     }
 

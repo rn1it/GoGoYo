@@ -41,20 +41,16 @@ class WalkEndViewModel(
     val navigateToStatistic: LiveData<Boolean>
         get() = _navigateToStatistic
 
-    // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadStatus>()
     val status: LiveData<LoadStatus>
         get() = _status
 
-    // error: The internal MutableLiveData that stores the error of the most recent request
     private val _error = MutableLiveData<String>()
     val error: LiveData<String>
         get() = _error
 
-    // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
 
-    // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {

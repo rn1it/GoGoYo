@@ -1,6 +1,5 @@
 package com.rn1.gogoyo.mypets.edit
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -21,15 +19,21 @@ import com.rn1.gogoyo.NavigationDirections
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
 import com.rn1.gogoyo.databinding.FragmentEditUserBinding
+import com.rn1.gogoyo.ext.checkPermission
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.mypets.newpets.NewPetViewModel
+import com.rn1.gogoyo.util.INVALID_FORMAT_INTRODUCTION_EMPTY
+import com.rn1.gogoyo.util.INVALID_FORMAT_NAME_EMPTY
+import com.rn1.gogoyo.util.INVALID_IMAGE_PATH_EMPTY
 import com.rn1.gogoyo.util.Logger
 
 class EditUserFragment : Fragment() {
 
     private var filePath: String = ""
     private lateinit var binding: FragmentEditUserBinding
-    private val viewModel by viewModels<EditUserViewModel> { getVmFactory(EditUserFragmentArgs.fromBundle(requireArguments()).userIdKey) }
+    private val viewModel by viewModels<EditUserViewModel> {
+        getVmFactory(EditUserFragmentArgs.fromBundle(requireArguments()).userIdKey)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,10 +53,9 @@ class EditUserFragment : Fragment() {
         viewModel.invalidInfo.observe(viewLifecycleOwner, Observer {
             it?.let {
                 when(it){
-                    NewPetViewModel.INVALID_FORMAT_NAME_EMPTY -> Toast.makeText(context, "寵物姓名不可以空白!", Toast.LENGTH_SHORT).show()
-                    NewPetViewModel.INVALID_FORMAT_INTRODUCTION_EMPTY -> Toast.makeText(context, "來段簡短的介紹讓大家更認識你!", Toast.LENGTH_SHORT).show()
-                    NewPetViewModel.INVALID_FORMAT_SEX_EMPTY ->  Toast.makeText(context, "記得選擇寵物性別喔!", Toast.LENGTH_SHORT).show()
-                    NewPetViewModel.INVALID_IMAGE_PATH_EMPTY -> Toast.makeText(context, "請上傳照片!", Toast.LENGTH_SHORT).show()
+                    INVALID_FORMAT_NAME_EMPTY -> Toast.makeText(context, getString(R.string.empty_user_name), Toast.LENGTH_SHORT).show()
+                    INVALID_FORMAT_INTRODUCTION_EMPTY -> Toast.makeText(context, getString(R.string.empty_introduction_text), Toast.LENGTH_SHORT).show()
+                    INVALID_IMAGE_PATH_EMPTY -> Toast.makeText(context, getString(R.string.empty_user_image_text), Toast.LENGTH_SHORT).show()
                 }
             }
         })
@@ -74,32 +77,6 @@ class EditUserFragment : Fragment() {
         return binding.root
     }
 
-    private fun checkPermission() {
-        val permission = ActivityCompat.checkSelfPermission(
-            this.requireContext(),
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            //未取得權限，向使用者要求允許權限
-            ActivityCompat.requestPermissions(
-                this.requireActivity(), arrayOf(
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ),
-                REQUEST_EXTERNAL_STORAGE
-            )
-        }
-        getLocalImg()
-    }
-
-    private fun getLocalImg() {
-        ImagePicker.with(this)
-            .crop()
-            .compress(1024)
-            .maxResultSize(1080, 1080)
-            .start()
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
             REQUEST_EXTERNAL_STORAGE -> {
@@ -115,7 +92,6 @@ class EditUserFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Toast.makeText(this.requireContext(), "resultCode = $resultCode , requestCode = $requestCode", Toast.LENGTH_SHORT).show()
 
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
@@ -124,18 +100,14 @@ class EditUserFragment : Fragment() {
                     filePath = ImagePicker.getFilePath(data) ?: ""
                     if (filePath.isNotEmpty()) {
                         val imgPath = filePath
-                        Logger.d(" = $imgPath")
-                        Toast.makeText(this.requireContext(), imgPath, Toast.LENGTH_SHORT).show()
                         Glide.with(this.requireContext()).load(filePath).into(binding.uploadUserIv)
 
                         viewModel.uploadImage(imgPath)
 
                     } else {
-                        Toast.makeText(this.requireContext(), "Upload failed", Toast.LENGTH_SHORT)
-                            .show()
+                        Logger.d("Camera Task Cancelled")
                     }
                 }
-
             }
         }
     }

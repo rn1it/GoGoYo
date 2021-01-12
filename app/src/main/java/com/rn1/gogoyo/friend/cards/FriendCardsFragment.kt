@@ -52,7 +52,6 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
         cardStackView.adapter = adapter
 
         cardStackView.layoutManager = CardStackLayoutManager(requireContext(), this)
-//        manager = CardStackLayoutManager(requireContext(), this)
 
         viewModel.usersNotFriend.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -70,7 +69,6 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
                 } else {
                     binding.friendCardNotificationTv.visibility = View.GONE
                     binding.buttonContainer.visibility = View.VISIBLE
-//                    newAdapter.submitList(list)
 
                     val old = adapter.getUsers()
                     val new = mutableListOf<Users>().apply {
@@ -108,7 +106,6 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
 
         setupCardStackView()
         setupButton()
-
 
         return binding.root
     }
@@ -221,17 +218,19 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
             viewModel.addOrPassCard(list, user.id, true)
         }
 
-        //        val rewind = binding.rewindButton
-//        rewind.setOnClickListener {
-//            val setting = RewindAnimationSetting.Builder()
-//                .setDirection(Direction.Bottom)
-//                .setDuration(Duration.Normal.duration)
-//                .setInterpolator(DecelerateInterpolator())
-//                .build()
-//            manager.setRewindAnimationSetting(setting)
-//            cardStackView.rewind()
-//            Log.d("CardStackView", "rewind: p = ${manager.topPosition}")
-//        }
+        /*
+        val rewind = binding.rewindButton
+        rewind.setOnClickListener {
+            val setting = RewindAnimationSetting.Builder()
+                .setDirection(Direction.Bottom)
+                .setDuration(Duration.Normal.duration)
+                .setInterpolator(DecelerateInterpolator())
+                .build()
+            manager.setRewindAnimationSetting(setting)
+            cardStackView.rewind()
+            Log.d("CardStackView", "rewind: p = ${manager.topPosition}")
+        }
+         */
     }
 
     /**
@@ -240,7 +239,7 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
     private fun play(path: String?) {
         stopMediaPlayer()
         if (path.isNullOrBlank()) {
-            Toast.makeText(context, "還沒有上傳聲音喔!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, getString(R.string.no_pet_audio_text), Toast.LENGTH_SHORT).show()
         } else {
 
             // show bark toast
@@ -261,8 +260,6 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
             mp.setDataSource(requireContext(), uri)
             mp.setOnPreparedListener {
                 it.start()
-
-
             }
             mp.prepare()
         }
@@ -275,7 +272,6 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
     private fun stopMediaPlayer() {
         if (mp.isPlaying) {
             mp.stop()
-//            binding.audioPlayBt.setImageResource(R.drawable.play_music)
         }
     }
 
@@ -308,7 +304,7 @@ class FriendCardsFragment(userId: String) : Fragment(), CardStackListener {
             exoPlayer.prepare(mediaSource)
             exoPlayer.playWhenReady = false
         } catch (e: Exception) {
-            Toast.makeText(context, "還沒有上傳影片喔!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, getString(R.string.no_pet_video_text), Toast.LENGTH_SHORT).show()
             Log.e("ViewHolder", "exoplayer error$e")
         }
     }

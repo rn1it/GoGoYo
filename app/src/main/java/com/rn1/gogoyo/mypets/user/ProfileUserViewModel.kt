@@ -32,7 +32,6 @@ class ProfileUserViewModel(
     val viewPagerList: LiveData<List<List<Articles>>>
         get() = _viewPagerList
 
-    // check profile is login user or not
     val isLoginUser = userId == UserManager.userUID
 
     var loginUser = MutableLiveData<Users>()
@@ -59,20 +58,16 @@ class ProfileUserViewModel(
     val navigateToEdit: LiveData<String>
         get() = _navigateToEdit
 
-    // status: The internal MutableLiveData that stores the status of the most recent request
     private val _status = MutableLiveData<LoadStatus>()
     val status: LiveData<LoadStatus>
         get() = _status
 
-    // error: The internal MutableLiveData that stores the error of the most recent request
     private val _error = MutableLiveData<String>()
     val error: LiveData<String>
         get() = _error
 
-    // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
 
-    // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
@@ -104,6 +99,8 @@ class ProfileUserViewModel(
 
     private fun getUser() {
         coroutineScope.launch {
+
+            _status.value = LoadStatus.LOADING
 
             _user.value =
                 when (val result = repository.getUserById(userId)) {
@@ -146,8 +143,6 @@ class ProfileUserViewModel(
                     is Result.Success -> {
                         _error.value = null
                         _status.value = LoadStatus.DONE
-                        val list = mutableListOf<List<Articles>>()
-                        _viewPagerList.value
                         getUserFavArticle(result.data)
                     }
                     is Result.Fail -> {
@@ -170,9 +165,11 @@ class ProfileUserViewModel(
         }
     }
 
-    private fun getUserFavArticle(userArticleList: List<Articles>) {
+    fun getUserFavArticle(userArticleList: List<Articles>) {
 
         coroutineScope.launch {
+
+            _status.value = LoadStatus.LOADING
 
                 when (val result = repository.getFavoriteArticlesById(userId)) {
                     is Result.Success -> {
@@ -228,6 +225,8 @@ class ProfileUserViewModel(
             when (_friendStatus.value) {
                 -1 -> { // send friend invite
                     coroutineScope.launch {
+
+                        _status.value = LoadStatus.LOADING
 
                         val friend = Friends().apply {
                             createdTime = Calendar.getInstance().timeInMillis
@@ -300,6 +299,9 @@ class ProfileUserViewModel(
     // 送出好友邀請後同步更新好友的好友狀態
     private fun updateFriendStatus(friend: Friends) {
         coroutineScope.launch {
+
+            _status.value = LoadStatus.LOADING
+
             when (val result = repository.setUserFriend(userId, friend)) {
                 is Result.Success -> {
                     _error.value = null
@@ -325,6 +327,8 @@ class ProfileUserViewModel(
 
         if (!isLoginUser) {
             coroutineScope.launch {
+
+                _status.value = LoadStatus.LOADING
 
                 when (val result = repository.getUserFriends(UserManager.userUID!!, null)){
 
@@ -367,6 +371,8 @@ class ProfileUserViewModel(
     fun uploadImage(path: String){
         coroutineScope.launch {
 
+            _status.value = LoadStatus.LOADING
+
             when (val result = repository.getImageUri(path)) {
                 is Result.Success -> {
                     _error.value = null
@@ -391,10 +397,12 @@ class ProfileUserViewModel(
         }
     }
 
-    fun updateUserImage(){
+    private fun updateUserImage(){
 
         coroutineScope.launch {
+
             _status.value = LoadStatus.LOADING
+
             val user = user.value!!
             user.image = filePath
 
@@ -418,7 +426,6 @@ class ProfileUserViewModel(
             }
         }
     }
-
 
     fun onDoneNavigateToEdit(){
         _navigateToEdit.value = null

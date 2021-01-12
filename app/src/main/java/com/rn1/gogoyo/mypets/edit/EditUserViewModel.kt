@@ -5,15 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
-import com.rn1.gogoyo.UserManager
 import com.rn1.gogoyo.component.MapOutlineProvider
-import com.rn1.gogoyo.model.Pets
 import com.rn1.gogoyo.model.Result
 import com.rn1.gogoyo.model.Users
 import com.rn1.gogoyo.model.source.GogoyoRepository
 import com.rn1.gogoyo.mypets.newpets.NewPetViewModel
-import com.rn1.gogoyo.util.LoadStatus
-import com.rn1.gogoyo.util.Logger
+import com.rn1.gogoyo.util.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -107,20 +104,22 @@ class EditUserViewModel(
                 && !introduction.value.isNullOrBlank()
                 && !imageFilePath.isNullOrBlank()
         when {
-            imageFilePath.isNullOrBlank() -> _invalidInfo.value = NewPetViewModel.INVALID_IMAGE_PATH_EMPTY
-            name.value.isNullOrEmpty() -> _invalidInfo.value = NewPetViewModel.INVALID_FORMAT_NAME_EMPTY
-            introduction.value.isNullOrBlank() -> _invalidInfo.value = NewPetViewModel.INVALID_FORMAT_INTRODUCTION_EMPTY
+            imageFilePath.isNullOrBlank() -> _invalidInfo.value = INVALID_IMAGE_PATH_EMPTY
+            name.value.isNullOrEmpty() -> _invalidInfo.value = INVALID_FORMAT_NAME_EMPTY
+            introduction.value.isNullOrBlank() -> _invalidInfo.value = INVALID_FORMAT_INTRODUCTION_EMPTY
         }
     }
 
     fun editUser(){
+
+        _status.value = LoadStatus.LOADING
+
         val user = user.value!!
         user.name = name.value!!
         user.introduction = introduction.value!!
         user.image = imageFilePath
 
         coroutineScope.launch {
-            _status.value = LoadStatus.LOADING
 
             when(val result = repository.editUsers(user)) {
                 is Result.Success -> {

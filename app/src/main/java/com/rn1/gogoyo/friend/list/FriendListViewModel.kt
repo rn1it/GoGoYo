@@ -27,11 +27,11 @@ class FriendListViewModel(
 
     var liveFriend = MutableLiveData<List<Friends>>()
 
+    val outlineProvider = MapOutlineProvider()
+
     private val _friendList = MutableLiveData<List<Users>>()
     val friendList: LiveData<List<Users>>
         get() = _friendList
-
-    val friendStatus = MutableLiveData<String>()
 
     private val _navigateToChatRoom = MutableLiveData<Chatroom>()
     val navigateToChatRoom: LiveData<Chatroom>
@@ -53,8 +53,6 @@ class FriendListViewModel(
 
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    val outlineProvider = MapOutlineProvider()
-
     init {
         getUserLiveFriend()
     }
@@ -66,42 +64,6 @@ class FriendListViewModel(
 
     private fun getUserLiveFriend(){
         liveFriend = repository.getUserLiveFriend(UserManager.userUID!!, null)
-    }
-
-    private fun getUserFriends(){
-
-//        friendStatus.value = friendShip
-
-//        val status = when (friendShip) {
-//            "朋友" -> 2
-//            "好友邀請" -> 1
-//            "等待中" -> 0
-//            else -> null
-//        }
-
-        coroutineScope.launch {
-
-            when (val result = repository.getUserFriends(userId, null)) {
-                is Result.Success -> {
-                    _error.value = null
-                    _status.value = LoadStatus.DONE
-                    val friends = result.data
-                    getFriendListById( friends)
-                }
-                is Result.Fail -> {
-                    _error.value = result.error
-                    _status.value = LoadStatus.ERROR
-                }
-                is Result.Error -> {
-                    _error.value = result.exception.toString()
-                    _status.value = LoadStatus.ERROR
-                }
-                else -> {
-                    _error.value = GogoyoApplication.instance.getString(R.string.something_wrong)
-                    _status.value = LoadStatus.ERROR
-                }
-            }
-        }
     }
 
     fun getFriendListById(friends: List<Friends>) {
@@ -190,6 +152,7 @@ class FriendListViewModel(
                 friendId = user.id
                 status = 2
             }
+
             when (val result = repository.setUserFriend(UserManager.userUID!!, friend)) {
                 is Result.Success -> {
                     _error.value = null
@@ -199,7 +162,6 @@ class FriendListViewModel(
                         status = 2
                     }
                     updateFriendStatus(user, friend)
-                    //  同步更新好友的好友狀態
                 }
                 is Result.Fail -> {
                     _error.value = result.error
@@ -217,7 +179,6 @@ class FriendListViewModel(
         }
     }
 
-    // 送出好友邀請後同步更新好友的好友狀態
     private fun updateFriendStatus(user: Users, friend: Friends) {
         coroutineScope.launch {
             when (val result = repository.setUserFriend(user.id, friend)) {

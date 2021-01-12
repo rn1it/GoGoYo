@@ -7,6 +7,7 @@
         <variable
             name="viewModel"
             type="com.rn1.gogoyo.mypets.edit.EditPetViewModel" />
+        <import type="com.rn1.gogoyo.util.LoadStatus"/>
     </data>
 
     <ScrollView
@@ -39,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="36dp"
-                android:text="名字"
+                android:text="@string/name_text"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
@@ -49,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
                 android:ems="10"
-                android:hint="請輸入字數小於 10 的名字"
+                android:hint="@string/name_length_limit_text"
                 android:inputType="textPersonName"
                 android:maxLength="10"
                 android:text="@={viewModel.name}"
@@ -64,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
-                android:text="性別"
+                android:text="@string/text_sex"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/addPetNameEt" />
 
@@ -82,15 +83,17 @@
                     android:id="@+id/radioBoy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingStart="0dp"
                     android:paddingEnd="10dp"
-                    android:text="男生" />
+                    android:text="@string/boy_text" />
 
                 <RadioButton
                     android:id="@+id/radioGirl"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingStart="0dp"
                     android:paddingEnd="10dp"
-                    android:text="女生" />
+                    android:text="@string/girl_text" />
 
             </RadioGroup>
 
@@ -100,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
-                android:text="品種"
+                android:text="@string/text_breed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/radioGroupPetSex" />
 
@@ -125,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
-                android:text="自我介紹"
+                android:text="@string/text_introduction"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/breedEt" />
 
@@ -137,7 +140,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="24dp"
                 android:ems="10"
-                android:hint="我是一隻乖狗狗.."
+                android:hint="@string/pet_introduction_hint_text"
                 android:inputType="textMultiLine"
                 android:maxLength="30"
                 android:singleLine="false"
@@ -152,23 +155,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="點選更換照片"
+                android:text="@string/upload_change_image_text"
                 android:maxLength="30"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/uploadPetIv" />
-
-            <!--            <VideoView-->
-            <!--                android:id="@+id/videoView"-->
-            <!--                android:layout_width="0dp"-->
-            <!--                android:layout_height="230dp"-->
-            <!--                android:layout_marginStart="24dp"-->
-            <!--                android:layout_marginTop="16dp"-->
-            <!--                android:layout_marginEnd="24dp"-->
-            <!--                android:backgroundTint="@android:color/black"-->
-            <!--                app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                app:layout_constraintTop_toBottomOf="@+id/addPetIntroEt" />-->
 
             <ProgressBar
                 android:id="@+id/progressBar_main"
@@ -185,24 +176,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/loadingTv" />
 
-
-            <!--            <com.google.android.exoplayer2.ui.PlayerView-->
-            <!--                android:id="@+id/exoplayer_item"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="200dp"-->
-            <!--                android:layout_margin="3dp"-->
-            <!--                app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                app:layout_constraintTop_toBottomOf="@+id/progressBar_main"-->
-            <!--                app:resize_mode="fill"-->
-            <!--                app:use_controller="true"/>-->
-
             <Button
                 android:id="@+id/uploadVideoBt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:text="上傳影片"
+                android:text="@string/upload_video_btn_text"
                 android:textColor="@color/black"
                 android:backgroundTint="@color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/textView18"
@@ -221,7 +200,8 @@
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:onClick="@{() -> viewModel.checkPetInfo()}"
-                android:text="修改資料"
+                android:clickable="@{viewModel.status == LoadStatus.LOADING ? false : true}"
+                android:text="@string/edit_profile_text"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -231,20 +211,12 @@
                 android:id="@+id/uploadAudioBt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="上傳叫聲"
+                android:text="@string/upload_audio_btn_text"
                 android:textColor="@color/black"
                 android:backgroundTint="@color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/textView16"
                 app:layout_constraintStart_toStartOf="@+id/uploadVideoBt"
                 app:layout_constraintTop_toTopOf="@+id/textView16" />
-
-<!--            <Button-->
-<!--                android:id="@+id/button12"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="Button"-->
-<!--                tools:layout_editor_absoluteX="117dp"-->
-<!--                tools:layout_editor_absoluteY="628dp" />-->
 
             <TextView
                 android:id="@+id/textView16"
@@ -252,7 +224,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
-                android:text="上傳聲音"
+                android:text="@string/upload_pet_audio_text"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/addPetIntroEt" />
 
@@ -262,7 +234,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="32dp"
-                android:text="上傳小短片"
+                android:text="@string/upload_pet_video_text"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
@@ -272,7 +244,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="32dp"
-                android:text="上傳中..."
+                android:text="@string/uploading_text"
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView18" />

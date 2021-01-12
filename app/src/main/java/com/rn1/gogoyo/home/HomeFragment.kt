@@ -18,7 +18,6 @@ import com.rn1.gogoyo.databinding.FragmentHomeBinding
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.model.Articles
 import com.rn1.gogoyo.model.Walk
-import com.rn1.gogoyo.util.Logger
 import java.util.*
 
 
@@ -90,18 +89,19 @@ class HomeFragment : Fragment(){
         return binding.root
     }
 
+    /**
+     * filter the article by search text with author name and article content
+     */
     // return query list
     fun filter(list: List<Articles>, query: String): List<Articles> {
+
 
         val lowerCaseQueryString = query.toLowerCase(Locale.ROOT)
         val filteredList = mutableListOf<Articles>()
 
         for (article in list) {
             val author = article.author!!.name.toLowerCase(Locale.ROOT)
-            val content = article.content ?: "" .toLowerCase(Locale.ROOT)
-
-            Logger.d("author = $author, query = $query")
-            Logger.d("content = $content, query = $query")
+            val content = article.title.toLowerCase(Locale.ROOT)
 
             if (author.contains(lowerCaseQueryString) || content.contains(lowerCaseQueryString)) {
                 filteredList.add(article)
@@ -110,6 +110,4 @@ class HomeFragment : Fragment(){
 
         return filteredList
     }
-
-
 }

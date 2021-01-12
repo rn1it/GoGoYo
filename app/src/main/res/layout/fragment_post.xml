@@ -42,7 +42,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/articleUploadIv">
+                app:layout_constraintTop_toBottomOf="@+id/imgRecyclerView">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -75,12 +75,12 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/imgRecyclerView"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="126dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
-                android:visibility="@{viewModel.images.size() == 0 ? View.GONE : View.VISIBLE}"
                 android:orientation="horizontal"
+                tools:listitem="@layout/item_walk_image"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView3" />
@@ -90,10 +90,10 @@
                 android:id="@+id/articleUploadIv"
                 android:layout_width="96dp"
                 android:layout_height="126dp"
-                android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/rectangle_dash_border"
                 android:padding="10dp"
+                android:visibility="@{viewModel.images.size() == 3 ? View.GONE : View.VISIBLE}"
                 android:src="@drawable/add_pet3"
                 app:layout_constraintStart_toEndOf="@+id/imgRecyclerView"
                 app:layout_constraintTop_toBottomOf="@+id/textView3" />

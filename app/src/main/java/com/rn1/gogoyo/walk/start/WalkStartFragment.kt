@@ -48,6 +48,7 @@ import com.rn1.gogoyo.R
 import com.rn1.gogoyo.UserManager
 import com.rn1.gogoyo.component.MapOutlineProvider
 import com.rn1.gogoyo.databinding.FragmentWalkStartBinding
+import com.rn1.gogoyo.ext.checkPermission
 import com.rn1.gogoyo.ext.getVmFactory
 import com.rn1.gogoyo.model.Friends
 import com.rn1.gogoyo.model.Users
@@ -99,7 +100,6 @@ class WalkStartFragment : Fragment(){
         viewModel.onLineWalks.observe(viewLifecycleOwner, Observer {
             it?.let {
 
-                Logger.d("current online list = $it")
                 if (it.isNotEmpty()) {
                     removeMarkers()
                 }
@@ -107,15 +107,12 @@ class WalkStartFragment : Fragment(){
             }
         })
 
-//        googleMap.setOnMarkerClickListener
         googleMap.setOnMarkerClickListener(OnMarkerClickListener { mark ->
             mark.showInfoWindow()
             val handler = Handler()
             handler.postDelayed(Runnable { mark.showInfoWindow() }, 200)
             true
         })
-
-
     }
 
     override fun onCreateView(
@@ -246,7 +243,15 @@ class WalkStartFragment : Fragment(){
         }
 
         binding.cameraBt.setOnClickListener {
-            checkPermission()
+            if (viewModel.imageStringList.value!= null) {
+                if (viewModel.imageStringList.value!!.size >= 3) {
+                    Toast.makeText(context, "很抱歉，目前最多只能拍攝三張照片!", Toast.LENGTH_SHORT).show()
+                } else {
+                    checkPermission()
+                }
+            } else {
+                checkPermission()
+            }
         }
 
         binding.addFriendBt.setOnClickListener {
@@ -318,8 +323,6 @@ class WalkStartFragment : Fragment(){
             REQUEST_EXTERNAL_STORAGE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     //get image
-                } else {
-                    Toast.makeText(this.context, "Permission denied", Toast.LENGTH_SHORT).show()
                 }
                 return
             }
@@ -456,42 +459,8 @@ class WalkStartFragment : Fragment(){
         return d
     }
 
-    private fun checkPermission() {
-        val permission = ActivityCompat.checkSelfPermission(
-            this.requireContext(),
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            //未取得權限，向使用者要求允許權限
-            ActivityCompat.requestPermissions(
-                this.requireActivity(), arrayOf(
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ),
-                REQUEST_EXTERNAL_STORAGE
-            )
-        }
-        getLocalImg()
-    }
-
-    private fun getLocalImg() {
-        ImagePicker.with(this)
-            .crop()                    //Crop image(Optional), Check Customization for more option
-            .compress(1024)            //Final image size will be less than 1 MB(Optional)
-            .maxResultSize(
-                1080,
-                1080
-            )    //Final image resolution will be less than 1080 x 1080(Optional)
-            .start()
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Toast.makeText(
-            this.requireContext(),
-            "resultCode = $resultCode , requestCode = $requestCode",
-            Toast.LENGTH_SHORT
-        ).show()
 
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
@@ -506,7 +475,7 @@ class WalkStartFragment : Fragment(){
                         viewModel.uploadImage(imgPath)
 
                     } else {
-                        Toast.makeText(this.requireContext(), "Upload failed", Toast.LENGTH_SHORT)
+                        Toast.makeText(this.requireContext(), "上傳失敗", Toast.LENGTH_SHORT)
                             .show()
                     }
                 }

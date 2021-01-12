@@ -11,7 +11,6 @@ import com.rn1.gogoyo.GogoyoApplication
 import com.rn1.gogoyo.R
 import com.rn1.gogoyo.databinding.ItemFriendBinding
 import com.rn1.gogoyo.databinding.ItemFriendStatusTitleBinding
-import com.rn1.gogoyo.home.content.ArticleContentPetImageAdapter
 import com.rn1.gogoyo.model.Users
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +22,6 @@ private const val USER_FRIEND = 1
 class FriendListAdapter(val viewModel: FriendListViewModel) : ListAdapter<FriendDataItem, RecyclerView.ViewHolder>(FriendDiffCallback) {
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
-
 
     class FriendStatusTitleViewHolder(val binding: ItemFriendStatusTitleBinding): RecyclerView.ViewHolder(binding.root){
 
@@ -105,9 +103,9 @@ class FriendListAdapter(val viewModel: FriendListViewModel) : ListAdapter<Friend
 
             for (status in 0..2){
                 when (status) {
-                    0 -> dataList.add(FriendDataItem.Title("等待中"))
-                    1 -> dataList.add(FriendDataItem.Title("好友邀請"))
-                    2 -> dataList.add(FriendDataItem.Title("朋友"))
+                    0 -> dataList.add(FriendDataItem.Title(GogoyoApplication.instance.getString(R.string.friend_waiting_accept_text)))
+                    1 -> dataList.add(FriendDataItem.Title(GogoyoApplication.instance.getString(R.string.friend_invite_text)))
+                    2 -> dataList.add(FriendDataItem.Title(GogoyoApplication.instance.getString(R.string.friend_text)))
                 }
 
                 val userList = list.filter { it.status == status }
@@ -142,9 +140,6 @@ class FriendListAdapter(val viewModel: FriendListViewModel) : ListAdapter<Friend
                 holder.bind(viewModel, itemUser.user)
             }
         }
-
-
-
     }
 
     companion object FriendDiffCallback: DiffUtil.ItemCallback<FriendDataItem>(){

@@ -8,7 +8,6 @@ import com.rn1.gogoyo.model.Users
 import com.rn1.gogoyo.model.source.GogoyoRepository
 import com.rn1.gogoyo.util.CurrentFragmentType
 import com.rn1.gogoyo.util.LoadStatus
-import com.rn1.gogoyo.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -69,8 +68,8 @@ class MainViewModel(private val repository: GogoyoRepository): ViewModel() {
                     _status.value = LoadStatus.DONE
 
                     val user = result.data
-                    Logger.d("aaaaaaaa${result.data}")
                     if (user.image.isNullOrEmpty()) {
+                        // first login user get photo from google
                         user.image = UserManager.userPhoto
                         updateUser(user)
                     }
@@ -117,6 +116,7 @@ class MainViewModel(private val repository: GogoyoRepository): ViewModel() {
     }
 
     fun postArticle(){
+        _status.value = LoadStatus.LOADING
         _toPostArticle.value = true
     }
 
