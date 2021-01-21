@@ -130,7 +130,7 @@ class ProfileUserViewModel(
     }
 
     private fun getUserLiveFriend(){
-        liveFriend = repository.getUserLiveFriend(UserManager.userUID!!, 2)
+        liveFriend = repository.getUserLiveFriend(userId, 2)
     }
 
     private fun getUserArticle() {

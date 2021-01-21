@@ -8,10 +8,7 @@ import com.rn1.gogoyo.model.Users
 import com.rn1.gogoyo.model.source.GogoyoRepository
 import com.rn1.gogoyo.util.CurrentFragmentType
 import com.rn1.gogoyo.util.LoadStatus
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class MainViewModel(private val repository: GogoyoRepository): ViewModel() {
 

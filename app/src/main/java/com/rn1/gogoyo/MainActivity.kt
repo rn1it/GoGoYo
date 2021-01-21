@@ -59,7 +59,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         // Obtain the FirebaseAnalytics instance.
         firebaseAnalytics = Firebase.analytics
 
@@ -68,6 +67,7 @@ class MainActivity : AppCompatActivity() {
 
             // if user not login, intent to login activity
             startActivity(Intent(this, LoginActivity::class.java))
+            finish()
         }
         else {
             val userName = UserManager.userName  ?:  "No Name"
@@ -126,7 +126,9 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun setUpBottomNav() {
-        binding.bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+        binding.bottomNavigationView.setOnNavigationItemSelectedListener(
+            onNavigationItemSelectedListener
+        )
         binding.bottomNavigationView.background = null
         binding.bottomNavigationView.menu.getItem(2).isEnabled = false
         // TODO add badge here
@@ -177,9 +179,12 @@ class MainActivity : AppCompatActivity() {
     private fun requestPermission(){
         ActivityCompat.requestPermissions(
             this,
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.CAMERA,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            PERMISSION_ID)
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ),
+            PERMISSION_ID
+        )
     }
 }
